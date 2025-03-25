@@ -2,9 +2,10 @@ export async function getList(): Promise<{
   list: {
     id: number;
     name: string;
-    type: string;
-    duration: string;
-  };
+    species: string;
+    traits: string[];
+    imageUri: string;
+  }[];
 }> {
   const response = await fetch('http://localhost:8081/api/list');
 
