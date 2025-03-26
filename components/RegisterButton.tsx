@@ -1,9 +1,18 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 export default function RegisterButton() {
+  const router = useRouter();
+
+  const handlePress = (): void => {
+    router.push('/cageForm'); // '/newScreen'으로 이동 (이동할 페이지 경로로 수정)
+  };
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      onPress={handlePress}
+      style={styles.container}>
       <Ionicons
         name='add-circle'
         size={20}

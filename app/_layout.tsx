@@ -40,6 +40,10 @@ export default function RootLayout() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name='+not-found' />
+        <Stack.Screen
+          name='cageForm'
+          options={{ headerShown: false }}  // 헤더 숨기기
+        />
       </Stack>
     </QueryClientProvider>
   );
