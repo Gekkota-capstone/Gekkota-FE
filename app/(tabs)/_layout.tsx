@@ -8,7 +8,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: colors.BLACK,
-        headerShown: true, // ✅ 여기서 헤더 활성화
+        headerShown: false, // ✅ 여기서 헤더 활성화
         headerTintColor: colors.BLACK,
         headerStyle: {
           backgroundColor: colors.WHITE,
@@ -24,12 +24,12 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name='index'
+        name='cage'
         options={{
           title: '홈',
           headerRight: () => (
             <Link
-              href='/'
+              href='/cage'
               style={{ marginRight: 15 }}
             >
               <Ionicons

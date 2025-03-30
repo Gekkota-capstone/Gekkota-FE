@@ -20,6 +20,7 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <CageListCard
+            id={item.id}
             name={item.name}
             species={item.species}
             traits={item.traits}
