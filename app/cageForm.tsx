@@ -21,16 +21,19 @@ const cageForm: React.FC = () => {
 
     const [step, setStep] = useState(1);
 
-    //기본값 (이름, 성별, 생년월일)
+    //기본값 (종, 이름, 성별, 생년월일)
     const { control, handleSubmit, setValue, watch } = useForm({
-        defaultValues: { name: "", gender: "", birthdate: "" },
+        defaultValues: { species: "", name: "", gender: "", birthdate: "" },
     });
 
     // 오류 메시지 상태 관리
     const [error, setError] = useState<string | null>(null);
 
+    // 종 버튼 클릭 확인
+    const [selectedSpecies, setSelectedSepcies] = useState<null | "crested" | "leopard">(null);
+
     // 성별 버튼 클릭 확인
-    const [selectedButton, setSelectedButton] = useState<null | "male" | "female" | "unknown">(null);
+    const [selectedGender, setSelectedGender] = useState<null | "male" | "female" | "unknown">(null);
 
     // 날짜 선택 관리
     const [selectedDate, setSelectedDate] = useState('2025-03-24');
@@ -38,8 +41,7 @@ const cageForm: React.FC = () => {
     // 이름 실시간으로 watch
     const nameValue = watch("name");
 
-    useEffect(() => {
-        // 이름 필드 값이 변경될 때마다 유효성 검사
+    useEffect(() => { // 이름 필드 값이 변경될 때마다 유효성 검사
         const validationMessage = isNameValid(nameValue);
         setError(validationMessage)
     }, [nameValue]);  // nameValue가 변경될 때마다 실행
@@ -73,9 +75,9 @@ const cageForm: React.FC = () => {
     const handlePrevious = () => { // 뒤로가기 함수
         if (step > 1) {
             setStep(step - 1);  // 이전 단계로 이동
-          } else {
+        } else {
             router.back(); // 첫 번째 단계일 때는 뒤로가기
-          }
+        }
     };
 
     const handleDateChange = (newDate: string) => {
@@ -85,15 +87,35 @@ const cageForm: React.FC = () => {
 
     const progressBarWidth = (currentStep: number) => { //진행바 범위 정하는 함수 (단계 늘어날 시 추가)
         if (currentStep === 1) {
-            return '33%';  // 1단계: 파랑 1/3
+            return '25%';  // 1단계: 파랑 1/4
         } else if (currentStep === 2) {
-            return '66%';  // 2단계: 파랑 2/3
+            return '50%';  // 2단계: 파랑 2/4
+        } else if (currentStep === 3) {
+            return '75%'; // 3단계: 파랑 3/4
         } else {
-            return '100%'; // 3단계: 파랑 3/3
+            return '100%'; // 3단계: 파랑 4/4
         }
     };
 
-    const onSubmit: SubmitHandler<FormData> = (data) => { console.log("제출데이터: ", data) }; //데이터들 data에 넣어 전달
+    const onSubmit: SubmitHandler<FormData> = async (data) => { //데이터 전송(수정하기)
+        console.log("제출 데이터:", data);
+
+        try {
+            const response = await fetch("api입력", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer YOUR_ACCESS_TOKEN" //인증
+                },
+                body: JSON.stringify(data), // 데이터를 JSON 형식으로 변환
+            });
+
+            const result = await response.json();
+            console.log("서버 응답:", result);
+        } catch (error) {
+            console.error("에러 발생:", error);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container} >
@@ -106,7 +128,55 @@ const cageForm: React.FC = () => {
             </View>
 
             {
+
                 step == 1 && (
+                    <View style={styles.container}>
+                        <Text style={styles.mainText}>어떤 도마뱀을{'\n'}추가하시겠습니까?</Text>
+                        <View style={styles.buttonContainer}>
+                            <View style={styles.buttonWithDescription}>
+                                <TouchableOpacity style={[styles.button, selectedSpecies === "crested" && styles.selectedButton]}
+                                    onPress={() => {
+                                        setSelectedSepcies("crested")
+                                        setValue("species", "crested")
+                                    }
+                                    }
+                                >
+                                    <Image source={
+                                        selectedSpecies === "crested"
+                                            ? require("@/assets/images/crested.png")
+                                            : require("@/assets/images/crested_bw.png")
+                                    } style={styles.speciesImage} />
+                                </TouchableOpacity>
+                                <Text style={[styles.genderText, selectedSpecies === "crested" && styles.selectedText]}>크레스티드 게코</Text>
+                            </View>
+                            <View style={styles.buttonWithDescription}>
+                                <TouchableOpacity style={[styles.button, selectedSpecies === "leopard" && styles.selectedButton]}
+                                    onPress={() => {
+                                        setSelectedSepcies("leopard")
+                                        setValue("species", "leopard")
+                                    }
+                                    }
+                                >
+                                    <Image source={
+                                        selectedSpecies === "leopard"
+                                            ? require("@/assets/images/leopard.png")
+                                            : require("@/assets/images/leopard_bw.png")
+                                    } style={styles.speciesImage} />
+                                </TouchableOpacity>
+                                <Text style={[styles.genderText, selectedSpecies === "leopard" && styles.selectedText]}>레오파드 게코</Text>
+                            </View>
+                        </View>
+                        <CustomButton
+                            title="다음"
+                            onPress={handleNext}
+                            isDisabled={selectedSpecies === null}
+                        />
+                    </View>
+                )
+            }
+            {
+
+                step == 2 && (
                     <View style={styles.container}>
                         <Text style={styles.mainText}>추가하실 도마뱀의{'\n'}이름은 무엇인가요?</Text>
                         <Controller
@@ -129,47 +199,47 @@ const cageForm: React.FC = () => {
             }
 
             {
-                step === 2 && (
+                step === 3 && (
                     <View style={styles.container}>
                         <Text style={styles.mainText}>추가하실 도마뱀의{'\n'}성별은 무엇인가요?</Text>
 
-                        <View style={styles.genderButton}>
-
-                            <TouchableOpacity
-                                style={[styles.button, selectedButton === "male" && styles.selectedButton]}
-                                onPress={() => {
-                                    setSelectedButton("male")
-                                    setValue("gender", "male")
-                                }}
-                            >
-                                <Image
-                                    source={
-                                        selectedButton === "male"
-                                            ? require('@/assets/images/male_symbol.png')
-                                            : require("@/assets/images/male_symbol_white.png")
-                                    }
-                                    style={styles.image} />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                style={[styles.button, selectedButton === "female" && styles.selectedButton]}
-                                onPress={() => {
-                                    setSelectedButton("female")
-                                    setValue("gender", "female")
-                                }}
-                            >
-                                <Image
-                                    source={
-                                        selectedButton === "female"
-                                            ? require("@/assets/images/female_symbol.png")
-                                            : require("@/assets/images/female_symbol_white.png")
-                                    }
-                                    style={styles.image} />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.textContainer}>
-                            <Text style={[styles.genderText, selectedButton === "male" && styles.selectedText]}>남아</Text>
-                            <Text style={[styles.genderText, selectedButton === "female" && styles.selectedText]}>여아</Text>
+                        <View style={styles.buttonContainer}>
+                            <View style={styles.buttonWithDescription}>
+                                <TouchableOpacity
+                                    style={[styles.button, selectedGender === "male" && styles.selectedButton]}
+                                    onPress={() => {
+                                        setSelectedGender("male")
+                                        setValue("gender", "male")
+                                    }}
+                                >
+                                    <Image
+                                        source={
+                                            selectedGender === "male"
+                                                ? require('@/assets/images/male_symbol.png')
+                                                : require("@/assets/images/male_symbol_white.png")
+                                        }
+                                        style={styles.image} />
+                                </TouchableOpacity>
+                                <Text style={[styles.genderText, selectedGender === "male" && styles.selectedText]}>남아</Text>
+                            </View>
+                            <View style={styles.buttonWithDescription}>
+                                <TouchableOpacity
+                                    style={[styles.button, selectedGender === "female" && styles.selectedButton]}
+                                    onPress={() => {
+                                        setSelectedGender("female")
+                                        setValue("gender", "female")
+                                    }}
+                                >
+                                    <Image
+                                        source={
+                                            selectedGender === "female"
+                                                ? require("@/assets/images/female_symbol.png")
+                                                : require("@/assets/images/female_symbol_white.png")
+                                        }
+                                        style={styles.image} />
+                                </TouchableOpacity>
+                                <Text style={[styles.genderText, selectedGender === "female" && styles.selectedText]}>여아</Text>
+                            </View>
                         </View>
                         <View style={styles.unknownGender}>
                             <Text style={styles.unknownText}>혹시 아직 성별을 구분할 수 없나요?</Text>
@@ -177,14 +247,14 @@ const cageForm: React.FC = () => {
 
                                 <TouchableOpacity
                                     onPress={() => {
-                                        setSelectedButton("unknown")
+                                        setSelectedGender("unknown")
                                         setValue("gender", "unknown")
                                     }}>
                                     <Ionicons
                                         name="checkmark-circle"
                                         size={16}
-                                        color={selectedButton === "unknown" ? Colors.mainBlue : Colors.gray}
-                                        style={{ opacity: selectedButton === "unknown" ? 1 : 0.5 }}></Ionicons>
+                                        color={selectedGender === "unknown" ? Colors.mainBlue : Colors.gray}
+                                        style={{ opacity: selectedGender === "unknown" ? 1 : 0.5 }}></Ionicons>
                                 </TouchableOpacity>
                                 <Text style={styles.unknownText} >미구분</Text>
                             </View>
@@ -192,14 +262,14 @@ const cageForm: React.FC = () => {
                         <CustomButton
                             title="다음"
                             onPress={handleNext}
-                            isDisabled={selectedButton === null}
+                            isDisabled={selectedGender === null}
                         />
                     </View>
                 )
             }
 
             {
-                step === 3 && (
+                step === 4 && (
                     <View style={styles.container}>
                         <Text style={styles.mainText}> {nameValue}의 생일은?</Text>
                         <Controller
@@ -278,7 +348,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: 'red',
     },
-    genderButton: {
+    buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         marginTop: 20,
@@ -298,20 +368,26 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: Colors.mainBlue,
     },
-    textContainer: {
-        flexDirection: 'row',
-        gap: 130,
-        marginTop: 10
+    buttonWithDescription: { 
+        flexDirection: 'column',
+        alignItems: 'center',
+        top: 10
     },
     genderText: {
         color: Colors.gray,
         opacity: 0.5,
         fontSize: 16,
+        marginTop: 10
     },
     selectedText: {
         color: Colors.gray,
         opacity: 1,
         fontSize: 16,
+    },
+    speciesImage: {
+        width: 120,
+        height: 150,
+        resizeMode: "contain"
     },
     image: {
         width: 80,
