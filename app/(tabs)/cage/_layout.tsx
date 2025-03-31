@@ -57,6 +57,26 @@ export default function CageLayout() {
           title: '',
         }}
       />
+      <Stack.Screen
+        name='[id]/camera'
+        options={{
+          headerShown: true,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{ paddingLeft: 4 }}
+            >
+              <Ionicons
+                name='chevron-back'
+                size={24}
+                color={colors.BLACK}
+              />
+            </TouchableOpacity>
+          ),
+          headerTitleAlign: 'center',
+          title: '',
+        }}
+      />
     </Stack>
   );
 }
