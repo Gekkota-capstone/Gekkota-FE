@@ -1,6 +1,6 @@
 import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
+import { useLocalSearchParams, Stack, router, useRouter } from 'expo-router';
 import {
   SafeAreaView,
   Text,
@@ -26,7 +26,10 @@ export default function PetDetailScreen() {
       <View style={styles.menuContainer}>
         <Pressable
           style={styles.menuItem}
-          onPress={() => console.log('카메라 클릭')}
+          onPress={() => {
+            router.push(`/cage/${id}/camera`);
+            console.log('카메라 클릭');
+          }}
         >
           <Text style={styles.menuTitle}>카메라</Text>
           <View style={styles.menuIcon}>
