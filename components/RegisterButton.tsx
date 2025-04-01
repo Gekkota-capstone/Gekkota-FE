@@ -6,7 +6,7 @@ export default function RegisterButton() {
   const router = useRouter();
 
   const handlePress = (): void => {
-    router.push('/CageForm'); // '/newScreen'으로 이동 (이동할 페이지 경로로 수정)
+    router.push('/cageForm'); // '/newScreen'으로 이동 (이동할 페이지 경로로 수정)
   };
 
   return (

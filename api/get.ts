@@ -3,6 +3,8 @@ export async function getList(): Promise<{
     id: number;
     name: string;
     species: string;
+    gender: string;
+    date: string;
     traits: string[];
     imageUri: string;
   }[];

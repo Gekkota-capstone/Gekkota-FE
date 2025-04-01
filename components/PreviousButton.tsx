@@ -1,6 +1,6 @@
 // 이전 버튼
 import React from 'react';
-import { StyleSheet, View, Button, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from 'expo-router';
 
@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         left: 0,
-        top: 40
         
     },
     previousButton: {

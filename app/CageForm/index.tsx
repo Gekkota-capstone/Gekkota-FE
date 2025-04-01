@@ -354,7 +354,7 @@ const index: React.FC = () => {
               <>
                 <View style={{ marginTop: 100 }}>
                   <DatePicker
-                    value={new Date(selectedDate)}
+                    value={selectedDate}
                     onChange={handleDateChange}
                   />
                 </View>

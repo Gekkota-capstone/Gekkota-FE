@@ -7,7 +7,7 @@ import { Colors } from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 
 interface DateTimePickerProps {
-  value: Date;  // 날짜 값은 Date 타입
+  value: string;  // 날짜 값은 Date 타입
   onChange: (date: string) => void;  // 날짜 변경 시 실행되는 함수
 }
 
@@ -25,6 +25,8 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ value, onChange }) => {
     setVisible(true);
   };
 
+  const safeDate = value ? new Date(value) : new Date();
+
   const onConfirm = (selectedDate: Date) => {
     setVisible(false);
     const formattedDate = format(selectedDate, 'yyyy-MM-dd'); // 날짜를 YYYY-MM-DD 형식으로 포맷
@@ -38,7 +40,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ value, onChange }) => {
   return (
     <View style={styles.container}>
         <Pressable style={styles.select} onPress={onPressDate}>
-          <Text style={styles.text}>{format(new Date(value), 'PPP', { locale: ko })}</Text>
+          <Text style={styles.text}>{format(new Date(safeDate), 'PPP', { locale: ko })}</Text>
           <Ionicons name="chevron-down-outline" size={10} color={Colors.gray} style={{opacity: 0.5}}></Ionicons>
         </Pressable>
       <View style={styles.separator} />
@@ -48,7 +50,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ value, onChange }) => {
         mode="date"
         onConfirm={onConfirm}
         onCancel={onCancel}
-        date={value}
+        date={safeDate}
         locale="ko"
         cancelTextIOS="취소"
         confirmTextIOS="확인"

@@ -1,6 +1,6 @@
 import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, Stack } from 'expo-router';
+import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import {
   SafeAreaView,
   Text,
@@ -12,6 +12,7 @@ import {
 
 export default function PetDetailScreen() {
   const { id } = useLocalSearchParams();
+  const router = useRouter();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -67,7 +68,8 @@ export default function PetDetailScreen() {
 
         <Pressable
           style={styles.menuItem}
-          onPress={() => console.log('설정 클릭')}
+          onPress={
+            () => router.push({ pathname: "/setting", params: { id }})}
         >
           <Text style={styles.menuTitle}>설정</Text>
           <View style={styles.menuIcon}>
