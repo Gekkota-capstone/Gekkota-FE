@@ -97,6 +97,7 @@ export default function SettingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Stack.Screen options={{ title: '정보 수정', headerTitleAlign: 'center' }} />
 
       <Text style={styles.title}>이름</Text>
       <TextInput style={styles.input} value={name} onChangeText={setName} />
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
     fontWeight: 'semibold',
     marginTop: 20,
     height: 20,
-    width: '85%',
+    width: '85%'
   },
   overlay: {
     justifyContent: 'flex-end',
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
   },
   select: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    marginRight: 30
   },
   ionicons: {
     marginTop: 20,

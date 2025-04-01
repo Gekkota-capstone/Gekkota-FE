@@ -71,8 +71,10 @@ export default function PetDetailScreen() {
 
         <Pressable
           style={styles.menuItem}
-          onPress={
-            () => router.push({ pathname: "/setting", params: { id }})}
+          onPress={() => {
+            router.push(`/cage/${id}/setting`);
+            console.log('설정 클릭');
+          }}
         >
           <Text style={styles.menuTitle}>설정</Text>
           <View style={styles.menuIcon}>

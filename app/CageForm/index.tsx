@@ -137,7 +137,7 @@ const index: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <PreviousButton onPrevious={handlePrevious} />
+      <PreviousButton onPrevious={handlePrevious} style={{marginTop: 50}} />
 
       <View style={styles.progressBar}>
         <View style={[styles.fillBar, { width: progressBarWidth(step) }]} />

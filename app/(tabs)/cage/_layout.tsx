@@ -38,7 +38,7 @@ export default function CageLayout() {
         }}
       />
       <Stack.Screen
-        name='[id]'
+        name='[id]/index'
         options={{
           headerShown: true,
           headerLeft: () => (
@@ -59,6 +59,26 @@ export default function CageLayout() {
       />
       <Stack.Screen
         name='[id]/camera'
+        options={{
+          headerShown: true,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{ paddingLeft: 4 }}
+            >
+              <Ionicons
+                name='chevron-back'
+                size={24}
+                color={colors.BLACK}
+              />
+            </TouchableOpacity>
+          ),
+          headerTitleAlign: 'center',
+          title: '',
+        }}
+      />
+      <Stack.Screen
+        name='[id]/setting'
         options={{
           headerShown: true,
           headerLeft: () => (

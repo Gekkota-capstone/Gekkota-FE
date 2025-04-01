@@ -18,7 +18,7 @@ export default function Layout() {
         name='index'
         options={{
           title: '케이지 생성',
-          headerShown: true,
+          headerShown: false,
           headerBackButtonDisplayMode: 'minimal',
         }}
       />
