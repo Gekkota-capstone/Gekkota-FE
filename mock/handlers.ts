@@ -49,4 +49,13 @@ export const handlers = [
       ],
     });
   }),
+  http.post('https://example.com/api/cage', async ({ request }) => {
+    const body = await request.json();
+
+    console.log('🐾 POST 요청 데이터:', body);
+
+    return HttpResponse.json({
+      message: '도마뱀이 성공적으로 추가되었습니다.',
+    });
+  }),
 ];
