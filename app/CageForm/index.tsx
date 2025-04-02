@@ -16,15 +16,17 @@ import { useRouter } from 'expo-router';
 import CustomButton from '@/components/PrimaryButton';
 import PreviousButton from '@/components/PreviousButton';
 import DatePicker from '@/components/DatePicker';
+import { usePostCage } from '@/hooks/usePostCage';
 
 interface FormData {
   // 폼 데이터 타입 정의
   name: string;
   gender: string;
   birthdate: string;
+  species: string;
 }
 
-const index: React.FC = () => {
+const cageForm = () => {
   const router = useRouter();
 
   const [step, setStep] = useState(1);
@@ -113,35 +115,30 @@ const index: React.FC = () => {
       return '100%'; // 3단계: 파랑 4/4
     }
   };
-
+  const cageMutation = usePostCage();
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     //데이터 전송(수정하기)
     console.log('제출 데이터:', data);
 
-    try {
-      const response = await fetch('api입력', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer YOUR_ACCESS_TOKEN', //인증
-        },
-        body: JSON.stringify(data), // 데이터를 JSON 형식으로 변환
-      });
-
-      const result = await response.json();
-      console.log('서버 응답:', result);
-    } catch (error) {
-      console.error('에러 발생:', error);
-    }
+    cageMutation.mutate(data, {
+      onSuccess: (res) => {
+        router.replace('/cage');
+      },
+      onError: (error) => {
+        console.error('에러 발생:', error);
+      },
+    });
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <PreviousButton onPrevious={handlePrevious} style={{marginTop: 50}} />
+      <PreviousButton
+        onPrevious={handlePrevious}
+        style={{ marginTop: 50 }}
+      />
 
       <View style={styles.progressBar}>
         <View style={[styles.fillBar, { width: progressBarWidth(step) }]} />
-        {/* 파랑색으로 채워지는 바 */}
       </View>
 
       {step == 1 && (
@@ -486,4 +483,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default index;
+export default cageForm;

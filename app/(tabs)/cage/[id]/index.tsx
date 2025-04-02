@@ -1,6 +1,6 @@
 import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, Stack, router, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
   SafeAreaView,
   Text,
