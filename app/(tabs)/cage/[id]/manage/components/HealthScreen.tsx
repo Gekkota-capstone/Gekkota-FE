@@ -20,28 +20,25 @@ export default function HealthScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack.Screen
-        options={{ title: '건강 관리', headerTitleAlign: 'center' }}
-      />
-
-      <ScrollView>
-        {/* 몸무게 차트 */}
+      {/* 스크롤 영역 */}
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         <WeightChart />
-
-        {/* 달력 컴포넌트 */}
         <HealthCalendar />
-
-        {/* 예시 건강 기록 카드 */}
         <HealthRecordCard onPress={() => setHealthVisible(true)} />
+        {/* 여백 공간 확보 */}
+        <View style={{ height: 80 }} />
+      </ScrollView>
 
-        {/* 추가하기 버튼 */}
+      {/* 하단 고정 버튼 */}
+      <View style={styles.fixedButtonContainer}>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => router.push(`/cage/${id}/manage/addHealth`)}
         >
           <Text style={styles.addButtonText}>추가하기</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
+
       <HealthDetailSheet
         visible={healthVisible}
         onClose={() => setHealthVisible(false)}
@@ -57,13 +54,28 @@ export default function HealthScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.WHITE, paddingHorizontal: 16 },
+  container: {
+    flex: 1,
+    backgroundColor: colors.WHITE,
+    position: 'relative',
+  },
+  scrollContent: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 50, // 버튼 높이 + 여유
+  },
+  fixedButtonContainer: {
+    backgroundColor: colors.WHITE,
+    position: 'absolute',
+    bottom: 20,
+    left: 16,
+    right: 16,
+  },
   addButton: {
     backgroundColor: colors.BLUE_500,
     padding: 16,
     borderRadius: 10,
     alignItems: 'center',
-    marginVertical: 20,
   },
   addButtonText: {
     color: colors.WHITE,
