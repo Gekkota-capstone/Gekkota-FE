@@ -57,7 +57,10 @@ export default function PetDetailScreen() {
 
         <Pressable
           style={styles.menuItem}
-          onPress={() => console.log('관리 클릭')}
+          onPress={() => {
+            router.push(`/cage/${id}/statusScreen`);
+            console.log('카메라 클릭');
+          }}
         >
           <Text style={styles.menuTitle}>관리</Text>
           <View style={styles.menuIcon}>

@@ -1,7 +1,7 @@
 import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
-import { Text, TouchableOpacity } from 'react-native';
+import { Platform, Text, TouchableOpacity } from 'react-native';
 
 export default function CageLayout() {
   return (
@@ -61,6 +61,7 @@ export default function CageLayout() {
         name='[id]/camera'
         options={{
           headerShown: true,
+          headerShadowVisible: false,
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => router.back()}
@@ -81,6 +82,28 @@ export default function CageLayout() {
         name='[id]/setting'
         options={{
           headerShown: true,
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{ paddingLeft: 4 }}
+            >
+              <Ionicons
+                name='chevron-back'
+                size={24}
+                color={colors.BLACK}
+              />
+            </TouchableOpacity>
+          ),
+          headerTitleAlign: 'center',
+          title: '',
+        }}
+      />
+      <Stack.Screen
+        name='[id]/statusScreen'
+        options={{
+          headerShown: true,
+          headerShadowVisible: false,
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => router.back()}
