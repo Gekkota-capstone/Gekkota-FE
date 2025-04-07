@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import 'react-native-reanimated';
 import queryClient from '@/api/queryClient';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 SplashScreen.preventAutoHideAsync();
 async function enableMocking() {
@@ -33,18 +34,20 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Stack>
-        <Stack.Screen
-          name='(tabs)'
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name='+not-found' />
-        <Stack.Screen
-          name='cageForm'
-          options={{ headerShown: false }}  // 헤더 숨기기
-        />
-      </Stack>
-    </QueryClientProvider>
+    <GestureHandlerRootView>
+      <QueryClientProvider client={queryClient}>
+        <Stack>
+          <Stack.Screen
+            name='(tabs)'
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name='+not-found' />
+          <Stack.Screen
+            name='cageForm'
+            options={{ headerShown: false }} // 헤더 숨기기
+          />
+        </Stack>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

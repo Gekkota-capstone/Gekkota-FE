@@ -10,6 +10,13 @@ const colors = {
   GRAY_600: '#4B5563',
   GRAY_700: '#374151',
   BLACK: '#000',
+
+  BLUE_400: '#63A4FF',
+  BLUE_500: '#3182F6',
+  BLUE_700: '#285EC8',
+
+  GREEN_500: '#00C853',
+  ORANGE_500: '#FFA726',
 };
 
 const queryKeys = {
