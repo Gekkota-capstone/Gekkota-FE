@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -9,9 +9,11 @@ import { Ionicons } from '@expo/vector-icons';
 interface DateTimePickerProps {
   value: string;  // 날짜 값은 Date 타입
   onChange: (date: string) => void;  // 날짜 변경 시 실행되는 함수
+  style?: ViewStyle;
+  textStyle?: TextStyle;
 }
 
-const DateTimePicker: React.FC<DateTimePickerProps> = ({ value, onChange }) => {
+const DateTimePicker: React.FC<DateTimePickerProps> = ({ value, onChange, style, textStyle }) => {
   const [mode, setMode] = useState<'date' | 'time' | 'datetime'>('date');
   const [visible, setVisible] = useState(false); // 모달 노출 여부
 
@@ -38,9 +40,9 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ value, onChange }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
         <Pressable style={styles.select} onPress={onPressDate}>
-          <Text style={styles.text}>{format(new Date(safeDate), 'PPP', { locale: ko })}</Text>
+          <Text style={[styles.text, textStyle]}>{format(new Date(safeDate), 'PPP', { locale: ko })}</Text>
           <Ionicons name="chevron-down-outline" size={10} color={Colors.gray} style={{opacity: 0.5}}></Ionicons>
         </Pressable>
       <View style={styles.separator} />
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: Colors.gray,
+    color: 'Colors.gray',
     opacity: 0.5,
     fontSize: 18,
   },
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 1,
     backgroundColor: Colors.gray,
-    opacity: 0.5,
+    opacity: 0.2,
     marginVertical: 10,
     width: 350
   },

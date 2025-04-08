@@ -9,6 +9,7 @@ import { Colors } from '@/constants/colors';
 import CustomButton from '@/components/PrimaryButton';
 import DatePicker from '@/components/DatePicker';
 import ModalSelector from '@/components/Modal';
+import DeleteModal from '@/components/DeleteModal';
 
 export default function SettingScreen() {
   const { id } = useLocalSearchParams();
@@ -20,6 +21,8 @@ export default function SettingScreen() {
 
   const [isGenderModalVisible, setIsGenderModalVisible] = useState(false);
   const [isSpeciesModalVisible, setIsSpeciesModalVisible] = useState(false);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const genderOptions = [
     { key: 'male', label: '남아' },
@@ -39,7 +42,7 @@ export default function SettingScreen() {
   const handleSelectSpecies = (selectedSpecies: string) => {
     setSpecies(selectedSpecies);
   };
-  
+
   const toggleGenderModal = () => setIsGenderModalVisible(!isGenderModalVisible);
   const toggleSpeciesModal = () => setIsSpeciesModalVisible(!isSpeciesModalVisible);
 
@@ -96,7 +99,7 @@ export default function SettingScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Stack.Screen options={{ title: '정보 수정', headerTitleAlign: 'center' }} />
 
       <Text style={styles.title}>이름</Text>
@@ -111,7 +114,7 @@ export default function SettingScreen() {
           editable={false}
           onPress={toggleGenderModal}
         />
-        <Ionicons style={styles.ionicons} name="chevron-down-outline" size={15} />
+        <Ionicons style={[styles.ionicons, { marginTop: 20 }]} name="chevron-down-outline" size={15} />
       </View>
       <ModalSelector
         isVisible={isGenderModalVisible}
@@ -119,7 +122,7 @@ export default function SettingScreen() {
         onSelect={handleSelectGender}
         data={genderOptions}
         selectedOption={gender}
-        title="성별 선택" 
+        title="성별 선택"
       />
       <View style={styles.separator} />
 
@@ -131,24 +134,34 @@ export default function SettingScreen() {
           editable={false}
           onPress={toggleSpeciesModal}
         />
-        <Ionicons style={styles.ionicons} name="chevron-down-outline" size={15} />
+        <Ionicons style={[styles.ionicons, { marginTop: 20 }]} name="chevron-down-outline" size={15} />
       </View>
       <ModalSelector
         isVisible={isSpeciesModalVisible}
-        onClose={toggleSpeciesModal} 
+        onClose={toggleSpeciesModal}
         onSelect={handleSelectSpecies}
-        data={speciesOptions} 
+        data={speciesOptions}
         selectedOption={species}
-        title="종 선택" 
+        title="종 선택"
       />
       <View style={styles.separator} />
 
       <Text style={styles.title}>생년월일</Text>
       <DatePicker
+        style={{ alignItems: 'flex-start' }}
+        textStyle={{ color: 'black', opacity: 1 }}
         value={date}
         onChange={setDate}
       >
       </DatePicker>
+
+      <TouchableOpacity
+        style={styles.delete}
+        onPress={() => setShowDeleteModal(true)}>
+        <Ionicons style={styles.ionicons} name="close-circle-outline" size={16} />
+        <Text style={styles.deleteText}>반려동물 정보 지우기</Text>
+      </TouchableOpacity>
+      <DeleteModal visible={showDeleteModal} onClose={() => setShowDeleteModal(false)} />
 
       <View style={{ position: 'absolute', bottom: 30, alignItems: 'center' }}>
         <CustomButton
@@ -157,13 +170,14 @@ export default function SettingScreen() {
         />
       </View>
 
-    </SafeAreaView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 20,
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center'
@@ -185,7 +199,7 @@ const styles = StyleSheet.create({
   input: {
     alignSelf: 'flex-start',
     marginLeft: 30,
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: 'semibold',
     marginTop: 20,
     height: 20,
@@ -203,9 +217,17 @@ const styles = StyleSheet.create({
     marginRight: 30
   },
   ionicons: {
-    marginTop: 20,
     opacity: 0.5,
     color: Colors.gray
+  },
+  delete: {
+    marginTop: 150,
+    flexDirection: 'row'
+  },
+  deleteText: {
+    marginLeft: 5,
+    color: Colors.gray,
+    opacity: 0.5
   }
 
 });
