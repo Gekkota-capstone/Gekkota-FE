@@ -13,6 +13,7 @@ import HealthRecordCard from './HealthRecordCard';
 import { colors } from '@/constants';
 import { useState } from 'react';
 import HealthDetailSheet from '@/components/HealthDetailSheet';
+import CustomButton from '@/components/PrimaryButton'
 
 export default function HealthScreen() {
   const { id } = useLocalSearchParams();
@@ -31,12 +32,10 @@ export default function HealthScreen() {
 
       {/* 하단 고정 버튼 */}
       <View style={styles.fixedButtonContainer}>
-        <TouchableOpacity
-          style={styles.addButton}
+        <CustomButton
+          title='추가하기'
           onPress={() => router.push(`/cage/${id}/manage/addHealth`)}
-        >
-          <Text style={styles.addButtonText}>추가하기</Text>
-        </TouchableOpacity>
+        />
       </View>
 
       <HealthDetailSheet
@@ -70,16 +69,5 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 16,
     right: 16,
-  },
-  addButton: {
-    backgroundColor: colors.BLUE_500,
-    padding: 16,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  addButtonText: {
-    color: colors.WHITE,
-    fontSize: 16,
-    fontWeight: '700',
-  },
+  }
 });

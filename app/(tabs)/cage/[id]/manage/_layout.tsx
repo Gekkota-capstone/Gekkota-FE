@@ -22,18 +22,8 @@ export default function CageLayout() {
               />
             </TouchableOpacity>
           ),
-          headerTitle: () => (
-            <Text
-              style={{
-                fontSize: 24,
-                fontWeight: '700',
-                color: colors.BLACK,
-              }}
-            >
-              관리
-            </Text>
-          ),
           headerTitleAlign: 'center',
+          title:'관리'
         }}
       />
       <Stack.Screen
@@ -52,18 +42,8 @@ export default function CageLayout() {
               />
             </TouchableOpacity>
           ),
-          headerTitle: () => (
-            <Text
-              style={{
-                fontSize: 24,
-                fontWeight: '700',
-                color: colors.BLACK,
-              }}
-            >
-              정보 추가하기
-            </Text>
-          ),
           headerTitleAlign: 'center',
+          title: '정보 추가하기'
         }}
       />
     </Stack>

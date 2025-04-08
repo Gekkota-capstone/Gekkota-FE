@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { colors } from '@/constants';
+import CustomButton from '@/components/PrimaryButton'
 
 export default function FeedScreen() {
   const { id } = useLocalSearchParams();
@@ -15,6 +16,7 @@ export default function FeedScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <Text>먹이</Text>
+      
     </SafeAreaView>
   );
 }

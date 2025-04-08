@@ -15,6 +15,7 @@ import { Controller, useForm } from 'react-hook-form';
 import * as ImagePicker from 'expo-image-picker';
 import BottomSheet from '@/components/BottomSheet';
 import SheddingSheet from '@/components/SheddingSheet';
+import CustomButton from '@/components/PrimaryButton'
 export default function HealthAddScreen() {
   const router = useRouter();
 
@@ -114,13 +115,10 @@ export default function HealthAddScreen() {
           </View>
         </ScrollView>
 
-        <TouchableOpacity
-          style={styles.cta}
+        <CustomButton
+          title='저장'
           onPress={handleSubmit(onSubmit)}
-        >
-          <Text style={styles.ctaText}>저장</Text>
-        </TouchableOpacity>
-
+        />
         {/* Bottom Sheet */}
         <SheddingSheet
           visible={isSheetVisible}
@@ -138,7 +136,7 @@ export default function HealthAddScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.WHITE },
+  container: { flex: 1, backgroundColor: colors.WHITE, alignItems:'center' },
   content: { flex: 1, paddingHorizontal: 20 },
   row: {
     flexDirection: 'row',
@@ -147,6 +145,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.GRAY_300,
+    width: '100%'
   },
   label: { fontSize: 16, fontWeight: '500', color: colors.BLACK },
   input: { fontSize: 16, color: colors.BLACK, textAlign: 'right', flex: 1 },
@@ -159,6 +158,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     minHeight: 80,
+    marginTop: 10
   },
   photoContainer: { marginVertical: 20 },
   photoPicker: {
