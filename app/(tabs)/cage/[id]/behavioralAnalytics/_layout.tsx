@@ -23,27 +23,7 @@ export default function CageLayout() {
             </TouchableOpacity>
           ),
           headerTitleAlign: 'center',
-          title: '관리',
-        }}
-      />
-      <Stack.Screen
-        name='addHealth'
-        options={{
-          headerShown: true,
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.back()}
-              style={{ paddingLeft: 4 }}
-            >
-              <Ionicons
-                name='chevron-back'
-                size={24}
-                color={colors.BLACK}
-              />
-            </TouchableOpacity>
-          ),
-          headerTitleAlign: 'center',
-          title: '정보 추가하기',
+          title: '행동분석',
         }}
       />
     </Stack>

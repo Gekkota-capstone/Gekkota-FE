@@ -148,9 +148,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   dayItem: {
-    width: screenWidth / 9,
+    width: screenWidth / 11,
     alignItems: 'center',
-    marginHorizontal: 4,
+    marginHorizontal: 2,
   },
   day: {
     color: colors.GRAY_500,
@@ -163,12 +163,13 @@ const styles = StyleSheet.create({
   },
   dateWrapper: {
     marginTop: 4,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 6,
     borderRadius: 15,
   },
+
   dateText: {
-    fontSize: 14,
+    fontSize: 12,
     color: colors.GRAY_700,
     fontWeight: '600',
   },
@@ -180,8 +181,8 @@ const styles = StyleSheet.create({
   selectedCircle: {
     backgroundColor: colors.BLUE_500,
     marginTop: 4,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 6,
     borderRadius: 15,
   },
   modalBackdrop: {
