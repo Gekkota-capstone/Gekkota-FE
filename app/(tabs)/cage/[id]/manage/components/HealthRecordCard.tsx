@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '@/constants';
 import { Pressable } from 'react-native-gesture-handler';
+import { Colors } from '@/constants/colors'
 
 interface HealthRecordCardProps {
   onPress: () => void;
@@ -22,7 +23,7 @@ export default function HealthRecordCard({ onPress }: HealthRecordCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.WHITE,
+    backgroundColor: Colors.light_gray,
     padding: 16,
     borderRadius: 10,
     marginVertical: 12,

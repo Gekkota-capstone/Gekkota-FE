@@ -7,13 +7,14 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import HealthCalendar from './HealthCalendar';
-import WeightChart from './WeightChart';
-import HealthRecordCard from './HealthRecordCard';
+import HealthCalendar from './components/HealthCalendar';
+import WeightChart from './components/WeightChart';
+import HealthRecordCard from './components/HealthRecordCard';
 import { colors } from '@/constants';
 import { useState } from 'react';
 import HealthDetailSheet from '@/components/HealthDetailSheet';
 import CustomButton from '@/components/PrimaryButton'
+import Calender from './components/Calender';
 
 export default function HealthScreen() {
   const { id } = useLocalSearchParams();
@@ -24,7 +25,7 @@ export default function HealthScreen() {
       {/* 스크롤 영역 */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <WeightChart />
-        <HealthCalendar />
+        <Calender />
         <HealthRecordCard onPress={() => setHealthVisible(true)} />
         {/* 여백 공간 확보 */}
         <View style={{ height: 80 }} />
@@ -66,6 +67,7 @@ const styles = StyleSheet.create({
   fixedButtonContainer: {
     backgroundColor: colors.WHITE,
     position: 'absolute',
+    alignItems: 'center',
     bottom: 20,
     left: 16,
     right: 16,
