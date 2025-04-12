@@ -21,18 +21,6 @@ const AlertCycleCard: React.FC<AlertCycleCardProps> = ({
     onPressAlert
 }) => {
 
-    const progressBarWidth = (dDay: number) => {
-        if (dDay === 1) {
-            return '25%'; // 1단계: 파랑 1/4
-        } else if (dDay === 2) {
-            return '50%'; // 2단계: 파랑 2/4
-        } else if (dDay === 3) {
-            return '75%'; // 3단계: 파랑 3/4
-        } else {
-            return '100%'; // 3단계: 파랑 4/4
-        }
-    };
-
     return (
         <View style={styles.card}>
             {/* 날짜와 D-day */}
@@ -77,7 +65,9 @@ const styles = StyleSheet.create({
         padding: 16,
         marginVertical: 24,
         borderRadius: 20,
-        width: '90%'
+        width: '90%',
+        height: 130,
+        justifyContent:'center'
     },
     topRow: {
         flexDirection: 'row',
