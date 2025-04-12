@@ -1,6 +1,7 @@
 import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import Feather from '@expo/vector-icons/Feather';
 import {
   SafeAreaView,
   Text,
@@ -43,6 +44,23 @@ export default function PetDetailScreen() {
 
         <Pressable
           style={styles.menuItem}
+          onPress={() => {
+            router.push(`/cage/${id}/behavioralAnalytics`);
+            console.log('행동분석 클릭');
+          }}
+        >
+          <Text style={styles.menuTitle}>행동분석</Text>
+          <View style={styles.menuIcon}>
+            <Feather
+              name='activity'
+              size={24}
+              color='black'
+            />
+          </View>
+        </Pressable>
+
+        <Pressable
+          style={styles.menuItem}
           onPress={() => console.log('대화 클릭')}
         >
           <Text style={styles.menuTitle}>대화</Text>
@@ -66,23 +84,6 @@ export default function PetDetailScreen() {
           <View style={styles.menuIcon}>
             <Ionicons
               name='list'
-              size={24}
-              color={colors.BLACK}
-            />
-          </View>
-        </Pressable>
-
-        <Pressable
-          style={styles.menuItem}
-          onPress={() => {
-            router.push(`/cage/${id}/setting`);
-            console.log('설정 클릭');
-          }}
-        >
-          <Text style={styles.menuTitle}>설정</Text>
-          <View style={styles.menuIcon}>
-            <Ionicons
-              name='settings'
               size={24}
               color={colors.BLACK}
             />

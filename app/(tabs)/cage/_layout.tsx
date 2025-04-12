@@ -1,9 +1,10 @@
 import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
-import { router, Stack } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Platform, Text, TouchableOpacity } from 'react-native';
 
 export default function CageLayout() {
+  const { id } = useLocalSearchParams();
   return (
     <Stack
       screenOptions={{
@@ -53,6 +54,18 @@ export default function CageLayout() {
               />
             </TouchableOpacity>
           ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => router.push(`/cage/${id}/setting`)}
+              style={{ paddingLeft: 4 }}
+            >
+              <Ionicons
+                name='settings'
+                size={24}
+                color={colors.BLACK}
+              />
+            </TouchableOpacity>
+          ),
           headerTitleAlign: 'center',
           title: '',
         }}
@@ -75,32 +88,11 @@ export default function CageLayout() {
             </TouchableOpacity>
           ),
           headerTitleAlign: 'center',
-          title: '',
+          title: '실시간 카메라',
         }}
       />
       <Stack.Screen
         name='[id]/setting'
-        options={{
-          headerShown: true,
-          headerShadowVisible: false,
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.back()}
-              style={{ paddingLeft: 4 }}
-            >
-              <Ionicons
-                name='chevron-back'
-                size={24}
-                color={colors.BLACK}
-              />
-            </TouchableOpacity>
-          ),
-          headerTitleAlign: 'center',
-          title: '',
-        }}
-      />
-      <Stack.Screen
-        name='[id]/statusScreen'
         options={{
           headerShown: true,
           headerShadowVisible: false,
