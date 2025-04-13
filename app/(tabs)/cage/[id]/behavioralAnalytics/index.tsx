@@ -23,7 +23,7 @@ export default function BehavioralAnalyticsScreen() {
   const highlightVideoExists = true; // 예시 (API 데이터 연동 시 변경)
 
   const videoSource =
-    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+    'https://direp.s3.amazonaws.com/test/sample.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARSJVEUEYSJWQNXUI%2F20250413%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20250413T071913Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Signature=f508eb9707abb423b749c382d99cad497976309bf932bdc628d64042b8d75b98';
   const player = useVideoPlayer(
     videoSource,
     (player: { loop: boolean; play: () => void }) => {

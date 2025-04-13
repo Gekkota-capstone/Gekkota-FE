@@ -8,15 +8,13 @@ import {
   ScrollView,
 } from 'react-native';
 import { useState } from 'react';
+import { VLCPlayer } from 'react-native-vlc-media-player';
 
 export default function CameraScreen() {
-  const player1 = useVideoPlayer(
-    'https://your-cdn/video1/stream.m3u8',
-    (player) => {
-      player.loop = true;
-      player.play();
-    }
-  );
+  const player1 = useVideoPlayer('rtsp://192.168.0.153:8554/test', (player) => {
+    player.loop = true;
+    player.play();
+  });
 
   const player2 = useVideoPlayer(
     'https://your-cdn/video2/stream.m3u8',
@@ -62,6 +60,13 @@ export default function CameraScreen() {
           style={styles.video}
         />
       </View>
+      <VLCPlayer
+        style={[styles.video]}
+        videoAspectRatio='16:9'
+        source={{
+          uri: 'rtsp://192.168.0.153:8554/test',
+        }}
+      />
     </ScrollView>
   );
 }

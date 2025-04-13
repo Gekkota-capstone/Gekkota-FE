@@ -47,6 +47,26 @@ export default function CageLayout() {
           title: '정보 추가하기',
         }}
       />
+      <Stack.Screen
+        name='addClean'
+        options={{
+          headerShown: true,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{ paddingLeft: 4 }}
+            >
+              <Ionicons
+                name='chevron-back'
+                size={24}
+                color={colors.BLACK}
+              />
+            </TouchableOpacity>
+          ),
+          headerTitleAlign: 'center',
+          title: '정보 추가하기',
+        }}
+      />
     </Stack>
   );
 }
