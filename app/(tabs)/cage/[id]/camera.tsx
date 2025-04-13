@@ -41,10 +41,13 @@ export default function CameraScreen() {
             size='large'
           />
         )}
-        <VideoView
-          player={player1}
-          style={styles.video}
-        />
+        <VLCPlayer
+        style={[styles.video]}
+        videoAspectRatio='16:9'
+        source={{
+          uri: 'rtsp://192.168.0.153:8554/test',
+        }}
+      />
       </View>
 
       <Text style={styles.title}>카메라2</Text>
@@ -60,13 +63,7 @@ export default function CameraScreen() {
           style={styles.video}
         />
       </View>
-      <VLCPlayer
-        style={[styles.video]}
-        videoAspectRatio='16:9'
-        source={{
-          uri: 'rtsp://192.168.0.153:8554/test',
-        }}
-      />
+      
     </ScrollView>
   );
 }
