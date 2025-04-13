@@ -10,6 +10,7 @@ export default function CageLayout() {
         name='index'
         options={{
           headerShown: true,
+          headerShadowVisible: false,
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => router.back()}

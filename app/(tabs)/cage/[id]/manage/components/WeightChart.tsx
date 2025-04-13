@@ -83,7 +83,7 @@ export default function WeightChart() {
 }
 
 const styles = StyleSheet.create({
-  container: { marginVertical: 16, paddingHorizontal: 16 },
+  container: { marginVertical: 10, paddingHorizontal: 16 },
   title: { fontSize: 18, fontWeight: '700', marginBottom: 12 },
   tabContainer: {
     flexDirection: 'row',

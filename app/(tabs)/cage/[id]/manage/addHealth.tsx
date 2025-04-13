@@ -52,19 +52,11 @@ export default function HealthAddScreen() {
           {/* 몸무게 입력 */}
           <View style={styles.row}>
             <Text style={styles.label}>몸무게</Text>
-            <Controller
-              control={control}
-              name='weight'
-              render={({ field: { value, onChange } }) => (
                 <TextInput
                   style={styles.input}
                   placeholder='0.00'
                   keyboardType='numeric'
-                  value={value}
-                  onChangeText={onChange}
                 />
-              )}
-            />
             <Text style={styles.unit}>g</Text>
           </View>
 

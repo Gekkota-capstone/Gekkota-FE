@@ -3,9 +3,9 @@ import { useLocalSearchParams, Stack } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import Tab from '@/components/Tab';
-import FeedScreen from './components/FeedScreen';
-import CleanScreen from './components/CleanScreen';
-import HealthScreen from './components/HealthScreen';
+import FeedScreen from './FeedScreen';
+import CleanScreen from './CleanScreen'
+import HealthScreen from './HealthScreen';
 import { colors } from '@/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
