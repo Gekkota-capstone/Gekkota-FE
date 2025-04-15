@@ -1,4 +1,3 @@
-import { SetStateAction, useState } from 'react';
 import {
   View,
   Text,
@@ -12,6 +11,7 @@ import {
 import { Calendar } from 'react-native-calendars';
 import { colors } from '@/constants';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -20,10 +20,17 @@ const generateWeek = (date: dayjs.Dayjs) => {
   return Array.from({ length: 7 }, (_, i) => startOfWeek.add(i, 'day'));
 };
 
-export default function HealthCalendar() {
-  const [selectedDate, setSelectedDate] = useState(dayjs());
+interface HealthCalendarProps {
+  selectedDate: dayjs.Dayjs;
+  onSelectDate: (date: dayjs.Dayjs) => void;
+}
+
+export default function HealthCalendar({
+  selectedDate,
+  onSelectDate,
+}: HealthCalendarProps) {
   const [currentWeekStart, setCurrentWeekStart] = useState(
-    dayjs().startOf('week')
+    selectedDate.startOf('week')
   );
   const [isCalendarVisible, setCalendarVisible] = useState(false);
 
@@ -39,7 +46,7 @@ export default function HealthCalendar() {
 
   const handleSelectDate = (dateString: string) => {
     const newDate = dayjs(dateString);
-    setSelectedDate(newDate);
+    onSelectDate(newDate);
     setCurrentWeekStart(newDate.startOf('week'));
     setCalendarVisible(false);
   };
@@ -50,7 +57,7 @@ export default function HealthCalendar() {
     return (
       <TouchableOpacity
         key={item.format('YYYY-MM-DD')}
-        onPress={() => setSelectedDate(item)}
+        onPress={() => handleSelectDate(item.format('YYYY-MM-DD'))}
         style={styles.dayItem}
       >
         <Text style={isSelected ? styles.selectedDay : styles.day}>
@@ -73,7 +80,6 @@ export default function HealthCalendar() {
         </Text>
       </TouchableOpacity>
 
-      {/* 주차 이동 버튼 */}
       <View style={styles.navigation}>
         <TouchableOpacity onPress={goToPreviousWeek}>
           <Text style={styles.navText}>{'<'}</Text>
@@ -90,7 +96,6 @@ export default function HealthCalendar() {
         </TouchableOpacity>
       </View>
 
-      {/* 달력 모달 */}
       <Modal
         visible={isCalendarVisible}
         transparent
@@ -167,7 +172,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     borderRadius: 15,
   },
-
   dateText: {
     fontSize: 12,
     color: colors.GRAY_700,
