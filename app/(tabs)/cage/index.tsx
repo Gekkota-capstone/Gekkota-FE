@@ -23,8 +23,8 @@ export default function HomeScreen() {
             id={item.id}
             name={item.name}
             species={item.species}
-            traits={item.traits}
-            imageUri={item.imageUri}
+            gender={item.gender}
+            birthdate={item.birthdate}
           />
         )}
       />

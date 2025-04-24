@@ -5,16 +5,16 @@ interface PetCardProps {
   id: number;
   name: string;
   species: string;
-  traits: string[];
-  imageUri: string;
+  gender: string;
+  birthdate: string;
 }
 
 export default function CageListCard({
   id,
   name,
   species,
-  traits,
-  imageUri,
+  gender,
+  birthdate,
 }: PetCardProps) {
   return (
     <Link
@@ -24,21 +24,17 @@ export default function CageListCard({
       <TouchableOpacity style={styles.container}>
         <Image
           style={styles.image}
-          source={{ uri: imageUri }}
+          source={
+            species === 'leopard'
+              ? require('@/assets/images/leopard.png')
+              : require('@/assets/images/leopard_bw.png')
+          }
         />
         <View style={styles.info}>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.species}>{species}</Text>
-          <View style={styles.traitsContainer}>
-            {traits.map((trait, idx) => (
-              <View
-                style={styles.trait}
-                key={idx}
-              >
-                <Text style={styles.traitText}>{trait}</Text>
-              </View>
-            ))}
-          </View>
+          <Text style={styles.species}>{gender}</Text>
+          <Text style={styles.species}>{birthdate}</Text>
         </View>
       </TouchableOpacity>
     </Link>
@@ -69,22 +65,6 @@ const styles = StyleSheet.create({
   },
   species: {
     color: '#666',
-    marginVertical: 4,
-  },
-  traitsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  trait: {
-    backgroundColor: '#E0E8FF',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    marginRight: 6,
-    marginTop: 4,
-  },
-  traitText: {
-    fontSize: 11,
-    color: '#5A80FF',
+    marginVertical: 2,
   },
 });
