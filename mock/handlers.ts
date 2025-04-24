@@ -36,10 +36,10 @@ export const handlers = [
       ],
     });
   }),
-  http.post('https://example.com/api/cage', async ({ request }) => {
+  http.post('https://localhost:8081/api/cage', async ({ request }) => {
     const body = await request.json();
 
-    console.log('🐾 POST 요청 데이터:', body);
+    console.log('POST 요청 데이터:', body);
 
     return HttpResponse.json({
       message: '도마뱀이 성공적으로 추가되었습니다.',
@@ -58,6 +58,19 @@ export const handlers = [
       activityGraph: {
         type: 'hourly',
         data: [20, 45, 28, 80, 99, 43, 54, 33, 22],
+      },
+    });
+  }),
+
+  http.get('http://localhost:8081/api/cages/:cageId/live', () => {
+    return HttpResponse.json({
+      camera1: {
+        cameraId: 1,
+        streamUrl: 'rtsp://210.99.70.120:1935/live/cctv001.stream',
+      },
+      camera2: {
+        cameraId: 2,
+        streamUrl: 'rtsp://210.99.70.120:1935/live/cctv001.stream',
       },
     });
   }),

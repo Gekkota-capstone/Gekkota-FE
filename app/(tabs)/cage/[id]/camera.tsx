@@ -1,5 +1,3 @@
-import { useVideoPlayer, VideoView } from 'expo-video';
-import { useEvent } from 'expo';
 import {
   View,
   Text,
@@ -7,63 +5,44 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import { useState } from 'react';
 import { VLCPlayer } from 'react-native-vlc-media-player';
+import { useGetLiveCameras } from '@/hooks/useGetLiveCameras';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function CameraScreen() {
-  const player1 = useVideoPlayer('rtsp://192.168.0.153:8554/test', (player) => {
-    player.loop = true;
-    player.play();
-  });
+  const { id } = useLocalSearchParams();
+  const { data, isLoading, isError } = useGetLiveCameras(Number(id));
 
-  const player2 = useVideoPlayer(
-    'https://your-cdn/video2/stream.m3u8',
-    (player) => {
-      player.loop = true;
-      player.play();
-    }
-  );
-
-  const { status: status1 } = useEvent(player1, 'statusChange', {
-    status: player1.status,
-  });
-  const { status: status2 } = useEvent(player2, 'statusChange', {
-    status: player2.status,
-  });
+  if (isLoading) return <Text style={styles.loading}>로딩 중...</Text>;
+  if (isError || !data) return <Text style={styles.loading}>에러 발생</Text>;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>카메라1</Text>
       <View style={styles.videoContainer}>
-        {status1 === 'loading' && (
-          <ActivityIndicator
-            style={styles.loading}
-            size='large'
+        {data?.camera1?.streamUrl ? (
+          <VLCPlayer
+            style={styles.video}
+            videoAspectRatio='16:9'
+            source={{ uri: data.camera1.streamUrl }}
           />
+        ) : (
+          <ActivityIndicator size='large' />
         )}
-        <VLCPlayer
-        style={[styles.video]}
-        videoAspectRatio='16:9'
-        source={{
-          uri: 'rtsp://192.168.0.153:8554/test',
-        }}
-      />
       </View>
 
       <Text style={styles.title}>카메라2</Text>
       <View style={styles.videoContainer}>
-        {status2 === 'loading' && (
-          <ActivityIndicator
-            style={styles.loading}
-            size='large'
+        {data?.camera2?.streamUrl ? (
+          <VLCPlayer
+            style={styles.video}
+            videoAspectRatio='16:9'
+            source={{ uri: data.camera2.streamUrl }}
           />
+        ) : (
+          <ActivityIndicator size='large' />
         )}
-        <VideoView
-          player={player2}
-          style={styles.video}
-        />
       </View>
-      
     </ScrollView>
   );
 }
