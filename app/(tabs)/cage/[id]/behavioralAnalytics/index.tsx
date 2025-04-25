@@ -15,7 +15,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
-import HealthCalendar from '../manage/components/HealthCalendar';
+import CustomCalendar from '../manage/components/CustomCalendar';
 import { colors } from '@/constants';
 import { useState } from 'react';
 import dayjs from 'dayjs';
@@ -52,7 +52,7 @@ export default function BehavioralAnalyticsScreen() {
         <Stack.Screen
           options={{ title: '행동분석', headerTitleAlign: 'center' }}
         />
-        <HealthCalendar
+        <CustomCalendar
           selectedDate={selectedDate}
           onSelectDate={setSelectedDate}
         />

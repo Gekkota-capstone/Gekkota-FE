@@ -8,35 +8,40 @@ import {
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 import { colors } from '@/constants';
-import dayjs from 'dayjs';
 
 const screenWidth = Dimensions.get('window').width;
 
-export default function WeightChart() {
+interface WeightDataPoint {
+  day?: string;
+  month?: string;
+  value: number;
+}
+
+interface WeightChartProps {
+  data: {
+    monthOfWeight: WeightDataPoint[];
+    yearOfWeight: WeightDataPoint[];
+  };
+}
+
+export default function WeightChart({ data }: WeightChartProps) {
   const [period, setPeriod] = useState<'monthly' | 'yearly'>('monthly');
-  const today = dayjs();
 
-  const dateRange =
+  const chartData =
     period === 'monthly'
-      ? `${today.startOf('month').format('YYYY.MM.DD')} ~ ${today.endOf('month').format('YYYY.MM.DD')}`
-      : `${today.startOf('year').format('YYYY.MM.DD')} ~ ${today.endOf('year').format('YYYY.MM.DD')}`;
-  const monthlyData = {
-    labels: ['11.12', '11.27', '12.11'],
-    datasets: [{ data: [4, 4.5, 2] }],
-  };
-
-  const yearlyData = {
-    labels: ['1월', '3월', '5월', '7월', '9월', '11월'],
-    datasets: [{ data: [3, 3.5, 7, 4.5, 5, 2] }],
-  };
-
-  const chartData = period === 'monthly' ? monthlyData : yearlyData;
+      ? {
+          labels: data.monthOfWeight.map((d) => d.day ?? ''),
+          datasets: [{ data: data.monthOfWeight.map((d) => d.value) }],
+        }
+      : {
+          labels: data.yearOfWeight.map((d) => d.month ?? ''),
+          datasets: [{ data: data.yearOfWeight.map((d) => d.value) }],
+        };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>잉크 몸무게 추이</Text>
 
-      {/* 기간 선택 탭 */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[styles.tab, period === 'monthly' && styles.tabActive]}
@@ -60,10 +65,6 @@ export default function WeightChart() {
         </TouchableOpacity>
       </View>
 
-      {/* 선택된 날짜 범위 (옵션) */}
-      <Text style={styles.dateRange}>{dateRange}</Text>
-
-      {/* 차트 */}
       <LineChart
         data={chartData}
         width={screenWidth - 40}
@@ -110,11 +111,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: colors.BLUE_500,
-  },
-  dateRange: {
-    fontSize: 12,
-    color: colors.GRAY_500,
-    marginTop: 12,
-    marginBottom: 8,
   },
 });

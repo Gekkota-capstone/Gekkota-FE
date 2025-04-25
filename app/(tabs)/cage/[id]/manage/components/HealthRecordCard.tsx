@@ -1,20 +1,38 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '@/constants';
 import { Pressable } from 'react-native-gesture-handler';
-import { Colors } from '@/constants/colors'
+import { Colors } from '@/constants/colors';
+
+interface HealthRecordData {
+  date: string;
+  weight: string;
+  memo: string;
+  photoUri?: string;
+  sheddingStatus: null | '탈피예정' | '탈피 중' | '탈피 완료' | '탈피 실패';
+}
 
 interface HealthRecordCardProps {
   onPress: () => void;
+  data: HealthRecordData;
 }
-export default function HealthRecordCard({ onPress }: HealthRecordCardProps) {
+
+export default function HealthRecordCard({
+  onPress,
+  data,
+}: HealthRecordCardProps) {
   return (
     <Pressable onPress={onPress}>
       <View style={styles.card}>
-        <Text style={styles.title}>건강</Text>
-        <Text style={styles.detail}>12g, 탈피 실패</Text>
-        <Text style={styles.description}>
-          잉크 왼쪽 다리에서 네번째 발가락 확인하기, 이번 탈피 이후 계속 물어
-          뜯는 것
+        <Text style={styles.title}>건강 기록</Text>
+        <Text style={styles.detail}>
+          {data.weight}
+          {data.sheddingStatus && `, ${data.sheddingStatus}`}
+        </Text>
+        <Text
+          style={styles.description}
+          numberOfLines={2}
+        >
+          {data.memo || '기록된 메모가 없습니다.'}
         </Text>
       </View>
     </Pressable>
@@ -29,7 +47,17 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     elevation: 2,
   },
-  title: { fontWeight: '700', fontSize: 18 },
-  detail: { color: colors.GRAY_700, marginVertical: 8 },
-  description: { color: colors.GRAY_600, fontSize: 13 },
+  title: {
+    fontWeight: '700',
+    fontSize: 18,
+    marginBottom: 4,
+  },
+  detail: {
+    color: colors.GRAY_700,
+    marginBottom: 8,
+  },
+  description: {
+    color: colors.GRAY_600,
+    fontSize: 13,
+  },
 });

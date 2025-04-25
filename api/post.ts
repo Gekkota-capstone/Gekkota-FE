@@ -22,3 +22,33 @@ export const postCage = async (data: CageData) => {
 
   return response.json(); // or return true
 };
+
+// src/api/health.ts
+// src/api/post.ts
+export async function postHealthRecord({
+  cageId,
+  data,
+}: {
+  cageId: number;
+  data: {
+    weight: string;
+    shedding: string;
+    memo: string;
+    photo?: string; // 선택 사항
+  };
+}): Promise<void> {
+  const response = await fetch(
+    `http://localhost:8081/api/cages/${cageId}/health`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('건강 기록 생성 중 오류 발생');
+  }
+}

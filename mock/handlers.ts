@@ -74,4 +74,65 @@ export const handlers = [
       },
     });
   }),
+  http.get(
+    'http://localhost:8081/api/cages/:cageId/health',
+    ({ request, params }) => {
+      const { cageId } = params;
+
+      const requestUrl = new URL(request.url);
+      const date = requestUrl.searchParams.get('date');
+
+      if (date === '2025-04-24') {
+        return HttpResponse.json({
+          date: '2025-04-02',
+          weight: 38.5,
+          memo: '잘 먹음',
+          shedding_status: '탈피 완료',
+          photo_urls: null,
+        });
+      }
+
+      return HttpResponse.json(null); // 데이터 없을 경우
+    }
+  ),
+
+  http.get('http://localhost:8081/api/cages/:cageId/weights', ({ request }) => {
+    const url = new URL(request.url);
+    const date = url.searchParams.get('date');
+
+    if (!date) {
+      return HttpResponse.json({ error: '날짜 쿼리 누락' }, { status: 400 });
+    }
+
+    const [year, month] = date.split('-');
+
+    return HttpResponse.json({
+      monthOfWeight: [
+        { day: `${month}.01`, value: 4.2 },
+        { day: `${month}.10`, value: 4.5 },
+        { day: `${month}.20`, value: 4.0 },
+        { day: `${month}.30`, value: 3.8 },
+      ],
+      yearOfWeight: [
+        { month: '1월', value: 3.2 },
+        { month: '3월', value: 4.1 },
+        { month: '5월', value: 3.9 },
+        { month: '7월', value: 4.5 },
+        { month: '9월', value: 4.3 },
+      ],
+    });
+  }),
+  http.post('http://localhost:8081/api/cages/:cageId/health', ({ request }) => {
+    return HttpResponse.json({
+      message: '도마뱀이 성공적으로 추가되었습니다.',
+    });
+  }),
+  http.delete(
+    'http://localhost:8081/api/cages/:cageId/health',
+    ({ request }) => {
+      return HttpResponse.json({
+        message: '도마뱀이 성공적으로 삭제되었습니다.',
+      });
+    }
+  ),
 ];

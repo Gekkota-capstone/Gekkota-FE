@@ -23,7 +23,10 @@ interface ModalComponentProps {
   isVisible: boolean;
   onClose: () => void;
 }
-const CleanModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
+export default function CleanModal({
+  isVisible,
+  onClose,
+}: ModalComponentProps) {
   const { control, handleSubmit, watch, setValue, getValues } = useForm<{
     selectedDate: string;
     memo: string;
@@ -116,8 +119,7 @@ const CleanModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
       </View>
     </Modal>
   );
-};
-export default CleanModal;
+}
 
 const styles = StyleSheet.create({
   modalWrapper: {

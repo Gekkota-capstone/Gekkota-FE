@@ -20,15 +20,15 @@ const generateWeek = (date: dayjs.Dayjs) => {
   return Array.from({ length: 7 }, (_, i) => startOfWeek.add(i, 'day'));
 };
 
-interface HealthCalendarProps {
+interface CustomCalendarProps {
   selectedDate: dayjs.Dayjs;
   onSelectDate: (date: dayjs.Dayjs) => void;
 }
 
-export default function HealthCalendar({
+export default function CustomCalendar({
   selectedDate,
   onSelectDate,
-}: HealthCalendarProps) {
+}: CustomCalendarProps) {
   const [currentWeekStart, setCurrentWeekStart] = useState(
     selectedDate.startOf('week')
   );

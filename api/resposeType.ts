@@ -33,3 +33,16 @@ export interface LiveCameras {
     streamUrl: string;
   };
 }
+
+export interface HealthRecordResponse {
+  id: number;
+  date: string;
+  weight: number;
+  memo: string;
+  shedding_status: null | '탈피예정' | '탈피 중' | '탈피 완료' | '탈피 실패';
+  photo_urls: string[] | null;
+}
+export interface WeightHistoryResponse {
+  monthOfWeight: { day: string; value: number }[];
+  yearOfWeight: { month: string; value: number }[];
+}

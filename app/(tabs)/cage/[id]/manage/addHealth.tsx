@@ -1,34 +1,61 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { Stack, useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
   TextInput,
-  ScrollView,
   Image,
 } from 'react-native';
+import Modal from 'react-native-modal';
+import { useForm, Controller } from 'react-hook-form';
+import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
-import { Controller, useForm } from 'react-hook-form';
 import * as ImagePicker from 'expo-image-picker';
-import BottomSheet from '@/components/BottomSheet';
-import SheddingSheet from '@/components/SheddingSheet';
-import CustomButton from '@/components/PrimaryButton'
-export default function HealthAddScreen() {
-  const router = useRouter();
+import CustomButton from '@/components/PrimaryButton';
+import { ScrollView } from 'react-native-gesture-handler';
+import { usePostHealthRecord } from '@/hooks/usePostHealthRecord';
+import { useLocalSearchParams } from 'expo-router';
 
+interface HealthModalProps {
+  isVisible: boolean;
+  onClose: () => void;
+}
+
+const sheddingOptions = [
+  '해당없음',
+  '탈피 예정',
+  '탈피 중',
+  '탈피 완료',
+  '탈피 실패',
+];
+
+export default function HealthModal({ isVisible, onClose }: HealthModalProps) {
+  const { id } = useLocalSearchParams();
+  const postHealth = usePostHealthRecord(Number(id));
   const { control, handleSubmit, watch, setValue } = useForm({
-    defaultValues: { weight: '', shedding: '해당없음', memo: '', photo: '' },
+    defaultValues: {
+      weight: '',
+      shedding: '해당없음',
+      memo: '',
+      photo: '',
+    },
   });
 
-  const [isSheetVisible, setSheetVisible] = useState(false);
-  const [shedding, setShedding] = useState('해당없음');
   const photo = watch('photo');
+  const shedding = watch('shedding');
+  const [isSelectOpen, setSelectOpen] = useState(false);
+
   const onSubmit = (data: any) => {
-    console.log(data);
-    router.back();
+    postHealth.mutate(data, {
+      onSuccess: () => {
+        console.log('✅ 성공적으로 저장됨');
+        onClose();
+      },
+      onError: (err) => {
+        console.error('❌ 저장 실패:', err);
+      },
+    });
   };
 
   const pickImage = async () => {
@@ -43,116 +70,210 @@ export default function HealthAddScreen() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <SafeAreaView style={styles.container}>
-        <Stack.Screen
-          options={{ title: '건강 추가', headerTitleAlign: 'center' }}
-        />
-        <ScrollView style={styles.content}>
-          {/* 몸무게 입력 */}
-          <View style={styles.row}>
-            <Text style={styles.label}>몸무게</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder='0.00'
-                  keyboardType='numeric'
+    <Modal
+      isVisible={isVisible}
+      onBackdropPress={onClose}
+      style={styles.modalWrapper}
+      backdropOpacity={0.5}
+    >
+      <View style={styles.modalContent}>
+        <View style={styles.container}>
+          <ScrollView contentContainerStyle={{ paddingBottom: 100, gap: 20 }}>
+            <View style={styles.header}>
+              <TouchableOpacity onPress={onClose}>
+                <Ionicons
+                  name='close-outline'
+                  size={25}
+                  style={styles.headerIcon}
                 />
-            <Text style={styles.unit}>g</Text>
-          </View>
+              </TouchableOpacity>
+              <Text style={styles.headerText}>관리 기록</Text>
+              <View />
+            </View>
 
-          {/* 탈피 상태 */}
-          <TouchableOpacity
-            style={styles.row}
-            onPress={() => setSheetVisible(true)}
-          >
-            <Text style={styles.label}>탈피</Text>
-            <Text style={styles.selectedText}>{shedding}</Text>
-          </TouchableOpacity>
+            <View style={styles.row}>
+              <Text style={styles.label}>몸무게</Text>
+              <Controller
+                control={control}
+                name='weight'
+                render={({ field: { value, onChange } }) => (
+                  <TextInput
+                    style={styles.input}
+                    placeholder='0.00'
+                    keyboardType='numeric'
+                    value={value}
+                    onChangeText={onChange}
+                  />
+                )}
+              />
+              <Text style={styles.unit}>g</Text>
+            </View>
 
-          {/* 메모 */}
-          <View style={styles.memoContainer}>
-            <Text style={styles.label}>메모</Text>
-            <Controller
-              control={control}
-              name='memo'
-              render={({ field: { value, onChange } }) => (
-                <TextInput
-                  style={styles.memoInput}
-                  placeholder='반려동물의 건강에 대한 메모를 남겨보세요.'
-                  multiline
-                  maxLength={100}
-                  value={value}
-                  onChangeText={onChange}
-                />
+            <View>
+              <Text style={styles.label}>탈피</Text>
+              <TouchableOpacity
+                style={styles.selectBox}
+                onPress={() => setSelectOpen(!isSelectOpen)}
+              >
+                <Text style={styles.selectBoxText}>{shedding}</Text>
+              </TouchableOpacity>
+
+              {isSelectOpen && (
+                <View style={styles.dropdown}>
+                  {sheddingOptions.map((option) => (
+                    <TouchableOpacity
+                      key={option}
+                      style={styles.dropdownItem}
+                      onPress={() => {
+                        setValue('shedding', option);
+                        setSelectOpen(false);
+                      }}
+                    >
+                      <Text style={styles.dropdownText}>{option}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               )}
+            </View>
+
+            <View style={styles.memoContainer}>
+              <Text style={styles.label}>메모</Text>
+              <Controller
+                control={control}
+                name='memo'
+                render={({ field: { value, onChange } }) => (
+                  <TextInput
+                    style={styles.memoInput}
+                    placeholder='반려동물의 건강에 대한 메모를 남겨보세요.'
+                    multiline
+                    value={value}
+                    onChangeText={onChange}
+                  />
+                )}
+              />
+            </View>
+
+            <View style={styles.photoContainer}>
+              <Text style={styles.label}>사진</Text>
+              <TouchableOpacity
+                style={styles.photoPicker}
+                onPress={pickImage}
+              >
+                {photo ? (
+                  <Image
+                    source={{ uri: photo }}
+                    style={styles.photoPicker}
+                  />
+                ) : (
+                  <Text style={styles.photoText}>+</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+          <View
+            style={{ width: '100%', alignItems: 'center', marginBottom: 20 }}
+          >
+            <CustomButton
+              title='저장'
+              onPress={handleSubmit(onSubmit)}
             />
           </View>
-
-          {/* 사진 */}
-          <View style={styles.photoContainer}>
-            <Text style={styles.label}>사진</Text>
-            <TouchableOpacity
-              style={styles.photoPicker}
-              onPress={pickImage}
-            >
-              {photo ? (
-                <Image
-                  source={{ uri: photo }}
-                  style={styles.photoPicker}
-                />
-              ) : (
-                <Text style={styles.photoText}>+</Text>
-              )}
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-
-        <CustomButton
-          title='저장'
-          onPress={handleSubmit(onSubmit)}
-        />
-        {/* Bottom Sheet */}
-        <SheddingSheet
-          visible={isSheetVisible}
-          onClose={() => setSheetVisible(false)}
-          onSelect={(status: string) => {
-            setShedding(status);
-            setValue('shedding', status); // react-hook-form 값도 갱신
-          }}
-          selected={shedding}
-          list={['해당없음', '탈피 예정', '탈피 중', '탈피 완료', '탈피 실패']}
-        />
-      </SafeAreaView>
-    </View>
+        </View>
+      </View>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.WHITE, alignItems:'center' },
-  content: { flex: 1, paddingHorizontal: 20 },
+  modalWrapper: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    height: 800,
+  },
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  headerIcon: {
+    opacity: 0.5,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.GRAY_300,
-    width: '100%'
+    paddingVertical: 12,
   },
-  label: { fontSize: 16, fontWeight: '500', color: colors.BLACK },
-  input: { fontSize: 16, color: colors.BLACK, textAlign: 'right', flex: 1 },
-  unit: { marginLeft: 8, fontSize: 16, fontWeight: '500', color: colors.BLACK },
-  selectedText: { fontSize: 16, color: colors.BLUE_500 },
-  memoContainer: { marginVertical: 20 },
+  label: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: colors.BLACK,
+  },
+  input: {
+    flex: 1,
+    textAlign: 'right',
+    fontSize: 16,
+    color: colors.BLACK,
+  },
+  unit: {
+    fontSize: 16,
+    color: colors.BLACK,
+    marginLeft: 8,
+  },
+  selectBox: {
+    marginTop: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: colors.GRAY_300,
+    borderRadius: 10,
+  },
+  selectBoxText: {
+    fontSize: 16,
+    color: colors.BLACK,
+  },
+  dropdown: {
+    borderWidth: 1,
+    borderColor: colors.GRAY_300,
+    borderRadius: 10,
+    marginTop: 8,
+  },
+  dropdownItem: {
+    padding: 12,
+  },
+  dropdownText: {
+    fontSize: 16,
+    color: colors.GRAY_700,
+  },
+  memoContainer: {
+    marginTop: 20,
+  },
   memoInput: {
     borderWidth: 1,
     borderColor: colors.GRAY_300,
     borderRadius: 10,
     padding: 10,
     minHeight: 80,
-    marginTop: 10
+    marginTop: 10,
   },
-  photoContainer: { marginVertical: 20 },
+  photoContainer: {
+    marginTop: 20,
+  },
   photoPicker: {
     width: 70,
     height: 70,
@@ -161,19 +282,9 @@ const styles = StyleSheet.create({
     borderColor: colors.GRAY_300,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
   },
-  photoText: { fontSize: 24, color: colors.GRAY_500 },
-  cta: {
-    backgroundColor: colors.BLUE_500,
-    padding: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 12,
-    margin: 20,
+  photoText: {
+    fontSize: 24,
+    color: colors.GRAY_500,
   },
-  ctaText: { color: colors.WHITE, fontSize: 18, fontWeight: '700' },
-  sheetContent: { padding: 16 },
-  sheetItem: { fontSize: 16, paddingVertical: 12 },
-  selectedSheetItem: { color: colors.BLUE_500, fontWeight: '600' },
 });
