@@ -6,7 +6,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import 'react-native-reanimated';
 import queryClient from '@/api/queryClient';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-
+import * as DevClient from 'expo-dev-client';
 SplashScreen.preventAutoHideAsync();
 async function enableMocking() {
   if (!__DEV__) return;
@@ -17,6 +17,7 @@ async function enableMocking() {
   server.listen({ onUnhandledRequest: 'bypass' });
   console.log('msw 시작');
 }
+DevClient.openMenu();
 enableMocking();
 export default function RootLayout() {
   const [loaded] = useFonts({

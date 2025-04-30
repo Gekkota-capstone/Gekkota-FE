@@ -5,9 +5,10 @@ import {
   LiveCameras,
   WeightHistoryResponse,
 } from './resposeType';
+import { fetchWithAuth } from './util';
 
 export async function getList(): Promise<CageList> {
-  const response = await fetch('http://localhost:8081/api/list');
+  const response = await fetchWithAuth('http://localhost:8081/api/list');
 
   if (!response.ok) {
     throw new Error('API 호출 중 에러 발생');
@@ -25,7 +26,7 @@ export async function getBehaviorAnalytics({
   cageId: number;
   date: string;
 }): Promise<BehaviorAnalyticsResponse> {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `http://localhost:8081/api/cages/${cageId}/behaviors?date=${date}`
   );
 
@@ -41,7 +42,7 @@ export async function getLiveCameras({
 }: {
   cageId: number;
 }): Promise<LiveCameras> {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `http://localhost:8081/api/cages/${cageId}/live`
   );
 
@@ -59,7 +60,7 @@ export async function getHealthRecord({
   cageId: number;
   date: string;
 }): Promise<HealthRecordResponse> {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `http://localhost:8081/api/cages/${cageId}/health?date=${date}`
   );
 
@@ -77,7 +78,7 @@ export async function getWeightHistory({
   cageId: number;
   date: string; // YYYY-MM-DD
 }): Promise<WeightHistoryResponse> {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `http://localhost:8081/api/cages/${cageId}/weights?date=${date}`
   );
 

@@ -1,3 +1,5 @@
+import { fetchWithAuth } from './util';
+
 // src/api/health.ts
 export async function deleteHealthRecord({
   cageId,
@@ -6,7 +8,7 @@ export async function deleteHealthRecord({
   cageId: number;
   cardId: number;
 }): Promise<void> {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `http://localhost:8081/api/cages/${cageId}/health?cardId=${cardId}`,
     {
       method: 'DELETE',

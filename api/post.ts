@@ -1,3 +1,5 @@
+import { fetchWithAuth } from './util';
+
 // api/lizard.ts
 export interface CageData {
   name: string;
@@ -37,7 +39,7 @@ export async function postHealthRecord({
     photo?: string; // 선택 사항
   };
 }): Promise<void> {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `http://localhost:8081/api/cages/${cageId}/health`,
     {
       method: 'POST',
