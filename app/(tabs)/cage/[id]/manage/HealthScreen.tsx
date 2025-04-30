@@ -10,7 +10,7 @@ import { useWeightHistory } from '@/hooks/useWeightHistory';
 import HealthDetailModal from '@/components/HealthDetailModal';
 import HealthRecordCard from './components/HealthRecordCard';
 import WeightChart from './components/WeightChart';
-import HealthModal from './AddHealth';
+import HealthModal from './addHealth';
 
 export default function HealthScreen() {
   const { id } = useLocalSearchParams();
