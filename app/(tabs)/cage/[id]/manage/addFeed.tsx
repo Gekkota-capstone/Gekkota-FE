@@ -19,42 +19,50 @@ interface ModalComponentProps {
 
 const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
     const { control, handleSubmit, watch, setValue, getValues } = useForm<{
-        selectedDate: string;
-        selectedFeed: string;
-        selectedSize: string;
-        quantity: number;
-        quantityUnit: string | null;
-        memo: string
+        date: string;
+        feed: {
+            food_type: string;
+            food_size: string | null;
+            food_amount: number | null;
+            amount_unit: string | null;
+            message?: string | null;
+        };
     }>({
         defaultValues: {
-            selectedDate: '2024.12.08',
-            selectedFeed: 'feed',
-            selectedSize: 'XS',
-            quantity: 0,
-            quantityUnit: 'ml',
-            memo: '',
+            date: '2025-05-01',
+            feed: {
+                food_type: '사료',
+                food_size: null,
+                food_amount: 0,
+                amount_unit: 'g',
+                message: null,
+            },
         },
     });
 
     const [showUnitToggle, setShowUnitToggle] = useState(false);
 
-    const selectedFeed = watch('selectedFeed');
-    const selectedDate = watch('selectedDate')
-    const quantityUnit = watch('quantityUnit');
+    const foodType = watch('feed.food_type');
+    const date = watch('date');
+    const unit = watch('feed.amount_unit');
+    const amount = watch('feed.food_amount');
 
     useEffect(() => {
-        if (selectedFeed === 'feed') {
-            setValue('quantityUnit', 'ml');
-            setShowUnitToggle(true);
-        } else if (
-            ['cricket', 'mealworm', 'superworm', 'waxworm', 'silkworm'].includes(selectedFeed || '')
-        ) {
-            setValue('quantityUnit', '마리');
-            setShowUnitToggle(false);
-        } else if (selectedFeed === 'fruit' || selectedFeed === 'vegetable') {
-            setValue('quantityUnit', null);
+        if (foodType === '사료') {
+          setValue('feed.amount_unit', 'ml');
+          setShowUnitToggle(true);
+          setValue('feed.food_size', null);
+          setValue('feed.message', null);
+        } else if (['귀뚜라미', '밀웜', '슈퍼밀웜', '왁스웜', '누에'].includes(foodType)) {
+          setValue('feed.amount_unit', '마리');
+          setShowUnitToggle(false);
+          setValue('feed.message', null);
+        } else if (['과일', '채소'].includes(foodType)) {
+          setValue('feed.food_size', null);
+          setValue('feed.amount_unit', null);
+          setValue('feed.food_amount', null);
         }
-    }, [selectedFeed]);
+      }, [foodType]);
 
     const onSubmit = (data: any) => {
         console.log(data);
@@ -95,24 +103,24 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
                         {/* 날짜 */}
                         <Text style={styles.labelText}>날짜</Text>
                         <TouchableOpacity style={styles.lineContainer}>
-                            <Text style={styles.dateText}>{selectedDate}</Text>
+                            <Text style={styles.dateText}>{date}</Text>
                         </TouchableOpacity>
 
                         {/* 먹이 */}
                         <Text style={styles.labelText}>먹이</Text>
                         <Controller
                             control={control}
-                            name="selectedFeed"
+                            name="feed.food_type"
                             render={({ field: { value, onChange } }) => (
                                 <FeedSelector value={value} onChange={onChange} />
                             )}
                         />
 
                         {/* 먹이 사이즈 (조건부 렌더링) */}
-                        {selectedFeed && !['fruit', 'vegetable', 'feed'].includes(selectedFeed) && (
+                        {foodType && !['과일', '채소', '사료'].includes(foodType) && (
                             <Controller
                                 control={control}
-                                name="selectedSize"
+                                name="feed.food_size"
                                 render={({ field: { value, onChange } }) => (
                                     <>
                                         <Text style={styles.labelText}>먹이 사이즈</Text>
@@ -124,24 +132,24 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
 
 
                         {/* 먹이 양 (조건부 렌더링) */}
-                        {quantityUnit && (
+                        {unit && (
                             <>
                                 <Text style={styles.labelText}>먹이 양</Text>
 
                                 {/* quantityUnit 컨트롤러 */}
                                 <Controller
                                     control={control}
-                                    name="quantityUnit"
-                                    render={({ field: { value, onChange } }) => (
+                                    name="feed.food_amount"
+                                    render={({ field: { value: quantityVal, onChange: onChangeQuantity } }) => (
                                         <Controller
                                             control={control}
-                                            name="quantity"
-                                            render={({ field: { value: quantityVal, onChange: onChangeQuantity } }) => (
+                                            name="feed.amount_unit"
+                                            render={({ field: { value: unitVal, onChange: onChangeUnit } }) => (
                                                 <FeedQuantity
                                                     quantity={quantityVal}
                                                     setQuantity={onChangeQuantity}
-                                                    quantityUnit={value}
-                                                    setQuantityUnit={onChange}
+                                                    quantityUnit={unitVal}
+                                                    setQuantityUnit={onChangeUnit}
                                                     showUnitToggle={showUnitToggle}
                                                     setShowUnitToggle={setShowUnitToggle}
                                                 />
@@ -154,10 +162,10 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
 
 
                         {/* 메모 (조건부 렌더링) */}
-                        {['fruit', 'vegetable'].includes(selectedFeed) && (
+                        {['과일', '채소'].includes(foodType) && (
                             <Controller
                                 control={control}
-                                name="memo"
+                                name="feed.message"
                                 render={({ field: { value, onChange } }) => (
                                     <>
                                         <Text style={styles.labelText}>상세 기록</Text>
@@ -165,7 +173,7 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
                                             <TextInput
                                                 style={styles.memoInput}
                                                 placeholder="어떤 과일을 얼마나 먹었는지 메모해보세요."
-                                                value={value}
+                                                value={value ?? ''}
                                                 onChangeText={onChange}
                                             />
                                         </TouchableOpacity>

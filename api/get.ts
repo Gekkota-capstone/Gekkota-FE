@@ -2,6 +2,7 @@ import {
   BehaviorAnalyticsResponse,
   CageList,
   HealthRecordResponse,
+  FeedRecordResponse,
   LiveCameras,
   WeightHistoryResponse,
 } from './resposeType';
@@ -87,4 +88,22 @@ export async function getWeightHistory({
   }
 
   return response.json();
+}
+
+export async function getFeedRecord({
+  cageId,
+  date,
+}: {
+  cageId: number;
+  date: string;
+}): Promise<FeedRecordResponse> {
+  const response = await fetchWithAuth(
+    `http://localhost:8081/api/cages/${cageId}/feed?date=${date}`
+  );
+
+  if (!response.ok) {
+    throw new Error('급여 데이터를 가져오는 중 오류 발생');
+  }
+
+  return await response.json();
 }

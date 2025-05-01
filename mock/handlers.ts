@@ -135,4 +135,25 @@ export const handlers = [
       });
     }
   ),
+  http.get(
+    'http://localhost:8081/api/cages/:cageId/feed',
+    ({ request, params }) => {
+      const { cageId } = params;
+
+      const requestUrl = new URL(request.url);
+      const date = requestUrl.searchParams.get('date');
+
+      if (date === '2025-05-01') {
+        return HttpResponse.json({
+          date: '2025-05-01',
+          food_type: '누에',
+          food_size: '중',
+          food_amount: 2,
+          amount_unit: '마리',
+          message: ''
+        });
+      }
+      return HttpResponse.json(null);
+    }
+  ),
 ];

@@ -132,10 +132,6 @@ const cageForm = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <PreviousButton
-        onPrevious={handlePrevious}
-        style={{ marginTop: 50 }}
-      />
 
       <View style={styles.progressBar}>
         <View style={[styles.fillBar, { width: progressBarWidth(step) }]} />

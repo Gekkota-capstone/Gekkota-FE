@@ -46,3 +46,13 @@ export interface WeightHistoryResponse {
   monthOfWeight: { day: string; value: number }[];
   yearOfWeight: { month: string; value: number }[];
 }
+
+export interface FeedRecordResponse {
+  id: number;
+  date: string;
+  food_type: '사료' | '귀뚜라미' | '밀웜' | '슈퍼밀웜' | '왁스웜' | '누에' | '과일' | '채소';
+  food_size: null | '극소' | '소' | '중' | '대' | '특대';
+  food_amount: number | null;
+  amount_unit: null | '마리' | 'ml' | 'g';
+  message: string | null;
+}

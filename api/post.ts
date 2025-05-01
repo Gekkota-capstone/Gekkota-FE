@@ -54,3 +54,35 @@ export async function postHealthRecord({
     throw new Error('건강 기록 생성 중 오류 발생');
   }
 }
+
+// src/api/feed.ts
+// src/api/post.ts
+export async function postFeedRecord({
+  cageId,
+  data,
+}: {
+  cageId: number;
+  data: {
+    date: string;
+    food_type: string;
+    food_size?: string;
+    food_amount?: number;
+    amount_unit?: string;
+    message?: string;
+  };
+}): Promise<void> {
+  const response = await fetchWithAuth(
+    `http://localhost:8081/api/cages/${cageId}/feed`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('급여 생성 중 오류 발생');
+  }
+}
