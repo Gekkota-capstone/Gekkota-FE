@@ -13,19 +13,20 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native';
 import { useGetLLMMessage } from '@/hooks/useGetLLMMessage';
 import { usePostLLMMessage } from '@/hooks/usePostLLMMessage';
+import { useLocalSearchParams } from 'expo-router';
 
-const cageId = 1; // 예시: 실제 ID를 받아올 수 있도록 처리
 type Message = {
   say: string;
   text: string;
 };
 export default function ChatScreen() {
+  const { id } = useLocalSearchParams();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const flatListRef = useRef<FlatList>(null);
 
-  const { data, isLoading } = useGetLLMMessage(cageId);
-  const { mutateAsync: sendMessage } = usePostLLMMessage(cageId);
+  const { data, isLoading } = useGetLLMMessage(Number(id));
+  const { mutateAsync: sendMessage } = usePostLLMMessage(Number(id));
 
   useEffect(() => {
     if (data) {

@@ -49,3 +49,7 @@ export interface WeightHistoryResponse {
 export interface LLMMessageResponse {
   messages: { say: string; text: string }[];
 }
+
+export interface CageState {
+  state: 'sleeping' | 'standing' | 'active' | 'eating';
+}

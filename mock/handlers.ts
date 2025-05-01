@@ -163,4 +163,15 @@ export const handlers = [
       message: '앱 사용법은 이렇게 사용하는 거야~',
     });
   }),
+  http.get(
+    'http://localhost:8081/api/cages/:cageId/state',
+    ({ request, params }) => {
+      const states = ['sleeping', 'standing'];
+      const randomState = states[Math.floor(Math.random() * states.length)];
+
+      return HttpResponse.json({
+        state: randomState,
+      });
+    }
+  ),
 ];
