@@ -10,16 +10,24 @@ import {
   StyleSheet,
   Pressable,
 } from 'react-native';
+import { useGetCageState } from '@/hooks/useGetCageState';
 
+const cageImages = {
+  sleeping: require('@/assets/images/sleep_pet.png'),
+  standing: require('@/assets/images/standding_pet.png'),
+  active: require('@/assets/images/sleep_pet.png'),
+  eating: require('@/assets/images/standding_pet.png'),
+};
 export default function PetDetailScreen() {
   const { id } = useLocalSearchParams();
+  const { data } = useGetCageState(Number(id));
   const router = useRouter();
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.cageContainer}>
         <Image
-          source={require('@/assets/images/sleep_pet.png')}
+          source={cageImages[data?.state ?? 'sleeping']}
           style={styles.cageImage}
         />
       </View>
@@ -61,7 +69,10 @@ export default function PetDetailScreen() {
 
         <Pressable
           style={styles.menuItem}
-          onPress={() => console.log('대화 클릭')}
+          onPress={() => {
+            console.log('대화 클릭');
+            router.push(`/cage/${id}/chat`);
+          }}
         >
           <Text style={styles.menuTitle}>대화</Text>
           <View style={styles.menuIcon}>

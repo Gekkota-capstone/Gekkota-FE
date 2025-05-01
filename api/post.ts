@@ -86,3 +86,31 @@ export async function postFeedRecord({
     throw new Error('급여 생성 중 오류 발생');
   }
 }
+
+export async function postLLMMessage({
+  cageId,
+  data,
+}: {
+  cageId: number;
+  data: {
+    message: string;
+  };
+}): Promise<{ message: string }> {
+  const response = await fetchWithAuth(
+    `http://localhost:8081/api/cages/${cageId}/llm`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('llm 대화 중 오류 발생');
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}

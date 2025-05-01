@@ -1,9 +1,11 @@
 import {
   BehaviorAnalyticsResponse,
   CageList,
+  CageState,
   HealthRecordResponse,
   FeedRecordResponse,
   LiveCameras,
+  LLMMessageResponse,
   WeightHistoryResponse,
 } from './resposeType';
 import { fetchWithAuth } from './util';
@@ -106,4 +108,36 @@ export async function getFeedRecord({
   }
 
   return await response.json();
+}
+
+export async function getLLMMessage({
+  cageId,
+}: {
+  cageId: number;
+}): Promise<LLMMessageResponse> {
+  const response = await fetchWithAuth(
+    `http://localhost:8081/api/cages/${cageId}/llm`
+  );
+
+  if (!response.ok) {
+    throw new Error('대화 데이터를 불러오는 중 오류 발생');
+  }
+
+  return response.json();
+}
+
+export async function getCageState({
+  cageId,
+}: {
+  cageId: number;
+}): Promise<CageState> {
+  const response = await fetchWithAuth(
+    `http://localhost:8081/api/cages/${cageId}/state`
+  );
+
+  if (!response.ok) {
+    throw new Error('몸무게 데이터를 불러오는 중 오류 발생');
+  }
+
+  return response.json();
 }

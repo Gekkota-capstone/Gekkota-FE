@@ -56,3 +56,10 @@ export interface FeedRecordResponse {
   amount_unit: null | '마리' | 'ml' | 'g';
   message: string | null;
 }
+export interface LLMMessageResponse {
+  messages: { say: string; text: string }[];
+}
+
+export interface CageState {
+  state: 'sleeping' | 'standing' | 'active' | 'eating';
+}

@@ -127,6 +127,7 @@ export const handlers = [
       message: '도마뱀이 성공적으로 추가되었습니다.',
     });
   }),
+
   http.delete(
     'http://localhost:8081/api/cages/:cageId/health',
     ({ request }) => {
@@ -154,6 +155,43 @@ export const handlers = [
         });
       }
       return HttpResponse.json(null);
+    }),
+  http.get('http://localhost:8081/api/cages/:cageId/llm', () => {
+    return HttpResponse.json({
+      messages: [
+        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
+        { say: 'ME', text: '앱 사용법을 알려주세요.' },
+        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
+        { say: 'ME', text: '앱 사용법을 알려주세요.' },
+        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
+        { say: 'ME', text: '앱 사용법을 알려주세요.' },
+        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
+        { say: 'ME', text: '앱 사용법을 알려주세요.' },
+        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
+        { say: 'ME', text: '앱 사용법을 알려주세요.' },
+        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
+        { say: 'ME', text: '앱 사용법을 알려주세요.' },
+        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
+        { say: 'ME', text: '앱 사용법을 알려주세요.' },
+        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
+        { say: 'ME', text: '앱 사용법을 알려주세요.' },
+      ],
+    });
+  }),
+  http.post('http://localhost:8081/api/cages/:cageId/llm', ({ request }) => {
+    return HttpResponse.json({
+      message: '앱 사용법은 이렇게 사용하는 거야~',
+    });
+  }),
+  http.get(
+    'http://localhost:8081/api/cages/:cageId/state',
+    ({ request, params }) => {
+      const states = ['sleeping', 'standing'];
+      const randomState = states[Math.floor(Math.random() * states.length)];
+
+      return HttpResponse.json({
+        state: randomState,
+      });
     }
   ),
 ];
