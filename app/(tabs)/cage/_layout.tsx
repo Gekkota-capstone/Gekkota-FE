@@ -92,6 +92,27 @@ export default function CageLayout() {
         }}
       />
       <Stack.Screen
+        name='[id]/chat'
+        options={{
+          headerShown: true,
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{ paddingLeft: 4 }}
+            >
+              <Ionicons
+                name='chevron-back'
+                size={24}
+                color={colors.BLACK}
+              />
+            </TouchableOpacity>
+          ),
+          headerTitleAlign: 'center',
+          title: '대화',
+        }}
+      />
+      <Stack.Screen
         name='[id]/setting'
         options={{
           headerShown: true,

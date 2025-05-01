@@ -17,8 +17,10 @@ async function enableMocking() {
   server.listen({ onUnhandledRequest: 'bypass' });
   console.log('msw 시작');
 }
-DevClient.openMenu();
+
 enableMocking();
+
+DevClient.openMenu();
 export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),

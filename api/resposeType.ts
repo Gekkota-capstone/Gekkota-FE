@@ -46,3 +46,6 @@ export interface WeightHistoryResponse {
   monthOfWeight: { day: string; value: number }[];
   yearOfWeight: { month: string; value: number }[];
 }
+export interface LLMMessageResponse {
+  messages: { say: string; text: string }[];
+}

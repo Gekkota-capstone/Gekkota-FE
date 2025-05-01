@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { useGetList } from '@/hooks/useGetList';
@@ -32,8 +38,8 @@ export default function SettingScreen() {
 
   const speciesOptions = [
     { key: 'crested', label: '크레스티드 게코' },
-    { key: 'leopard', label: '레오파드 게코' }
-  ]
+    { key: 'leopard', label: '레오파드 게코' },
+  ];
 
   const handleSelectGender = (selectedGender: string) => {
     setGender(selectedGender);
@@ -43,8 +49,10 @@ export default function SettingScreen() {
     setSpecies(selectedSpecies);
   };
 
-  const toggleGenderModal = () => setIsGenderModalVisible(!isGenderModalVisible);
-  const toggleSpeciesModal = () => setIsSpeciesModalVisible(!isSpeciesModalVisible);
+  const toggleGenderModal = () =>
+    setIsGenderModalVisible(!isGenderModalVisible);
+  const toggleSpeciesModal = () =>
+    setIsSpeciesModalVisible(!isSpeciesModalVisible);
 
   useEffect(() => {
     const resolvedPetId = Array.isArray(id) ? id[0] : id;
@@ -58,12 +66,14 @@ export default function SettingScreen() {
 
       try {
         const response = await getList();
-        const petData = response.list.find((item) => item.id === parseInt(petId as string)); // petId는 string으로 변환하여 비교
+        const petData = response.list.find(
+          (item) => item.id === parseInt(petId as string)
+        ); // petId는 string으로 변환하여 비교
         if (petData) {
           setName(petData.name);
           setSpecies(petData.species);
           setGender(petData.gender);
-          setDate(petData.date);
+          setDate(petData.birthdate);
         }
       } catch (error) {
         console.error('데이터 로딩 실패', error);
@@ -81,11 +91,14 @@ export default function SettingScreen() {
         gender,
         date,
       };
-      const response = await fetch(`http://localhost:8081/api/update/${petId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData),
-      });
+      const response = await fetch(
+        `http://localhost:8081/api/update/${petId}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error('데이터 수정 실패');
@@ -100,10 +113,16 @@ export default function SettingScreen() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: '정보 수정', headerTitleAlign: 'center' }} />
+      <Stack.Screen
+        options={{ title: '정보 수정', headerTitleAlign: 'center' }}
+      />
 
       <Text style={styles.title}>이름</Text>
-      <TextInput style={styles.input} value={name} onChangeText={setName} />
+      <TextInput
+        style={styles.input}
+        value={name}
+        onChangeText={setName}
+      />
       <View style={styles.separator} />
 
       <Text style={styles.title}>성별</Text>
@@ -114,7 +133,11 @@ export default function SettingScreen() {
           editable={false}
           onPress={toggleGenderModal}
         />
-        <Ionicons style={[styles.ionicons, { marginTop: 20 }]} name="chevron-down-outline" size={15} />
+        <Ionicons
+          style={[styles.ionicons, { marginTop: 20 }]}
+          name='chevron-down-outline'
+          size={15}
+        />
       </View>
       <ModalSelector
         isVisible={isGenderModalVisible}
@@ -122,7 +145,7 @@ export default function SettingScreen() {
         onSelect={handleSelectGender}
         data={genderOptions}
         selectedOption={gender}
-        title="성별 선택"
+        title='성별 선택'
       />
       <View style={styles.separator} />
 
@@ -134,7 +157,11 @@ export default function SettingScreen() {
           editable={false}
           onPress={toggleSpeciesModal}
         />
-        <Ionicons style={[styles.ionicons, { marginTop: 20 }]} name="chevron-down-outline" size={15} />
+        <Ionicons
+          style={[styles.ionicons, { marginTop: 20 }]}
+          name='chevron-down-outline'
+          size={15}
+        />
       </View>
       <ModalSelector
         isVisible={isSpeciesModalVisible}
@@ -142,7 +169,7 @@ export default function SettingScreen() {
         onSelect={handleSelectSpecies}
         data={speciesOptions}
         selectedOption={species}
-        title="종 선택"
+        title='종 선택'
       />
       <View style={styles.separator} />
 
@@ -152,16 +179,23 @@ export default function SettingScreen() {
         textStyle={{ color: 'black', opacity: 1 }}
         value={date}
         onChange={setDate}
-      >
-      </DatePicker>
+      ></DatePicker>
 
       <TouchableOpacity
         style={styles.delete}
-        onPress={() => setShowDeleteModal(true)}>
-        <Ionicons style={styles.ionicons} name="close-circle-outline" size={16} />
+        onPress={() => setShowDeleteModal(true)}
+      >
+        <Ionicons
+          style={styles.ionicons}
+          name='close-circle-outline'
+          size={16}
+        />
         <Text style={styles.deleteText}>반려동물 정보 지우기</Text>
       </TouchableOpacity>
-      <DeleteModal visible={showDeleteModal} onClose={() => setShowDeleteModal(false)} />
+      <DeleteModal
+        visible={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+      />
 
       <View style={{ position: 'absolute', bottom: 30, alignItems: 'center' }}>
         <CustomButton
@@ -169,9 +203,8 @@ export default function SettingScreen() {
           onPress={handleSave}
         />
       </View>
-
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -180,7 +213,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   separator: {
     alignItems: 'center',
@@ -203,32 +236,30 @@ const styles = StyleSheet.create({
     fontWeight: 'semibold',
     marginTop: 20,
     height: 20,
-    width: '85%'
+    width: '85%',
   },
   overlay: {
     justifyContent: 'flex-end',
   },
   modalSelector: {
     alignSelf: 'flex-start',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   select: {
     flexDirection: 'row',
-    marginRight: 30
+    marginRight: 30,
   },
   ionicons: {
     opacity: 0.5,
-    color: Colors.gray
+    color: Colors.gray,
   },
   delete: {
     marginTop: 150,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   deleteText: {
     marginLeft: 5,
     color: Colors.gray,
-    opacity: 0.5
-  }
-
+    opacity: 0.5,
+  },
 });
-

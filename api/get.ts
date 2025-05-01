@@ -3,6 +3,7 @@ import {
   CageList,
   HealthRecordResponse,
   LiveCameras,
+  LLMMessageResponse,
   WeightHistoryResponse,
 } from './resposeType';
 import { fetchWithAuth } from './util';
@@ -80,6 +81,22 @@ export async function getWeightHistory({
 }): Promise<WeightHistoryResponse> {
   const response = await fetchWithAuth(
     `http://localhost:8081/api/cages/${cageId}/weights?date=${date}`
+  );
+
+  if (!response.ok) {
+    throw new Error('몸무게 데이터를 불러오는 중 오류 발생');
+  }
+
+  return response.json();
+}
+
+export async function getLLMMessage({
+  cageId,
+}: {
+  cageId: number;
+}): Promise<LLMMessageResponse> {
+  const response = await fetchWithAuth(
+    `http://localhost:8081/api/cages/${cageId}/llm`
   );
 
   if (!response.ok) {

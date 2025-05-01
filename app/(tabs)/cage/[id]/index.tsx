@@ -61,7 +61,10 @@ export default function PetDetailScreen() {
 
         <Pressable
           style={styles.menuItem}
-          onPress={() => console.log('대화 클릭')}
+          onPress={() => {
+            console.log('대화 클릭');
+            router.push(`/cage/${id}/chat`);
+          }}
         >
           <Text style={styles.menuTitle}>대화</Text>
           <View style={styles.menuIcon}>
