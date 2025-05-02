@@ -4,6 +4,7 @@ import { getApp } from '@react-native-firebase/app';
 import {
   getAuth,
   signInWithEmailAndPassword,
+  updateProfile
 } from '@react-native-firebase/auth';
 import { router } from 'expo-router';
 import { colors } from '@/constants';
@@ -42,7 +43,7 @@ export default function SignInScreen() {
         secureTextEntry
         style={styles.input}
       />
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && <Text style={styles.error}>이메일 혹은 비밀번호가 올바른 형식이 아닙니다.</Text>}
       <Button
         title='Sign In'
         onPress={handleSignIn}

@@ -65,11 +65,11 @@ return (
     <View style={styles.infoContainer}>
       <View style={styles.infoRow}>
         <Text style={styles.label}>닉네임</Text>
-        <Text style={styles.value}>게코</Text>
+        <Text style={styles.value}>{auth.currentUser?.displayName}</Text>
       </View>
       <View style={styles.infoRow}>
         <Text style={styles.label}>이메일 주소</Text>
-        <Text style={styles.value}>gekotta@gmail.com</Text>
+        <Text style={styles.value}>{auth.currentUser?.email}</Text>
       </View>
     </View>
 
