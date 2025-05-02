@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/constants/colors';
+import { colors } from '@/constants';
 
 interface ModalSelectorProps {
   isVisible: boolean;
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: Colors.gray,
+    color: colors.gray,
     opacity: 0.5
   },
   separator: {

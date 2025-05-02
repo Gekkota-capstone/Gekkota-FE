@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors } from '@/constants/colors';
+import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import CustomButton from '@/components/PrimaryButton';
@@ -321,7 +321,7 @@ const cageForm = () => {
                   name='checkmark-circle'
                   size={16}
                   color={
-                    selectedGender === 'unknown' ? Colors.mainBlue : Colors.gray
+                    selectedGender === 'unknown' ? colors.mainBlue : colors.gray
                   }
                   style={{ opacity: selectedGender === 'unknown' ? 1 : 0.5 }}
                 ></Ionicons>
@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
   },
   fillBar: {
     height: '100%',
-    backgroundColor: Colors.mainBlue,
+    backgroundColor: colors.mainBlue,
   },
 
   mainText: {
@@ -428,13 +428,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 140,
     height: 160,
-    backgroundColor: Colors.light_gray,
+    backgroundColor: colors.light_gray,
     borderRadius: 10,
   },
   selectedButton: {
     backgroundColor: 'white',
     borderWidth: 3,
-    borderColor: Colors.mainBlue,
+    borderColor: colors.mainBlue,
   },
   buttonWithDescription: {
     flexDirection: 'column',
@@ -442,13 +442,13 @@ const styles = StyleSheet.create({
     top: 10,
   },
   genderText: {
-    color: Colors.gray,
+    color: colors.gray,
     opacity: 0.5,
     fontSize: 16,
     marginTop: 10,
   },
   selectedText: {
-    color: Colors.gray,
+    color: colors.gray,
     opacity: 1,
     fontSize: 16,
   },
@@ -463,7 +463,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   unknownText: {
-    color: Colors.gray,
+    color: colors.gray,
     opacity: 0.5,
     fontSize: 14,
   },

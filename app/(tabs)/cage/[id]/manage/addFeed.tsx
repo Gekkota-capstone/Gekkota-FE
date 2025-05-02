@@ -4,7 +4,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import Modal from "react-native-modal";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors } from '@/constants/colors'
+import { colors } from '@/constants'
 import { ScrollView } from "react-native-gesture-handler";
 import FeedSelector from './components/FeedSelector'
 import FeedSizeSelector from "./components/FeedSizeSelector";
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     },
     lineContainer: {
         borderWidth: 1,
-        borderColor: Colors.gray,
+        borderColor: colors.gray,
         borderRadius: 20,
         paddingVertical: 12,
         paddingHorizontal: 20,
@@ -274,11 +274,11 @@ const styles = StyleSheet.create({
     },
     deleteText: {
         fontSize: 13,
-        color: Colors.gray,
+        color: colors.gray,
         marginLeft: 3
     },
     memoInput: {
         fontSize: 16,
-        color: Colors.gray,
+        color: colors.gray,
     }
 });

@@ -1,7 +1,7 @@
 // 기본 버튼
 import React from 'react';
 import { StyleSheet, View, ViewStyle, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { Colors } from '@/constants/colors'
+import { colors } from '@/constants'
 
 interface PrimaryButtonProps {
   onPress: () => void; 
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   button: {
-    backgroundColor: Colors.mainBlue,
+    backgroundColor: colors.mainBlue,
     paddingVertical: 15,
     width: width - 60,
     borderRadius: 10,
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   disabledButton: {
-    backgroundColor: Colors.disabledBlue,
+    backgroundColor: colors.disabledBlue,
   }
 });
 

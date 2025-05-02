@@ -11,7 +11,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/constants/colors';
+import { colors } from '@/constants';
 
 interface DateTimePickerProps {
   value: string; // yyyy-MM-dd 형태
@@ -50,7 +50,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
         <Ionicons
           name='chevron-down-outline'
           size={14}
-          color={Colors.gray}
+          color={colors.gray}
           style={{ opacity: 0.5, marginLeft: 4 }}
         />
       </Pressable>
@@ -80,13 +80,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: Colors.gray,
+    color: colors.gray,
     opacity: 0.8,
     fontSize: 16,
   },
   separator: {
     height: 1,
-    backgroundColor: Colors.gray,
+    backgroundColor: colors.gray,
     opacity: 0.2,
     marginTop: 8,
     width: 350,

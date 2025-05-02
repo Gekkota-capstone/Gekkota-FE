@@ -11,7 +11,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import Modal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/constants/colors';
+import { colors } from '@/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import FeedSelector from './components/FeedSelector';
 import FeedSizeSelector from './components/FeedSizeSelector';
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   dateText: {
-    color: Colors.mainBlue,
+    color: colors.mainBlue,
     fontSize: 18,
   },
   delete: {
@@ -193,13 +193,13 @@ const styles = StyleSheet.create({
   },
   deleteText: {
     fontSize: 13,
-    color: Colors.gray,
+    color: colors.gray,
     marginLeft: 3,
   },
   memoInput: {
     fontSize: 16,
     height: 100,
-    color: Colors.gray,
+    color: colors.gray,
     textAlignVertical: 'top',
   },
 });

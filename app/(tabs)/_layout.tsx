@@ -2,6 +2,7 @@ import { Tabs, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
 import Feather from '@expo/vector-icons/Feather';
+import { Text } from 'react-native'
 
 export default function TabLayout() {
   return (
@@ -50,12 +51,30 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name='setting'
+        name='mypage'
         options={{
-          title: '설정',
+          headerShown: true,
+          headerTintColor: colors.BLACK,
+          headerStyle: {
+            backgroundColor: colors.WHITE,
+          },
+          headerTitleAlign: 'left',
+          headerTitle: () => (
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: '700',
+                color: colors.BLACK,
+                width: '100%',
+                textAlign: 'left',
+              }}
+            >
+              마이페이지
+            </Text>
+          ),
           tabBarIcon: ({ color }) => (
-            <Feather
-              name='settings'
+            <Ionicons
+              name='person-circle-outline'
               size={26}
               color={color}
             />
@@ -67,8 +86,8 @@ export default function TabLayout() {
         options={{
           title: '테스트',
           tabBarIcon: ({ color }) => (
-            <Feather
-              name='settings'
+            <Ionicons
+              name='hammer-outline'
               size={26}
               color={color}
             />

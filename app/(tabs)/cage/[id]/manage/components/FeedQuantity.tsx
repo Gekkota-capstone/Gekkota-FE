@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
 import { feedData, feedImages, FeedKey } from '../constants/feeding';
-import { Colors } from '@/constants/colors';
+import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { opacity } from 'react-native-reanimated/lib/typescript/Colors';
 
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     quantityButton: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: Colors.disabledBlue,
+        backgroundColor: colors.disabledBlue,
         borderRadius: 12,
         marginTop: 20,
         width: 120,
@@ -98,21 +98,21 @@ const styles = StyleSheet.create({
         marginHorizontal: 5
     },
     quantitySymbol: {
-        color: Colors.mainBlue,
+        color: colors.mainBlue,
         fontSize: 32
     },
     unitChangeContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        color: Colors.gray,
+        color: colors.gray,
         marginTop: 10,
         gap: 5
     },
     unitChangeBackground: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: Colors.mainBlue,
+        backgroundColor: colors.mainBlue,
         opacity: 1,
         borderRadius: 12,
         width: 15,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Colors } from '@/constants/colors';
+import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 
 interface AlertCycleCardProps {
@@ -67,7 +67,7 @@ function AlertCycleCard({
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    backgroundColor: Colors.light_gray,
+    backgroundColor: colors.light_gray,
     padding: 16,
     marginVertical: 24,
     borderRadius: 20,
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   filledBar: {
-    backgroundColor: Colors.mainBlue,
+    backgroundColor: colors.mainBlue,
     height: '100%',
     borderRadius: 999,
     overflow: 'hidden',

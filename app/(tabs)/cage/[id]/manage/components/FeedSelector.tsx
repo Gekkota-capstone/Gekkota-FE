@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
 import { feedData, feedImages, FeedKey } from '../constants/feeding';
-import { Colors } from '@/constants/colors';
+import { colors } from '@/constants';
 
 interface FeedSelectorProps {
     value: string | null;
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: 80,
         height: 80,
-        backgroundColor: Colors.light_gray,
+        backgroundColor: colors.light_gray,
         borderRadius: 16
     },
     feedImage: {

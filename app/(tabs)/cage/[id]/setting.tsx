@@ -11,7 +11,7 @@ import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { useGetList } from '@/hooks/useGetList';
 import { getList } from '@/api/get';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/constants/colors';
+import { colors } from '@/constants';
 import CustomButton from '@/components/PrimaryButton';
 import DatePicker from '@/components/DatePicker';
 import ModalSelector from '@/components/Modal';
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   },
   ionicons: {
     opacity: 0.5,
-    color: Colors.gray,
+    color: colors.gray,
   },
   delete: {
     marginTop: 150,
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   deleteText: {
     marginLeft: 5,
-    color: Colors.gray,
+    color: colors.gray,
     opacity: 0.5,
   },
 });

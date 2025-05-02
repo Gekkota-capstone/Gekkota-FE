@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '@/constants';
 import { Pressable } from 'react-native-gesture-handler';
-import { Colors } from '@/constants/colors';
 
 interface HealthRecordData {
   date: string;
@@ -41,7 +40,7 @@ export default function HealthRecordCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.light_gray,
+    backgroundColor: colors.light_gray,
     padding: 16,
     borderRadius: 10,
     marginVertical: 12,

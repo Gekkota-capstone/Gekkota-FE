@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
 import { feedData, feedImages, FeedKey, sizes } from '../constants/feeding';
-import { Colors } from '@/constants/colors';
+import { colors } from '@/constants';
 
 interface FeedSizeSelectorProps {
     value: string | null;
@@ -46,12 +46,12 @@ const styles = StyleSheet.create({
     },
     sizeText: {
         fontSize: 13,
-        color: Colors.gray,
+        color: colors.gray,
         fontWeight: 'bold',
         opacity: 0.5
     },
     sizeButton: {
-        backgroundColor: Colors.light_gray,
+        backgroundColor: colors.light_gray,
         borderRadius: 20,
         marginHorizontal: 5,
         paddingVertical: 12,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     selectedSizeButton: {
         backgroundColor: 'white',
-        borderColor: Colors.gray,
+        borderColor: colors.gray,
         borderWidth: 1,
     },
 });
