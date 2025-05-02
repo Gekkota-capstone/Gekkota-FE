@@ -51,7 +51,7 @@ export default function FeedScreen() {
               food_size: feedData.food_size,
               food_amount: feedData.food_amount,
               amount_unit: feedData.amount_unit,
-              message: feedData.message
+              memo: feedData.memo
             }}
           />
         )}
@@ -76,7 +76,7 @@ export default function FeedScreen() {
             food_size: feedData.food_size,
             food_amount: feedData.food_amount,
             amount_unit: feedData.amount_unit,
-            message: feedData.message
+            memo: feedData.memo
           }}
         />
       )}

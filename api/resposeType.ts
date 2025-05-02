@@ -54,7 +54,13 @@ export interface FeedRecordResponse {
   food_size: null | '극소' | '소' | '중' | '대' | '특대';
   food_amount: number | null;
   amount_unit: null | '마리' | 'ml' | 'g';
-  message: string | null;
+  memo: string | null;
+}
+
+export interface CleanRecordResponse {
+  id: number;
+  date: string;
+  memo: string | null;
 }
 export interface LLMMessageResponse {
   messages: { say: string; text: string }[];

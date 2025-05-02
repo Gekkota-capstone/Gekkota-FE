@@ -156,6 +156,23 @@ export const handlers = [
       }
       return HttpResponse.json(null);
     }),
+    http.get(
+      'http://localhost:8081/api/cages/:cageId/clean',
+      ({ request, params }) => {
+        const { cageId } = params;
+  
+        const requestUrl = new URL(request.url);
+        const date = requestUrl.searchParams.get('date');
+  
+        if (date === '2025-05-02') {
+          return HttpResponse.json({
+            date: '2025-05-02',
+            memo: '먼지를 깨끗하게 털고 밥그릇을 닦아줌.'
+          });
+        }
+        return HttpResponse.json(null);
+      }),
+
   http.get('http://localhost:8081/api/cages/:cageId/llm', () => {
     return HttpResponse.json({
       messages: [

@@ -4,6 +4,7 @@ import {
   CageState,
   HealthRecordResponse,
   FeedRecordResponse,
+  CleanRecordResponse,
   LiveCameras,
   LLMMessageResponse,
   WeightHistoryResponse,
@@ -105,6 +106,24 @@ export async function getFeedRecord({
 
   if (!response.ok) {
     throw new Error('급여 데이터를 가져오는 중 오류 발생');
+  }
+
+  return await response.json();
+}
+
+export async function getCleanRecord({
+  cageId,
+  date,
+}: {
+  cageId: number;
+  date: string;
+}): Promise<CleanRecordResponse> {
+  const response = await fetchWithAuth(
+    `http://localhost:8081/api/cages/${cageId}/clean?date=${date}`
+  );
+
+  if (!response.ok) {
+    throw new Error('청소 데이터를 가져오는 중 오류 발생');
   }
 
   return await response.json();

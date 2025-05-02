@@ -9,8 +9,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import FeedSelector from './components/FeedSelector'
 import FeedSizeSelector from "./components/FeedSizeSelector";
 import FeedQuantity from "./components/FeedQuantity";
-import { FeedKey } from "./constants/feeding";
 import { router } from "expo-router";
+import dayjs from 'dayjs';
 
 interface ModalComponentProps {
     isVisible: boolean;
@@ -18,24 +18,25 @@ interface ModalComponentProps {
 }
 
 const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
-    const { control, handleSubmit, watch, setValue, getValues } = useForm<{
+    const formattedDate = dayjs().format('YYYY-MM-DD');
+    const { control, handleSubmit, watch, setValue } = useForm<{
         date: string;
         feed: {
             food_type: string;
             food_size: string | null;
             food_amount: number | null;
             amount_unit: string | null;
-            message?: string | null;
+            memo?: string | null;
         };
     }>({
         defaultValues: {
-            date: '2025-05-01',
+            date: formattedDate,
             feed: {
                 food_type: '사료',
                 food_size: null,
                 food_amount: 0,
                 amount_unit: 'g',
-                message: null,
+                memo: null,
             },
         },
     });
@@ -45,24 +46,23 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
     const foodType = watch('feed.food_type');
     const date = watch('date');
     const unit = watch('feed.amount_unit');
-    const amount = watch('feed.food_amount');
 
     useEffect(() => {
         if (foodType === '사료') {
-          setValue('feed.amount_unit', 'ml');
-          setShowUnitToggle(true);
-          setValue('feed.food_size', null);
-          setValue('feed.message', null);
+            setValue('feed.amount_unit', 'ml');
+            setShowUnitToggle(true);
+            setValue('feed.food_size', null);
+            setValue('feed.memo', null);
         } else if (['귀뚜라미', '밀웜', '슈퍼밀웜', '왁스웜', '누에'].includes(foodType)) {
-          setValue('feed.amount_unit', '마리');
-          setShowUnitToggle(false);
-          setValue('feed.message', null);
+            setValue('feed.amount_unit', '마리');
+            setShowUnitToggle(false);
+            setValue('feed.memo', null);
         } else if (['과일', '채소'].includes(foodType)) {
-          setValue('feed.food_size', null);
-          setValue('feed.amount_unit', null);
-          setValue('feed.food_amount', null);
+            setValue('feed.food_size', null);
+            setValue('feed.amount_unit', null);
+            setValue('feed.food_amount', null);
         }
-      }, [foodType]);
+    }, [foodType]);
 
     const onSubmit = (data: any) => {
         console.log(data);
@@ -165,7 +165,7 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
                         {['과일', '채소'].includes(foodType) && (
                             <Controller
                                 control={control}
-                                name="feed.message"
+                                name="feed.memo"
                                 render={({ field: { value, onChange } }) => (
                                     <>
                                         <Text style={styles.labelText}>상세 기록</Text>

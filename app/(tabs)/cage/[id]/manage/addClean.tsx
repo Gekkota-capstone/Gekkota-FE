@@ -7,17 +7,13 @@ import {
   TextInput,
 } from 'react-native';
 import CustomButton from '@/components/PrimaryButton';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import Modal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
 import { ScrollView } from 'react-native-gesture-handler';
-import FeedSelector from './components/FeedSelector';
-import FeedSizeSelector from './components/FeedSizeSelector';
-import FeedQuantity from './components/FeedQuantity';
-import { FeedKey } from './constants/feeding';
 import { router } from 'expo-router';
+import dayjs from 'dayjs';
 
 interface ModalComponentProps {
   isVisible: boolean;
@@ -27,16 +23,19 @@ export default function CleanModal({
   isVisible,
   onClose,
 }: ModalComponentProps) {
-  const { control, handleSubmit, watch, setValue, getValues } = useForm<{
-    selectedDate: string;
+  const formattedDate = dayjs().format('YYYY-MM-DD');
+
+  const { control, handleSubmit, watch } = useForm<{
+    date: string;
     memo: string;
   }>({
     defaultValues: {
-      selectedDate: '2024.12.08',
+      date: formattedDate,
       memo: '',
     },
   });
-  const selectedDate = watch('selectedDate');
+
+  const date = watch('date');
 
   const onSubmit = (data: any) => {
     console.log(data);
@@ -79,7 +78,7 @@ export default function CleanModal({
             {/* 날짜 */}
             <Text style={styles.labelText}>날짜</Text>
             <TouchableOpacity style={styles.lineContainer}>
-              <Text style={styles.dateText}>{selectedDate}</Text>
+              <Text style={styles.dateText}>{date}</Text>
             </TouchableOpacity>
 
             {/* 메모 (조건부 렌더링) */}

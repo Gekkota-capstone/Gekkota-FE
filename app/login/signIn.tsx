@@ -22,7 +22,15 @@ export default function SignInScreen() {
       console.log('Firebase ID Token:', token);
       router.replace('/cage'); // 로그인 후 홈으로
     } catch (e: any) {
-      setError(e.message);
+      if (e.code === 'auth/user-not-found') {
+        setError('가입되지 않은 이메일입니다.');
+      } else if (e.code === 'auth/wrong-password') {
+        setError('비밀번호가 잘못되었습니다.');
+      } else if (e.code === 'auth/invalid-credential') {
+        setError('이메일 혹은 비밀번호를 다시 확인해주세요.');
+      } else {
+        setError(e.message); // 그 외의 오류
+      }
     }
   };
 
@@ -43,7 +51,7 @@ export default function SignInScreen() {
         secureTextEntry
         style={styles.input}
       />
-      {error && <Text style={styles.error}>이메일 혹은 비밀번호가 올바른 형식이 아닙니다.</Text>}
+      {error && <Text style={styles.error}>{error}</Text>}
       <Button
         title='Sign In'
         onPress={handleSignIn}

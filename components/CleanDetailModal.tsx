@@ -3,32 +3,28 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
-import { useDeleteFeedRecord } from '@/hooks/useDeleteFeedRecord';
+import { useDeleteCleanRecord } from '@/hooks/useDeleteCleanRecord';
 import { useLocalSearchParams } from 'expo-router';
 
-interface FeedRecordData {
+interface CleanRecordData {
     id: number;
     date: string;
-    food_type: '사료' | '귀뚜라미' | '밀웜' | '슈퍼밀웜' | '왁스웜' | '누에' | '과일' | '채소';
-    food_size: null | '극소' | '소' | '중' | '대' | '특대';
-    food_amount: number | null;
-    amount_unit: null | '마리' | 'ml' | 'g';
     memo: string | null;
 }
 
-interface FeedDetailModalProps {
+interface CleanDetailModalProps {
     visible: boolean;
     onClose: () => void;
-    data: FeedRecordData;
+    data: CleanRecordData;
 }
 
-export default function FeedDetailModal({
+export default function CleanDetailModal({
     visible,
     onClose,
     data,
-}: FeedDetailModalProps) {
+}: CleanDetailModalProps) {
     const { id } = useLocalSearchParams();
-    const { mutate: deleteFeed } = useDeleteFeedRecord(Number(id), onClose);
+    const { mutate: deleteClean } = useDeleteCleanRecord(Number(id), onClose);
     return (
         <Modal
             isVisible={visible}
@@ -48,7 +44,7 @@ export default function FeedDetailModal({
                             style={styles.headerIcon}
                         />
                     </TouchableOpacity>
-                    <Text style={styles.headerText}>급여 기록</Text>
+                    <Text style={styles.headerText}>청소 기록</Text>
                     <View />
                 </View>
 
@@ -58,25 +54,6 @@ export default function FeedDetailModal({
                         <Text style={styles.label}>날짜</Text>
                         <Text style={styles.value}>{data.date}</Text>
                     </View>
-
-                    <View style={styles.row}>
-                        <Text style={styles.label}>먹이 종류</Text>
-                        <Text style={styles.value}>{data.food_type}</Text>
-                    </View>
-
-                    {data.food_size && (
-                        <View style={styles.row}>
-                            <Text style={styles.label}>먹이 사이즈 </Text>
-                            <Text style={styles.value}>{data.food_size}</Text>
-                        </View>
-                    )}
-
-                    {data.food_amount && (
-                        <View style={styles.row}>
-                            <Text style={styles.label}>먹이 양</Text>
-                            <Text style={styles.value}>{data.food_amount}{data.amount_unit}</Text>
-                        </View>
-                    )}
 
                     {data.memo && (
                         <View style={styles.memoContainer}>
@@ -89,7 +66,7 @@ export default function FeedDetailModal({
                 </View>
                 <TouchableOpacity
                     style={styles.delete}
-                    onPress={() => deleteFeed(data.id)}
+                    onPress={() => deleteClean(data.id)}
                 >
                     <Ionicons
                         name='trash-bin-outline'

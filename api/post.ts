@@ -68,7 +68,7 @@ export async function postFeedRecord({
     food_size?: string;
     food_amount?: number;
     amount_unit?: string;
-    message?: string;
+    memo?: string;
   };
 }): Promise<void> {
   const response = await fetchWithAuth(
@@ -86,6 +86,35 @@ export async function postFeedRecord({
     throw new Error('급여 생성 중 오류 발생');
   }
 }
+
+// src/api/feed.ts
+// src/api/post.ts
+export async function postCleanRecord({
+  cageId,
+  data,
+}: {
+  cageId: number;
+  data: {
+    date: string;
+    memo?: string;
+  };
+}): Promise<void> {
+  const response = await fetchWithAuth(
+    `http://localhost:8081/api/cages/${cageId}/clean`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('청소 생성 중 오류 발생');
+  }
+}
+
 
 export async function postLLMMessage({
   cageId,
