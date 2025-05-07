@@ -1,34 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
-import { useGetList } from '@/hooks/useGetList';
-import { getList } from '@/api/get';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { useGetPetInfo } from '@/hooks/useGetPetInfo';
+import { usePetContext } from '@/contexts/PetContext';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
 import CustomButton from '@/components/PrimaryButton';
 import DatePicker from '@/components/DatePicker';
 import ModalSelector from '@/components/Modal';
 import DeleteModal from '@/components/DeleteModal';
+import { useUpdatePetInfo } from '@/hooks/useUpdatePetInfo';
 
 export default function SettingScreen() {
-  const { id } = useLocalSearchParams();
-  const [name, setName] = useState('');
-  const [gender, setGender] = useState('');
-  const [species, setSpecies] = useState('');
-  const [date, setDate] = useState('');
-  const [petId, setPetId] = useState<string | number>('');
+  const { petId } = usePetContext(); // Context에서 petId 가져오기
+  const { data, error, isLoading } = petId ? useGetPetInfo(petId) : { data: null, error: null, isLoading: false };
 
-  const [isGenderModalVisible, setIsGenderModalVisible] = useState(false);
-  const [isSpeciesModalVisible, setIsSpeciesModalVisible] = useState(false);
-
+  const [name, setName] = useState(data?.name || '');  // 수정 가능한 이름 상태
+  const [gender, setGender] = useState(data?.gender || '');  // 성별 상태
+  const [species, setSpecies] = useState(data?.species || '');  // 종 상태
+  const [birthdate, setBirthdate] = useState(data?.birthdate || '');  // 생년월일 상태
+  const [isGenderModalVisible, setGenderModalVisible] = useState(false);
+  const [isSpeciesModalVisible, setSpeciesModalVisible] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [date, setDate] = useState('');
+  const { mutate } = useUpdatePetInfo();
+
+  const handleSelectGender = (value: string) => {
+    setGender(value);
+    toggleGenderModal();
+  };
+
+  const handleSelectSpecies = (value: string) => {
+    setSpecies(value);
+    toggleSpeciesModal();
+  };
+
+  const toggleGenderModal = () => setGenderModalVisible(!isGenderModalVisible);
+  const toggleSpeciesModal = () => setSpeciesModalVisible(!isSpeciesModalVisible);
+
+  
 
   const genderOptions = [
     { key: 'male', label: '남아' },
@@ -37,92 +48,49 @@ export default function SettingScreen() {
   ];
 
   const speciesOptions = [
-    { key: 'crested', label: '크레스티드 게코' },
-    { key: 'leopard', label: '레오파드 게코' },
-  ];
-
-  const handleSelectGender = (selectedGender: string) => {
-    setGender(selectedGender);
-  };
-
-  const handleSelectSpecies = (selectedSpecies: string) => {
-    setSpecies(selectedSpecies);
-  };
-
-  const toggleGenderModal = () =>
-    setIsGenderModalVisible(!isGenderModalVisible);
-  const toggleSpeciesModal = () =>
-    setIsSpeciesModalVisible(!isSpeciesModalVisible);
+    { key: '크레스티드 게코', label: '크레스티드 게코' },
+    { key: '레오파드 게코', label: '레오파드 게코' }
+  ]
 
   useEffect(() => {
-    const resolvedPetId = Array.isArray(id) ? id[0] : id;
-    setPetId(resolvedPetId);
-  }, [id]);
-
-  // 데이터를 가져오는 함수
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!petId) return;
-
-      try {
-        const response = await getList();
-        const petData = response.list.find(
-          (item) => item.id === parseInt(petId as string)
-        ); // petId는 string으로 변환하여 비교
-        if (petData) {
-          setName(petData.name);
-          setSpecies(petData.species);
-          setGender(petData.gender);
-          setDate(petData.birthdate);
-        }
-      } catch (error) {
-        console.error('데이터 로딩 실패', error);
-      }
-    };
-    fetchData();
-  }, [petId]);
-
-  // 수정한 데이터를 서버에 반영하는 함수 (수정)
-  const handleSave = async () => {
-    try {
-      const updatedData = {
-        name,
-        species,
-        gender,
-        date,
-      };
-      const response = await fetch(
-        `http://localhost:8081/api/update/${petId}`,
-        {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedData),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('데이터 수정 실패');
-      }
-
-      alert('수정되었습니다.');
-    } catch (error) {
-      console.error('수정 실패', error);
-      alert('수정 실패');
+    if (data) {
+      setName(data.name);
+      setGender(data.gender);
+      setSpecies(data.species);
+      setBirthdate(data.birthdate);
     }
+  }, [data]);
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>Error loading pet information</Text>;
+  }
+
+  if (!data) {
+    return <Text>No pet information found</Text>;
+  }
+
+  const handleUpdate = () => {
+    if (!petId) {
+      console.error('ID가 없습니다.');
+      return;
+    }
+    mutate({
+      petId: petId as string,
+      updatedData: { name, species, gender, birthdate },
+    });
+
   };
 
   return (
     <View style={styles.container}>
-      <Stack.Screen
-        options={{ title: '정보 수정', headerTitleAlign: 'center' }}
-      />
+      <Stack.Screen options={{ title: '정보 수정', headerTitleAlign: 'center' }} />
 
       <Text style={styles.title}>이름</Text>
-      <TextInput
-        style={styles.input}
-        value={name}
-        onChangeText={setName}
-      />
+      <TextInput style={styles.input} value={name} onChangeText={setName} editable={true} />
       <View style={styles.separator} />
 
       <Text style={styles.title}>성별</Text>
@@ -130,14 +98,10 @@ export default function SettingScreen() {
         <TextInput
           style={styles.input}
           value={gender}
-          editable={false}
           onPress={toggleGenderModal}
+          editable={false}
         />
-        <Ionicons
-          style={[styles.ionicons, { marginTop: 20 }]}
-          name='chevron-down-outline'
-          size={15}
-        />
+        <Ionicons style={[styles.ionicons, { marginTop: 20 }]} name="chevron-down-outline" size={15} />
       </View>
       <ModalSelector
         isVisible={isGenderModalVisible}
@@ -145,7 +109,7 @@ export default function SettingScreen() {
         onSelect={handleSelectGender}
         data={genderOptions}
         selectedOption={gender}
-        title='성별 선택'
+        title="성별 선택"
       />
       <View style={styles.separator} />
 
@@ -157,11 +121,7 @@ export default function SettingScreen() {
           editable={false}
           onPress={toggleSpeciesModal}
         />
-        <Ionicons
-          style={[styles.ionicons, { marginTop: 20 }]}
-          name='chevron-down-outline'
-          size={15}
-        />
+        <Ionicons style={[styles.ionicons, { marginTop: 20 }]} name="chevron-down-outline" size={15} />
       </View>
       <ModalSelector
         isVisible={isSpeciesModalVisible}
@@ -169,42 +129,36 @@ export default function SettingScreen() {
         onSelect={handleSelectSpecies}
         data={speciesOptions}
         selectedOption={species}
-        title='종 선택'
+        title="종 선택"
       />
       <View style={styles.separator} />
 
       <Text style={styles.title}>생년월일</Text>
       <DatePicker
-        style={{ alignItems: 'flex-start' }}
+        style={{ alignItems: 'flex-start', paddingTop: 17, paddingLeft: 20 }}
         textStyle={{ color: 'black', opacity: 1 }}
-        value={date}
-        onChange={setDate}
-      ></DatePicker>
+        value={birthdate}
+        onChange={setBirthdate}
+      >
+      </DatePicker>
 
       <TouchableOpacity
         style={styles.delete}
-        onPress={() => setShowDeleteModal(true)}
-      >
-        <Ionicons
-          style={styles.ionicons}
-          name='close-circle-outline'
-          size={16}
-        />
+        onPress={() => setShowDeleteModal(true)}>
+        <Ionicons style={styles.ionicons} name="close-circle-outline" size={16} />
         <Text style={styles.deleteText}>반려동물 정보 지우기</Text>
       </TouchableOpacity>
-      <DeleteModal
-        visible={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-      />
+      <DeleteModal visible={showDeleteModal} onClose={() => setShowDeleteModal(false)} />
 
       <View style={{ position: 'absolute', bottom: 30, alignItems: 'center' }}>
         <CustomButton
           title='수정'
-          onPress={handleSave}
+          onPress={() => handleUpdate()}
         />
       </View>
+
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -213,7 +167,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   separator: {
     alignItems: 'center',
@@ -236,30 +190,31 @@ const styles = StyleSheet.create({
     fontWeight: 'semibold',
     marginTop: 20,
     height: 20,
-    width: '85%',
+    width: '85%'
   },
   overlay: {
     justifyContent: 'flex-end',
   },
   modalSelector: {
     alignSelf: 'flex-start',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   select: {
     flexDirection: 'row',
-    marginRight: 30,
+    marginRight: 30
   },
   ionicons: {
     opacity: 0.5,
-    color: colors.gray,
+    color: colors.gray
   },
   delete: {
     marginTop: 150,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   deleteText: {
     marginLeft: 5,
     color: colors.gray,
-    opacity: 0.5,
-  },
+    opacity: 0.5
+  }
+
 });

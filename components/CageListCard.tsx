@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface PetCardProps {
@@ -17,27 +17,27 @@ export default function CageListCard({
   birthdate,
 }: PetCardProps) {
   return (
-    <Link
-      href={`/cage/${id}`}
-      asChild
-    >
-      <TouchableOpacity style={styles.container}>
-        <Image
-          style={styles.image}
-          source={
-            species === 'leopard'
-              ? require('@/assets/images/leopard.png')
-              : require('@/assets/images/leopard_bw.png')
-          }
-        />
-        <View style={styles.info}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.species}>{species}</Text>
-          <Text style={styles.species}>{gender}</Text>
-          <Text style={styles.species}>{birthdate}</Text>
-        </View>
-      </TouchableOpacity>
-    </Link>
+    <TouchableOpacity
+      onPress={() => {
+        router.push(`/cage/${id}`);
+        console.log(`id값은? ${id}`);  // id 값 확인용
+      }}
+      style={styles.container}>
+      <Image
+        style={styles.image}
+        source={
+          species === 'leopard'
+            ? require('@/assets/images/leopard.png')
+            : require('@/assets/images/leopard_bw.png')
+        }
+      />
+      <View style={styles.info}>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.species}>{species}</Text>
+        <Text style={styles.species}>{gender}</Text>
+        <Text style={styles.species}>{birthdate}</Text>
+      </View>
+    </TouchableOpacity>
   );
 }
 

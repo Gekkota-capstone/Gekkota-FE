@@ -17,6 +17,7 @@ import CustomButton from '@/components/PrimaryButton';
 import PreviousButton from '@/components/PreviousButton';
 import DatePicker from '@/components/DatePicker';
 import { usePostCage } from '@/hooks/usePostCage';
+import dayjs from 'dayjs';
 
 interface FormData {
   // 폼 데이터 타입 정의
@@ -50,7 +51,8 @@ const cageForm = () => {
   >(null);
 
   // 날짜 선택 관리
-  const [selectedDate, setSelectedDate] = useState('2025-03-24');
+  const formattedDate = dayjs().format('YYYY-MM-DD');
+  const [selectedDate, setSelectedDate] = useState(formattedDate);
 
   // 이름 실시간으로 watch
   const nameValue = watch('name');
@@ -87,15 +89,6 @@ const cageForm = () => {
   const handleNext = () => {
     // 다음버튼 함수
     setStep((prevStep) => prevStep + 1);
-  };
-
-  const handlePrevious = () => {
-    // 뒤로가기 함수
-    if (step > 1) {
-      setStep(step - 1); // 이전 단계로 이동
-    } else {
-      router.back(); // 첫 번째 단계일 때는 뒤로가기
-    }
   };
 
   const handleDateChange = (newDate: string) => {

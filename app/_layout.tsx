@@ -7,7 +7,10 @@ import 'react-native-reanimated';
 import queryClient from '@/api/queryClient';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as DevClient from 'expo-dev-client';
+import PetProvider from '@/contexts/PetContext';
+
 SplashScreen.preventAutoHideAsync();
+
 async function enableMocking() {
   if (!__DEV__) return;
 
@@ -21,6 +24,7 @@ async function enableMocking() {
 enableMocking();
 
 DevClient.openMenu();
+
 export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -39,17 +43,19 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView>
       <QueryClientProvider client={queryClient}>
-        <Stack>
-          <Stack.Screen
-            name='(tabs)'
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name='+not-found' />
-          <Stack.Screen
-            name='cageForm'
-            options={{ headerShown: false }} // 헤더 숨기기
-          />
-        </Stack>
+        <PetProvider> {/* ✅ 모든 자식 컴포넌트가 PetContext에 접근 가능 */}
+          <Stack>
+            <Stack.Screen
+              name='(tabs)'
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name='+not-found' />
+            <Stack.Screen
+              name='cageForm'
+              options={{ headerShown: false }}
+            />
+          </Stack>
+        </PetProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>
   );

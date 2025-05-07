@@ -1,4 +1,4 @@
-import { SafeAreaView, FlatList, StyleSheet, Text } from 'react-native';
+import { SafeAreaView, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import RegisterButton from '@/components/RegisterButton';
 import CageListCard from '@/components/CageListCard';
 import { useGetList } from '@/hooks/useGetList';
@@ -19,13 +19,15 @@ export default function HomeScreen() {
         data={list}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <CageListCard
-            id={item.id}
-            name={item.name}
-            species={item.species}
-            gender={item.gender}
-            birthdate={item.birthdate}
-          />
+          <TouchableOpacity>
+            <CageListCard
+              id={item.id}
+              name={item.name}
+              species={item.species}
+              gender={item.gender}
+              birthdate={item.birthdate}
+            />
+          </TouchableOpacity>
         )}
       />
     </SafeAreaView>
