@@ -115,7 +115,6 @@ export async function postCleanRecord({
   }
 }
 
-
 export async function postLLMMessage({
   cageId,
   data,
@@ -138,6 +137,36 @@ export async function postLLMMessage({
 
   if (!response.ok) {
     throw new Error('llm 대화 중 오류 발생');
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}
+
+export async function postUserInfo({
+  data,
+}: {
+  data: {
+    nickname: string;
+    profile: string;
+  };
+}): Promise<{
+  nickname: string;
+  profile: string;
+}> {
+  const response = await fetchWithAuth(
+    `http://localhost:8081/api/user/me/profile`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('유저 정보중 오류 발생');
   }
 
   const responseData = await response.json();
