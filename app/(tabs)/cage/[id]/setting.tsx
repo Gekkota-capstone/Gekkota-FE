@@ -15,10 +15,10 @@ export default function SettingScreen() {
   const { petId } = usePetContext(); // Context에서 petId 가져오기
   const { data, error, isLoading } = petId ? useGetPetInfo(petId) : { data: null, error: null, isLoading: false };
 
-  const [name, setName] = useState(data?.name || '');  // 수정 가능한 이름 상태
-  const [gender, setGender] = useState(data?.gender || '');  // 성별 상태
-  const [species, setSpecies] = useState(data?.species || '');  // 종 상태
-  const [birthdate, setBirthdate] = useState(data?.birthdate || '');  // 생년월일 상태
+  const [name, setName] = useState(data?.name || '');
+  const [gender, setGender] = useState(data?.gender || '');
+  const [species, setSpecies] = useState(data?.species || '');
+  const [birthdate, setBirthdate] = useState(data?.birthdate || '');
   const [isGenderModalVisible, setGenderModalVisible] = useState(false);
   const [isSpeciesModalVisible, setSpeciesModalVisible] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

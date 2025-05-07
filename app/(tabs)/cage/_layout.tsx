@@ -3,17 +3,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Text, TouchableOpacity } from 'react-native';
 import { usePetContext } from '@/contexts/PetContext'
-import { useEffect } from 'react';
 
 export default function CageLayout() {
-  const { id } = useLocalSearchParams();
   const { petId, setPetId } = usePetContext(); //context를 이용하여 전역에서 관리. PetDetailScreen에서 id 
-
-  useEffect(() => {
-    if (id) {
-      setPetId(id as string);
-    }
-  }, [id]);
 
   return (
       <Stack
