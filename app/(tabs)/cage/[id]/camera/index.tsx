@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import { VLCPlayer } from 'react-native-vlc-media-player';
 import { useGetLiveCameras } from '@/hooks/useGetLiveCameras';
@@ -17,33 +18,35 @@ export default function CameraScreen() {
   if (isError || !data) return <Text style={styles.loading}>에러 발생</Text>;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>카메라1</Text>
-      <View style={styles.videoContainer}>
-        {data?.camera1?.streamUrl ? (
-          <VLCPlayer
-            style={styles.video}
-            videoAspectRatio='16:9'
-            source={{ uri: data.camera1.streamUrl }}
-          />
-        ) : (
-          <ActivityIndicator size='large' />
-        )}
-      </View>
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>카메라1</Text>
+        <View style={styles.videoContainer}>
+          {data?.camera1?.streamUrl ? (
+            <VLCPlayer
+              style={styles.video}
+              videoAspectRatio='16:9'
+              source={{ uri: data.camera1.streamUrl }}
+            />
+          ) : (
+            <ActivityIndicator size='large' />
+          )}
+        </View>
 
-      <Text style={styles.title}>카메라2</Text>
-      <View style={styles.videoContainer}>
-        {data?.camera2?.streamUrl ? (
-          <VLCPlayer
-            style={styles.video}
-            videoAspectRatio='16:9'
-            source={{ uri: data.camera2.streamUrl }}
-          />
-        ) : (
-          <ActivityIndicator size='large' />
-        )}
-      </View>
-    </ScrollView>
+        <Text style={styles.title}>카메라2</Text>
+        <View style={styles.videoContainer}>
+          {data?.camera2?.streamUrl ? (
+            <VLCPlayer
+              style={styles.video}
+              videoAspectRatio='16:9'
+              source={{ uri: data.camera2.streamUrl }}
+            />
+          ) : (
+            <ActivityIndicator size='large' />
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

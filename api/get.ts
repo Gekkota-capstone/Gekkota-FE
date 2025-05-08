@@ -33,7 +33,6 @@ export async function getPetInfo(petId: string) {
   return petData; // petData 반환
 }
 
-
 // src/api/getBehaviorAnalytics.ts
 export async function getBehaviorAnalytics({
   cageId,
