@@ -38,7 +38,19 @@ export default function BehavioralAnalyticsScreen() {
     }
   );
 
-  const activityGraph = data?.activityGraph ?? { type: 'hourly', data: [] };
+  const hourly = data?.activityGraph.timeOfActivity || [];
+  const daily = data?.activityGraph.recentDatOfActivit || [];
+
+  const labels =
+    chartType === 'hourly'
+      ? hourly.map((item) => item.hour)
+      : daily.map((item) => item.day);
+
+  const values =
+    chartType === 'hourly'
+      ? hourly.map((item) => item.value)
+      : daily.map((item) => item.value);
+
   const isAbnormal = !!data?.abnormalBehavior;
 
   const getTimeRangeLabel = (start: number, end: number) =>
@@ -149,13 +161,10 @@ export default function BehavioralAnalyticsScreen() {
           </View>
           <BarChart
             data={{
-              labels:
-                activityGraph.type === 'hourly'
-                  ? ['0', '3', '6', '9', '12', '15', '18', '21', '24']
-                  : ['2.9', '2.13', '2.17', '오늘'],
-              datasets: [{ data: activityGraph.data }],
+              labels,
+              datasets: [{ data: values }],
             }}
-            width={screenWidth - 60} // 화면 거의 풀로
+            width={screenWidth - 60}
             height={220}
             fromZero
             yAxisLabel=''
@@ -165,7 +174,7 @@ export default function BehavioralAnalyticsScreen() {
               backgroundGradientTo: colors.WHITE,
               color: () => colors.BLUE_500,
               labelColor: () => colors.GRAY_700,
-              barPercentage: activityGraph.data.length > 7 ? 0.5 : 0.7,
+              barPercentage: values.length > 7 ? 0.5 : 0.7,
             }}
           />
         </View>

@@ -12,7 +12,7 @@ import {
 import { fetchWithAuth } from './util';
 
 export async function getList(): Promise<CageList> {
-  const response = await fetchWithAuth('http://localhost:8081/api/list');
+  const response = await fetchWithAuth('http://localhost:8081/api/cages');
 
   if (!response.ok) {
     throw new Error('API 호출 중 에러 발생');

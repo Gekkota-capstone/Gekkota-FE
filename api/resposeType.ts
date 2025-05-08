@@ -18,8 +18,8 @@ export interface BehaviorAnalyticsResponse {
   };
   heatmapImageUrl: string | null;
   activityGraph: {
-    type: 'hourly' | 'daily';
-    data: [20, 45, 28, 80, 99, 43, 54, 33, 22];
+    recentDatOfActivit: { day: string; value: number }[];
+    timeOfActivity: { hour: string; value: number }[];
   };
 }
 
@@ -50,7 +50,15 @@ export interface WeightHistoryResponse {
 export interface FeedRecordResponse {
   id: number;
   date: string;
-  food_type: '사료' | '귀뚜라미' | '밀웜' | '슈퍼밀웜' | '왁스웜' | '누에' | '과일' | '채소';
+  food_type:
+    | '사료'
+    | '귀뚜라미'
+    | '밀웜'
+    | '슈퍼밀웜'
+    | '왁스웜'
+    | '누에'
+    | '과일'
+    | '채소';
   food_size: null | '극소' | '소' | '중' | '대' | '특대';
   food_amount: number | null;
   amount_unit: null | '마리' | 'ml' | 'g';

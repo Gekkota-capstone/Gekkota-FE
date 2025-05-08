@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 export const handlers = [
-  http.get('http://localhost:8081/api/list', () => {
+  http.get('http://localhost:8081/api/cages', () => {
     return HttpResponse.json({
       list: [
         {
@@ -56,8 +56,26 @@ export const handlers = [
       },
       heatmapImageUrl: 'https://via.placeholder.com/400x200',
       activityGraph: {
-        type: 'hourly',
-        data: [20, 45, 28, 80, 99, 43, 54, 33, 22],
+        recentDatOfActivit: [
+          { day: '04.01', value: 120 },
+          { day: '04.02', value: 95 },
+          { day: '04.03', value: 150 },
+          { day: '04.04', value: 80 },
+          { day: '04.05', value: 110 },
+          { day: '04.06', value: 130 },
+          { day: '04.07', value: 90 },
+        ],
+        timeOfActivity: [
+          { hour: '0', value: 20 },
+          { hour: '3', value: 45 },
+          { hour: '6', value: 28 },
+          { hour: '9', value: 80 },
+          { hour: '12', value: 99 },
+          { hour: '15', value: 43 },
+          { hour: '18', value: 54 },
+          { hour: '21', value: 33 },
+          { hour: '24', value: 22 },
+        ],
       },
     });
   }),
@@ -151,27 +169,29 @@ export const handlers = [
           food_size: '중',
           food_amount: 2,
           amount_unit: '마리',
-          message: ''
+          message: '',
         });
       }
       return HttpResponse.json(null);
-    }),
-    http.get(
-      'http://localhost:8081/api/cages/:cageId/clean',
-      ({ request, params }) => {
-        const { cageId } = params;
-  
-        const requestUrl = new URL(request.url);
-        const date = requestUrl.searchParams.get('date');
-  
-        if (date === '2025-05-02') {
-          return HttpResponse.json({
-            date: '2025-05-02',
-            memo: '먼지를 깨끗하게 털고 밥그릇을 닦아줌.'
-          });
-        }
-        return HttpResponse.json(null);
-      }),
+    }
+  ),
+  http.get(
+    'http://localhost:8081/api/cages/:cageId/clean',
+    ({ request, params }) => {
+      const { cageId } = params;
+
+      const requestUrl = new URL(request.url);
+      const date = requestUrl.searchParams.get('date');
+
+      if (date === '2025-05-02') {
+        return HttpResponse.json({
+          date: '2025-05-02',
+          memo: '먼지를 깨끗하게 털고 밥그릇을 닦아줌.',
+        });
+      }
+      return HttpResponse.json(null);
+    }
+  ),
 
   http.get('http://localhost:8081/api/cages/:cageId/llm', () => {
     return HttpResponse.json({
