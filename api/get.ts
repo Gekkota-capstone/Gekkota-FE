@@ -22,6 +22,18 @@ export async function getList(): Promise<CageList> {
   return data;
 }
 
+export async function getPetInfo(petId: string) {
+  const response = await getList(); // 기존 리스트 전부 가져오기
+  const petData = response.list.find((item) => item.id === Number(petId)); // petId가 숫자형으로 되어 있으므로 Number로 변환
+
+  if (!petData) {
+    throw new Error('해당 ID의 도마뱀 정보를 찾을 수 없습니다.');
+  }
+
+  return petData; // petData 반환
+}
+
+
 // src/api/getBehaviorAnalytics.ts
 export async function getBehaviorAnalytics({
   cageId,

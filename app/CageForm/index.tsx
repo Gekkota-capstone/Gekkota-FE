@@ -14,9 +14,9 @@ import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import CustomButton from '@/components/PrimaryButton';
-import PreviousButton from '@/components/PreviousButton';
 import DatePicker from '@/components/DatePicker';
 import { usePostCage } from '@/hooks/usePostCage';
+import dayjs from 'dayjs';
 
 interface FormData {
   // 폼 데이터 타입 정의
@@ -40,17 +40,18 @@ const cageForm = () => {
   const [error, setError] = useState<string | null>(null);
 
   // 종 버튼 클릭 확인
-  const [selectedSpecies, setSelectedSepcies] = useState<
-    null | 'crested' | 'leopard'
+  const [selectedSpecies, setSelectedSepecies] = useState<
+    null | '크레스티드 게코' | '레오파드 게코'
   >(null);
 
   // 성별 버튼 클릭 확인
   const [selectedGender, setSelectedGender] = useState<
-    null | 'male' | 'female' | 'unknown'
+    null | '남아' | '여아' | '미구분'
   >(null);
 
   // 날짜 선택 관리
-  const [selectedDate, setSelectedDate] = useState('2025-03-24');
+  const formattedDate = dayjs().format('YYYY-MM-DD');
+  const [selectedDate, setSelectedDate] = useState(formattedDate);
 
   // 이름 실시간으로 watch
   const nameValue = watch('name');
@@ -87,15 +88,6 @@ const cageForm = () => {
   const handleNext = () => {
     // 다음버튼 함수
     setStep((prevStep) => prevStep + 1);
-  };
-
-  const handlePrevious = () => {
-    // 뒤로가기 함수
-    if (step > 1) {
-      setStep(step - 1); // 이전 단계로 이동
-    } else {
-      router.back(); // 첫 번째 단계일 때는 뒤로가기
-    }
   };
 
   const handleDateChange = (newDate: string) => {
@@ -147,16 +139,16 @@ const cageForm = () => {
               <TouchableOpacity
                 style={[
                   styles.button,
-                  selectedSpecies === 'crested' && styles.selectedButton,
+                  selectedSpecies === '크레스티드 게코' && styles.selectedButton,
                 ]}
                 onPress={() => {
-                  setSelectedSepcies('crested');
-                  setValue('species', 'crested');
+                  setSelectedSepecies('크레스티드 게코');
+                  setValue('species', '크레스티드 게코');
                 }}
               >
                 <Image
                   source={
-                    selectedSpecies === 'crested'
+                    selectedSpecies === '크레스티드 게코'
                       ? require('@/assets/images/crested.png')
                       : require('@/assets/images/crested_bw.png')
                   }
@@ -166,7 +158,7 @@ const cageForm = () => {
               <Text
                 style={[
                   styles.genderText,
-                  selectedSpecies === 'crested' && styles.selectedText,
+                  selectedSpecies === '크레스티드 게코' && styles.selectedText,
                 ]}
               >
                 크레스티드 게코
@@ -176,16 +168,16 @@ const cageForm = () => {
               <TouchableOpacity
                 style={[
                   styles.button,
-                  selectedSpecies === 'leopard' && styles.selectedButton,
+                  selectedSpecies === '레오파드 게코' && styles.selectedButton,
                 ]}
                 onPress={() => {
-                  setSelectedSepcies('leopard');
-                  setValue('species', 'leopard');
+                  setSelectedSepecies('레오파드 게코');
+                  setValue('species', '레오파드 게코');
                 }}
               >
                 <Image
                   source={
-                    selectedSpecies === 'leopard'
+                    selectedSpecies === '레오파드 게코'
                       ? require('@/assets/images/leopard.png')
                       : require('@/assets/images/leopard_bw.png')
                   }
@@ -195,7 +187,7 @@ const cageForm = () => {
               <Text
                 style={[
                   styles.genderText,
-                  selectedSpecies === 'leopard' && styles.selectedText,
+                  selectedSpecies === '레오파드 게코' && styles.selectedText,
                 ]}
               >
                 레오파드 게코
@@ -251,16 +243,16 @@ const cageForm = () => {
               <TouchableOpacity
                 style={[
                   styles.button,
-                  selectedGender === 'male' && styles.selectedButton,
+                  selectedGender === '남아' && styles.selectedButton,
                 ]}
                 onPress={() => {
-                  setSelectedGender('male');
-                  setValue('gender', 'male');
+                  setSelectedGender('남아');
+                  setValue('gender', '남아');
                 }}
               >
                 <Image
                   source={
-                    selectedGender === 'male'
+                    selectedGender === '남아'
                       ? require('@/assets/images/male_symbol.png')
                       : require('@/assets/images/male_symbol_white.png')
                   }
@@ -270,7 +262,7 @@ const cageForm = () => {
               <Text
                 style={[
                   styles.genderText,
-                  selectedGender === 'male' && styles.selectedText,
+                  selectedGender === '남아' && styles.selectedText,
                 ]}
               >
                 남아
@@ -280,16 +272,16 @@ const cageForm = () => {
               <TouchableOpacity
                 style={[
                   styles.button,
-                  selectedGender === 'female' && styles.selectedButton,
+                  selectedGender === '여아' && styles.selectedButton,
                 ]}
                 onPress={() => {
-                  setSelectedGender('female');
-                  setValue('gender', 'female');
+                  setSelectedGender('여아');
+                  setValue('gender', '여아');
                 }}
               >
                 <Image
                   source={
-                    selectedGender === 'female'
+                    selectedGender === '여아'
                       ? require('@/assets/images/female_symbol.png')
                       : require('@/assets/images/female_symbol_white.png')
                   }
@@ -299,7 +291,7 @@ const cageForm = () => {
               <Text
                 style={[
                   styles.genderText,
-                  selectedGender === 'female' && styles.selectedText,
+                  selectedGender === '여아' && styles.selectedText,
                 ]}
               >
                 여아
@@ -313,17 +305,17 @@ const cageForm = () => {
             <View style={styles.selectUnknownGender}>
               <TouchableOpacity
                 onPress={() => {
-                  setSelectedGender('unknown');
-                  setValue('gender', 'unknown');
+                  setSelectedGender('미구분');
+                  setValue('gender', '미구분');
                 }}
               >
                 <Ionicons
                   name='checkmark-circle'
                   size={16}
                   color={
-                    selectedGender === 'unknown' ? colors.mainBlue : colors.gray
+                    selectedGender === '미구분' ? colors.mainBlue : colors.gray
                   }
-                  style={{ opacity: selectedGender === 'unknown' ? 1 : 0.5 }}
+                  style={{ opacity: selectedGender === '미구분' ? 1 : 0.5 }}
                 ></Ionicons>
               </TouchableOpacity>
               <Text style={styles.unknownText}>미구분</Text>

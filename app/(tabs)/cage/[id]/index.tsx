@@ -2,6 +2,7 @@ import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Feather from '@expo/vector-icons/Feather';
+import { usePetContext } from '@/contexts/PetContext'
 import {
   SafeAreaView,
   Text,
@@ -11,6 +12,7 @@ import {
   Pressable,
 } from 'react-native';
 import { useGetCageState } from '@/hooks/useGetCageState';
+import { useEffect } from 'react';
 
 const cageImages = {
   sleeping: require('@/assets/images/sleep_pet.png'),
@@ -20,8 +22,15 @@ const cageImages = {
 };
 export default function PetDetailScreen() {
   const { id } = useLocalSearchParams();
+  const { setPetId } = usePetContext(); //현재 페이지의 id PetContext에 저장
   const { data } = useGetCageState(Number(id));
   const router = useRouter();
+
+  useEffect(() => {
+    if (id) {
+      setPetId(id as string);
+    }
+  }, [id]);
 
   return (
     <SafeAreaView style={styles.container}>

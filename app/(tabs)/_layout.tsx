@@ -1,7 +1,6 @@
 import { Tabs, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
-import Feather from '@expo/vector-icons/Feather';
 import { Text } from 'react-native'
 
 export default function TabLayout() {
