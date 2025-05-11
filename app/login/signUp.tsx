@@ -18,6 +18,7 @@ import {
 import { router } from 'expo-router';
 import { colors } from '@/constants';
 import ProfileModal from '@/components/ProfileModal';
+import SuccessModal from '@/components/AlertModal';
 import { Ionicons } from '@expo/vector-icons';
 import { usePostUserInfo } from '@/hooks/usePostUserInfo';
 
@@ -29,6 +30,7 @@ export default function SignUpScreen() {
   const [profile, setProfile] =
     useState<keyof typeof profileImages>('profile1');
   const [profileModalVisible, setProfileModalVisible] = useState(false);
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
   const { mutate } = usePostUserInfo(() => router.replace('/cage'));
 
   const auth = getAuth(getApp());
@@ -73,6 +75,8 @@ export default function SignUpScreen() {
       const cred = await signInWithEmailAndPassword(auth, email, password);
       await cred.user.getIdToken();
       mutate({ nickname, profile });
+      setSuccessModalVisible(true);
+      router.push('/login/signIn');
     } catch (e: any) {
       setError(e.message);
     }
@@ -144,6 +148,11 @@ export default function SignUpScreen() {
       >
         이미 계정이 있으신가요? 로그인
       </Text>
+      <SuccessModal
+        title='회원가입 완료'
+        message='로그인 화면으로 돌아갑니다.'
+        visible={successModalVisible}
+        onConfirm={() => setSuccessModalVisible(false)} />
     </View>
   );
 }
