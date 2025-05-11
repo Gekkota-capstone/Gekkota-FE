@@ -11,11 +11,11 @@ import Modal from 'react-native-modal';
 import { useForm, Controller } from 'react-hook-form';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
-import * as ImagePicker from 'expo-image-picker';
 import CustomButton from '@/components/PrimaryButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import { usePostHealthRecord } from '@/hooks/usePostHealthRecord';
 import { useLocalSearchParams } from 'expo-router';
+import dayjs from 'dayjs';
 
 interface HealthModalProps {
   isVisible: boolean;
@@ -33,16 +33,18 @@ const sheddingOptions = [
 export default function HealthModal({ isVisible, onClose }: HealthModalProps) {
   const { id } = useLocalSearchParams();
   const postHealth = usePostHealthRecord(Number(id));
+  const formattedDate = dayjs().format('YYYY-MM-DD');
   const { control, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
       weight: '',
       shedding: '해당없음',
       memo: '',
-      photo: '',
+      // photo: '',
+      date: formattedDate,
     },
   });
 
-  const photo = watch('photo');
+  // const photo = watch('photo');
   const shedding = watch('shedding');
   const [isSelectOpen, setSelectOpen] = useState(false);
 
@@ -58,16 +60,16 @@ export default function HealthModal({ isVisible, onClose }: HealthModalProps) {
     });
   };
 
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
+  // const pickImage = async () => {
+  //   const result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //     quality: 1,
+  //   });
 
-    if (!result.canceled && result.assets.length > 0) {
-      setValue('photo', result.assets[0].uri);
-    }
-  };
+  //   if (!result.canceled && result.assets.length > 0) {
+  //     setValue('photo', result.assets[0].uri);
+  //   }
+  // };
 
   return (
     <Modal
@@ -153,7 +155,7 @@ export default function HealthModal({ isVisible, onClose }: HealthModalProps) {
               />
             </View>
 
-            <View style={styles.photoContainer}>
+            {/* <View style={styles.photoContainer}>
               <Text style={styles.label}>사진</Text>
               <TouchableOpacity
                 style={styles.photoPicker}
@@ -168,7 +170,7 @@ export default function HealthModal({ isVisible, onClose }: HealthModalProps) {
                   <Text style={styles.photoText}>+</Text>
                 )}
               </TouchableOpacity>
-            </View>
+            </View> */}
           </ScrollView>
           <View
             style={{ width: '100%', alignItems: 'center', marginBottom: 20 }}
