@@ -4,12 +4,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import LogoutModal from '@/components/LogoutModal';
 import ProfileModal from '@/components/ProfileModal';
+import CustomButton from '@/components/PrimaryButton';
+import AlertModal from '@/components/AlertModal';
 import { getApp } from '@react-native-firebase/app';
 import {
   getAuth,
+  sendPasswordResetEmail,
+  updateProfile,
   signOut,
+  firebase,
 } from '@react-native-firebase/auth';
+
 import { router } from 'expo-router';
+import { TextInput } from 'react-native-gesture-handler';
 
 const profileImages = {
   profile1: require('@/assets/images/profile1.png'),
@@ -21,9 +28,16 @@ const profileImages = {
 
 export default function MypageScreen() {
   const auth = getAuth(getApp());
+  const user = firebase.auth().currentUser;
+
+  const [name, setName] = useState<string>(user?.displayName || '');
+
   const [profile, setProfile] = useState<keyof typeof profileImages>('profile1');
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [profileModalVisible, setProfileModalVisible] = useState(false);
+
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  const [passwordModalVisible, setPasswordModalVisible] = useState(false);
 
   const handleLogout = () => {
     setLogoutModalVisible(false);
@@ -36,62 +50,117 @@ export default function MypageScreen() {
       });
   }
 
-return (
-  <SafeAreaView style={styles.container}>
-    {/* 프로필 이미지 */}
-    <View style={styles.profileContainer}>
-      <View style={styles.imageWrapper}>
-        <Image
-          source={profileImages[profile]}
-          style={styles.image}
-          resizeMode="contain"
+  const handleUpdate = async (name: string) => {
+    if (user) {
+      try {
+        await updateProfile(user, { displayName: name });
+        setUpdateModalVisible(true);
+      } catch (error) {
+        console.error(error instanceof Error ? error.message : '알 수 없는 에러');
+      }
+    } else {
+      console.error('사용자가 로그인되어 있지 않습니다.');
+    }
+  }
+
+  const handlePasswordReset = async () => {
+    if (user && user.email) {
+      try {
+        await sendPasswordResetEmail(auth, user.email);
+        setPasswordModalVisible(true);
+      } catch (error) {
+        console.error(error instanceof Error ? error.message : '알 수 없는 에러');
+      }
+    } else {
+      console.error('사용자가 로그인되어 있지 않습니다.');
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* 프로필 이미지 */}
+      <View style={styles.profileContainer}>
+        <View style={styles.imageWrapper}>
+          <Image
+            source={profileImages[profile]}
+            style={styles.image}
+            resizeMode="contain"
+          />
+          <TouchableOpacity
+            onPress={() => setProfileModalVisible(true)}
+            style={styles.plusIcon}>
+            <Ionicons name="add-circle" size={35} color="#888" />
+          </TouchableOpacity>
+
+          <ProfileModal
+            visible={profileModalVisible}
+            onClose={() => setProfileModalVisible(false)}
+            onSelect={(key) => setProfile(key)}
+            selected={profile}
+          />
+        </View>
+      </View>
+
+      {/* 내 정보 */}
+      <View style={styles.infoContainer}>
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>이메일 주소</Text>
+          <Text style={styles.value}>{auth.currentUser?.email}</Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>닉네임</Text>
+          <TextInput
+            style={styles.value}
+            onChangeText={setName}
+          >{name}</TextInput>
+        </View>
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>비밀번호</Text>
+          <TouchableOpacity
+            onPress={() => handlePasswordReset()}>
+            <Text style={[styles.label, { textDecorationLine: 'underline' }]}>변경하기</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <TouchableOpacity
+        onPress={() => setLogoutModalVisible(true)}
+        style={styles.logoutContainer}>
+        <Ionicons name="exit-outline" size={16} color="#999" />
+        <Text style={styles.logoutText}>로그아웃</Text>
+      </TouchableOpacity>
+      <View style={styles.button}>
+        <CustomButton
+          title='수정하기'
+          onPress={() => handleUpdate(name)} />
+      </View>
+
+      <AlertModal
+        title='비밀번호 변경'
+        message={`비밀번호 재설정 메일이\n${user?.email ?? '이메일 정보 없음'}로 전송되었습니다.`}
+        visible={passwordModalVisible}
+        onConfirm={() => setPasswordModalVisible(false)}
+      />
+      <AlertModal
+        title='정보 수정'
+        message='정보가 정상적으로 수정되었습니다.'
+        visible={updateModalVisible}
+        onConfirm={() => setUpdateModalVisible(false)}
+      />
+       <LogoutModal
+          visible={logoutModalVisible}
+          onCancel={() => setLogoutModalVisible(false)}
+          onConfirm={handleLogout}
         />
-        <TouchableOpacity
-          onPress={() => setProfileModalVisible(true)}
-          style={styles.plusIcon}>
-          <Ionicons name="add-circle" size={35} color="#888" />
-        </TouchableOpacity>
+    </SafeAreaView>
 
-        <ProfileModal
-          visible={profileModalVisible}
-          onClose={() => setProfileModalVisible(false)}
-          onSelect={(key) => setProfile(key)}
-          selected={profile}
-        />
-      </View>
-    </View>
-
-    {/* 내 정보 */}
-    <View style={styles.infoContainer}>
-      <View style={styles.infoRow}>
-        <Text style={styles.label}>닉네임</Text>
-        <Text style={styles.value}>{auth.currentUser?.displayName}</Text>
-      </View>
-      <View style={styles.infoRow}>
-        <Text style={styles.label}>이메일 주소</Text>
-        <Text style={styles.value}>{auth.currentUser?.email}</Text>
-      </View>
-    </View>
-
-    <TouchableOpacity
-      onPress={() => setLogoutModalVisible(true)}
-      style={styles.logoutContainer}>
-      <Ionicons name="exit-outline" size={16} color="#999" />
-      <Text style={styles.logoutText}>로그아웃</Text>
-    </TouchableOpacity>
-    <LogoutModal
-      visible={logoutModalVisible}
-      onCancel={() => setLogoutModalVisible(false)}
-      onConfirm={handleLogout}
-    />
-  </SafeAreaView>
-);
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 60,
+    paddingVertical: 60,
     paddingHorizontal: 24,
     backgroundColor: '#fff',
   },
@@ -107,7 +176,7 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 65,
     borderColor: colors.mainBlue,
-    borderWidth: 5
+    borderWidth: 4
   },
   plusIcon: {
     position: 'absolute',
@@ -135,7 +204,7 @@ const styles = StyleSheet.create({
   },
   logoutContainer: {
     position: 'absolute',
-    bottom: 24,
+    bottom: 80,
     left: 0,
     right: 0,
     flexDirection: 'row',
@@ -147,4 +216,12 @@ const styles = StyleSheet.create({
     color: '#888',
     fontSize: 12,
   },
+  button: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    bottom: 20,
+    left: 0,
+    right: 0
+  }
 });
