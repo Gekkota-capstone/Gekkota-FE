@@ -77,3 +77,10 @@ export interface LLMMessageResponse {
 export interface CageState {
   state: 'sleeping' | 'standing' | 'active' | 'eating';
 }
+
+export interface DevicesInfo {
+  sn: string;
+  IP: string;
+  rtsp_url: string;
+  device_id: string;
+}

@@ -231,4 +231,12 @@ export const handlers = [
       });
     }
   ),
+  http.post('http://localhost:8081/api/devices', ({ request }) => {
+    return HttpResponse.json({
+      SN: 'temp',
+      IP: '192.168.0.200',
+      rtsp_url: 'rtsp://210.99.70.120:1935/live/cctv006.stream',
+      device_id: 'string',
+    });
+  }),
 ];

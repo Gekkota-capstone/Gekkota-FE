@@ -1,3 +1,4 @@
+import { DevicesInfo } from './resposeType';
 import { fetchWithAuth } from './util';
 
 // api/lizard.ts
@@ -171,4 +172,19 @@ export async function postUserInfo({
 
   const responseData = await response.json();
   return responseData;
+}
+
+export async function postDevicesInfo(): Promise<DevicesInfo> {
+  const response = await fetchWithAuth(`http://localhost:8081/api/devices`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('기기 데이터를 불러오는 중 오류 발생');
+  }
+
+  return response.json();
 }

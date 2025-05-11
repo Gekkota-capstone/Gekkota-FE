@@ -8,6 +8,7 @@ import {
   LiveCameras,
   LLMMessageResponse,
   WeightHistoryResponse,
+  DevicesInfo,
 } from './resposeType';
 import { fetchWithAuth } from './util';
 
