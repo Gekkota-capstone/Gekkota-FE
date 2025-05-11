@@ -36,11 +36,14 @@ export interface LiveCameras {
 
 export interface HealthRecordResponse {
   id: number;
-  date: string;
-  weight: number;
-  memo: string;
+  date: string | null;
+  weight: number | null;
+  memo: string | null;
   shedding_status: null | '탈피예정' | '탈피 중' | '탈피 완료' | '탈피 실패';
   photo_urls: string[] | null;
+
+  monthOfWeight: { day: string; value: number }[];
+  yearOfWeight: { month: string; value: number }[];
 }
 export interface WeightHistoryResponse {
   monthOfWeight: { day: string; value: number }[];
@@ -71,11 +74,17 @@ export interface CleanRecordResponse {
   memo: string | null;
 }
 export interface LLMMessageResponse {
-  messages: { say: string; text: string }[];
+  messages: {
+    id: number;
+    question: string;
+    answer: string;
+    created_at: string;
+  }[];
 }
 
 export interface CageState {
-  state: 'sleeping' | 'standing' | 'active' | 'eating';
+  pet_id: string;
+  is_hiding: boolean;
 }
 
 export interface DevicesInfo {

@@ -2,7 +2,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, View, ScrollView, StyleSheet } from 'react-native';
 import { colors } from '@/constants';
 import React, { useState } from 'react';
-import { useGetFeedRecord } from '@/hooks/useGetFeedRecord'
+import { useGetFeedRecord } from '@/hooks/useGetFeedRecord';
 import AlertCycleCard from './components/AlertCycleCard';
 import FeedRecordCard from './components/FeedRecordCard';
 import FeedDetailModal from '@/components/FeedDetailModal';
@@ -14,7 +14,7 @@ import dayjs from 'dayjs';
 export default function FeedScreen() {
   const { id } = useLocalSearchParams();
   const [isModalVisible, setModalVisible] = useState(false); //추가
-  const [selectedDate, setSelectedDate] = useState(dayjs()); 
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [feedVisible, setFeedVisible] = useState(false); //급여기록
 
   const { data: feedData } = useGetFeedRecord(
@@ -33,14 +33,13 @@ export default function FeedScreen() {
           nextDate='12/8'
           dDay={1}
           alertText='3일 간격으로'
-          onPressCycle={() => { }}
-          onPressAlert={() => { }}
+          onPressCycle={() => {}}
+          onPressAlert={() => {}}
         />
         <CustomCalendar
           selectedDate={selectedDate}
           onSelectDate={setSelectedDate}
         />
-
 
         {feedData && (
           <FeedRecordCard
@@ -51,13 +50,12 @@ export default function FeedScreen() {
               food_size: feedData.food_size,
               food_amount: feedData.food_amount,
               amount_unit: feedData.amount_unit,
-              memo: feedData.memo
+              memo: feedData.memo,
             }}
           />
         )}
 
         <View style={{ height: 80 }} />
-
       </ScrollView>
 
       <CustomButton
@@ -76,7 +74,7 @@ export default function FeedScreen() {
             food_size: feedData.food_size,
             food_amount: feedData.food_amount,
             amount_unit: feedData.amount_unit,
-            memo: feedData.memo
+            memo: feedData.memo,
           }}
         />
       )}

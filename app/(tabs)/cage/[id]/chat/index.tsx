@@ -15,22 +15,37 @@ import { useGetLLMMessage } from '@/hooks/useGetLLMMessage';
 import { usePostLLMMessage } from '@/hooks/usePostLLMMessage';
 import { useLocalSearchParams } from 'expo-router';
 
-type Message = {
-  say: string;
+type MessageBubble = {
+  id: string; // FlatList의 key 용도
+  say: 'ME' | 'AI';
   text: string;
 };
+
 export default function ChatScreen() {
   const { id } = useLocalSearchParams();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageBubble[]>([]);
   const [input, setInput] = useState('');
   const flatListRef = useRef<FlatList>(null);
 
   const { data, isLoading } = useGetLLMMessage(Number(id));
   const { mutateAsync: sendMessage } = usePostLLMMessage(Number(id));
 
+  // 서버에서 받아온 messages 파싱
   useEffect(() => {
     if (data) {
-      setMessages(data.messages);
+      const parsed: MessageBubble[] = data.messages.flatMap((msg) => [
+        {
+          id: `${msg.id}-q`,
+          say: 'ME',
+          text: msg.question,
+        },
+        {
+          id: `${msg.id}-a`,
+          say: 'AI',
+          text: msg.answer,
+        },
+      ]);
+      setMessages(parsed);
     }
   }, [data]);
 
@@ -42,17 +57,24 @@ export default function ChatScreen() {
     const text = input.trim();
     if (!text) return;
 
-    const myMessage: Message = { say: 'ME', text };
-    setMessages((prev) => [...prev, myMessage]);
+    const userMessage: MessageBubble = {
+      id: `local-${Date.now()}-q`,
+      say: 'ME',
+      text,
+    };
+    setMessages((prev) => [...prev, userMessage]);
     setInput('');
 
     try {
       const response = await sendMessage({ message: text });
-      const aiMessage: Message = { say: 'AI', text: response.message };
+      const aiMessage: MessageBubble = {
+        id: `local-${Date.now()}-a`,
+        say: 'AI',
+        text: response.answer,
+      };
       setMessages((prev) => [...prev, aiMessage]);
     } catch (err) {
       console.error('LLM 메시지 전송 실패:', err);
-      // 에러 처리 메시지도 넣을 수 있음
     }
   };
 
@@ -66,7 +88,7 @@ export default function ChatScreen() {
         <FlatList
           ref={flatListRef}
           data={[...messages].reverse()}
-          keyExtractor={(_, idx) => String(idx)}
+          keyExtractor={(item) => item.id}
           inverted
           contentContainerStyle={styles.messageList}
           renderItem={({ item }) => (

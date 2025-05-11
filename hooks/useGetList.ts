@@ -1,9 +1,9 @@
-import { getList } from '@/api/get';
+import { getPets } from '@/api/get';
 import { useQuery } from '@tanstack/react-query';
 
 export function useGetList() {
   return useQuery({
-    queryFn: getList,
+    queryFn: getPets,
     queryKey: ['list'],
   });
 }

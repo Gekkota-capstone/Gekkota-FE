@@ -12,8 +12,8 @@ import {
 } from './resposeType';
 import { fetchWithAuth } from './util';
 
-export async function getList(): Promise<CageList> {
-  const response = await fetchWithAuth('http://localhost:8081/api/cages');
+export async function getPets(): Promise<CageList> {
+  const response = await fetchWithAuth('http://localhost:8081/api/pets');
 
   if (!response.ok) {
     throw new Error('API 호출 중 에러 발생');
@@ -24,7 +24,7 @@ export async function getList(): Promise<CageList> {
 }
 
 export async function getPetInfo(petId: string) {
-  const response = await getList(); // 기존 리스트 전부 가져오기
+  const response = await getPets(); // 기존 리스트 전부 가져오기
   const petData = response.list.find((item) => item.id === Number(petId)); // petId가 숫자형으로 되어 있으므로 Number로 변환
 
   if (!petData) {
@@ -36,14 +36,14 @@ export async function getPetInfo(petId: string) {
 
 // src/api/getBehaviorAnalytics.ts
 export async function getBehaviorAnalytics({
-  cageId,
+  cageId: petid,
   date,
 }: {
   cageId: number;
   date: string;
 }): Promise<BehaviorAnalyticsResponse> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/behaviors?date=${date}`
+    `http://localhost:8081/api/pet-actives/${petid}?date=${date}`
   );
 
   if (!response.ok) {
@@ -77,7 +77,7 @@ export async function getHealthRecord({
   date: string;
 }): Promise<HealthRecordResponse> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/health?date=${date}`
+    `http://localhost:8081/api/pet-healths/${cageId}?date=${date}`
   );
 
   if (!response.ok) {
@@ -87,33 +87,33 @@ export async function getHealthRecord({
   return await response.json();
 }
 
-export async function getWeightHistory({
-  cageId,
-  date,
-}: {
-  cageId: number;
-  date: string; // YYYY-MM-DD
-}): Promise<WeightHistoryResponse> {
-  const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/weights?date=${date}`
-  );
+// export async function getWeightHistory({
+//   cageId,
+//   date,
+// }: {
+//   cageId: number;
+//   date: string; // YYYY-MM-DD
+// }): Promise<WeightHistoryResponse> {
+//   const response = await fetchWithAuth(
+//     `http://localhost:8081/api/cages/${cageId}/weights?date=${date}`
+//   );
 
-  if (!response.ok) {
-    throw new Error('몸무게 데이터를 불러오는 중 오류 발생');
-  }
+//   if (!response.ok) {
+//     throw new Error('몸무게 데이터를 불러오는 중 오류 발생');
+//   }
 
-  return response.json();
-}
+//   return response.json();
+// }
 
 export async function getFeedRecord({
-  cageId,
+  cageId: petId,
   date,
 }: {
   cageId: number;
   date: string;
 }): Promise<FeedRecordResponse> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/feed?date=${date}`
+    `http://localhost:8081/api/pet-feeds/${petId}?date=${date}`
   );
 
   if (!response.ok) {
@@ -131,7 +131,7 @@ export async function getCleanRecord({
   date: string;
 }): Promise<CleanRecordResponse> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/clean?date=${date}`
+    `http://localhost:8081/api/pet-cleans/${cageId}?date=${date}`
   );
 
   if (!response.ok) {
@@ -142,12 +142,12 @@ export async function getCleanRecord({
 }
 
 export async function getLLMMessage({
-  cageId,
+  cageId: petId,
 }: {
   cageId: number;
 }): Promise<LLMMessageResponse> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/llm`
+    `http://localhost:8081/api/chats/${petId}`
   );
 
   if (!response.ok) {
@@ -158,12 +158,12 @@ export async function getLLMMessage({
 }
 
 export async function getCageState({
-  cageId,
+  cageId: petId,
 }: {
   cageId: number;
 }): Promise<CageState> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/state`
+    `http://localhost:8081/api/pets/${petId}/state`
   );
 
   if (!response.ok) {

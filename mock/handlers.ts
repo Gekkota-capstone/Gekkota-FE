@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 export const handlers = [
-  http.get('http://localhost:8081/api/cages', () => {
+  http.get('http://localhost:8081/api/pets', () => {
     return HttpResponse.json({
       list: [
         {
@@ -36,7 +36,7 @@ export const handlers = [
       ],
     });
   }),
-  http.post('https://localhost:8081/api/cage', async ({ request }) => {
+  http.post('https://localhost:8081/api/pets', async ({ request }) => {
     const body = await request.json();
 
     console.log('POST 요청 데이터:', body);
@@ -45,7 +45,7 @@ export const handlers = [
       message: '도마뱀이 성공적으로 추가되었습니다.',
     });
   }),
-  http.get('http://localhost:8081/api/cages/:cageId/behaviors', () => {
+  http.get('http://localhost:8081/api/pet-actives/:petId', () => {
     return HttpResponse.json({
       abnormalBehavior: '크레스티드 게코의 파이어업 상태 30분간 지속',
       highlightVideoUrl: 'https://direp.s3.amazonaws.com/test/sample.mp4',
@@ -80,25 +80,31 @@ export const handlers = [
     });
   }),
 
-  http.get('http://localhost:8081/api/cages/:cageId/live', () => {
-    return HttpResponse.json({
-      camera1: {
-        cameraId: 1,
-        streamUrl: 'rtsp://210.99.70.120:1935/live/cctv001.stream',
-      },
-      camera2: {
-        cameraId: 2,
-        streamUrl: 'rtsp://210.99.70.120:1935/live/cctv001.stream',
-      },
-    });
-  }),
+  // http.get('http://localhost:8081/api/cages/:cageId/live', () => {
+  //   return HttpResponse.json({
+  //     camera1: {
+  //       cameraId: 1,
+  //       streamUrl: 'rtsp://210.99.70.120:1935/live/cctv001.stream',
+  //     },
+  //     camera2: {
+  //       cameraId: 2,
+  //       streamUrl: 'rtsp://210.99.70.120:1935/live/cctv001.stream',
+  //     },
+  //   });
+  // }),
   http.get(
-    'http://localhost:8081/api/cages/:cageId/health',
+    'http://localhost:8081/api/pet-healths/:petId',
     ({ request, params }) => {
       const { cageId } = params;
 
       const requestUrl = new URL(request.url);
       const date = requestUrl.searchParams.get('date');
+
+      if (!date) {
+        return HttpResponse.json({ error: '날짜 쿼리 누락' }, { status: 400 });
+      }
+
+      const [year, month] = date.split('-');
 
       if (date === '2025-04-24') {
         return HttpResponse.json({
@@ -107,6 +113,40 @@ export const handlers = [
           memo: '잘 먹음',
           shedding_status: '탈피 완료',
           photo_urls: null,
+          monthOfWeight: [
+            { day: `${month}.01`, value: 4.2 },
+            { day: `${month}.10`, value: 4.5 },
+            { day: `${month}.20`, value: 4.0 },
+            { day: `${month}.30`, value: 3.8 },
+          ],
+          yearOfWeight: [
+            { month: '1월', value: 3.2 },
+            { month: '3월', value: 4.1 },
+            { month: '5월', value: 3.9 },
+            { month: '7월', value: 4.5 },
+            { month: '9월', value: 4.3 },
+          ],
+        });
+      } else {
+        return HttpResponse.json({
+          date: '2025-04-02',
+          weight: 38.5,
+          memo: null,
+          shedding_status: '탈피 완료',
+          photo_urls: null,
+          monthOfWeight: [
+            { day: `${month}.01`, value: 4.2 },
+            { day: `${month}.10`, value: 4.5 },
+            { day: `${month}.20`, value: 4.0 },
+            { day: `${month}.30`, value: 3.8 },
+          ],
+          yearOfWeight: [
+            { month: '1월', value: 3.2 },
+            { month: '3월', value: 4.1 },
+            { month: '5월', value: 3.9 },
+            { month: '7월', value: 4.5 },
+            { month: '9월', value: 4.3 },
+          ],
         });
       }
 
@@ -114,48 +154,45 @@ export const handlers = [
     }
   ),
 
-  http.get('http://localhost:8081/api/cages/:cageId/weights', ({ request }) => {
-    const url = new URL(request.url);
-    const date = url.searchParams.get('date');
+  // http.get('http://localhost:8081/api/cages/:cageId/weights', ({ request }) => {
+  //   const url = new URL(request.url);
+  //   const date = url.searchParams.get('date');
 
-    if (!date) {
-      return HttpResponse.json({ error: '날짜 쿼리 누락' }, { status: 400 });
-    }
+  //   if (!date) {
+  //     return HttpResponse.json({ error: '날짜 쿼리 누락' }, { status: 400 });
+  //   }
 
-    const [year, month] = date.split('-');
+  //   const [year, month] = date.split('-');
 
-    return HttpResponse.json({
-      monthOfWeight: [
-        { day: `${month}.01`, value: 4.2 },
-        { day: `${month}.10`, value: 4.5 },
-        { day: `${month}.20`, value: 4.0 },
-        { day: `${month}.30`, value: 3.8 },
-      ],
-      yearOfWeight: [
-        { month: '1월', value: 3.2 },
-        { month: '3월', value: 4.1 },
-        { month: '5월', value: 3.9 },
-        { month: '7월', value: 4.5 },
-        { month: '9월', value: 4.3 },
-      ],
-    });
-  }),
-  http.post('http://localhost:8081/api/cages/:cageId/health', ({ request }) => {
+  //   return HttpResponse.json({
+  //     monthOfWeight: [
+  //       { day: `${month}.01`, value: 4.2 },
+  //       { day: `${month}.10`, value: 4.5 },
+  //       { day: `${month}.20`, value: 4.0 },
+  //       { day: `${month}.30`, value: 3.8 },
+  //     ],
+  //     yearOfWeight: [
+  //       { month: '1월', value: 3.2 },
+  //       { month: '3월', value: 4.1 },
+  //       { month: '5월', value: 3.9 },
+  //       { month: '7월', value: 4.5 },
+  //       { month: '9월', value: 4.3 },
+  //     ],
+  //   });
+  // }),
+  http.post('http://localhost:8081/api/pet-healths/:petId', ({ request }) => {
     return HttpResponse.json({
       message: '도마뱀이 성공적으로 추가되었습니다.',
     });
   }),
 
-  http.delete(
-    'http://localhost:8081/api/cages/:cageId/health',
-    ({ request }) => {
-      return HttpResponse.json({
-        message: '도마뱀이 성공적으로 삭제되었습니다.',
-      });
-    }
-  ),
+  http.delete('http://localhost:8081/api/pet-healths/:petId', ({ request }) => {
+    return HttpResponse.json({
+      message: '도마뱀이 성공적으로 삭제되었습니다.',
+    });
+  }),
   http.get(
-    'http://localhost:8081/api/cages/:cageId/feed',
+    'http://localhost:8081/api/pet-feeds/:petId',
     ({ request, params }) => {
       const { cageId } = params;
 
@@ -176,7 +213,7 @@ export const handlers = [
     }
   ),
   http.get(
-    'http://localhost:8081/api/cages/:cageId/clean',
+    'http://localhost:8081/api/pet-cleans/:petId',
     ({ request, params }) => {
       const { cageId } = params;
 
@@ -193,35 +230,43 @@ export const handlers = [
     }
   ),
 
-  http.get('http://localhost:8081/api/cages/:cageId/llm', () => {
+  http.get('http://localhost:8081/api/chats/:petId', () => {
     return HttpResponse.json({
       messages: [
-        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
-        { say: 'ME', text: '앱 사용법을 알려주세요.' },
-        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
-        { say: 'ME', text: '앱 사용법을 알려주세요.' },
-        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
-        { say: 'ME', text: '앱 사용법을 알려주세요.' },
-        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
-        { say: 'ME', text: '앱 사용법을 알려주세요.' },
-        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
-        { say: 'ME', text: '앱 사용법을 알려주세요.' },
-        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
-        { say: 'ME', text: '앱 사용법을 알려주세요.' },
-        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
-        { say: 'ME', text: '앱 사용법을 알려주세요.' },
-        { say: 'AI', text: '안녕하세요! 무엇을 도와드릴까요?' },
-        { say: 'ME', text: '앱 사용법을 알려주세요.' },
+        {
+          id: 1,
+          question: '안녕하세요! 무엇을 도와드릴까요?',
+          answer: '앱 사용법을 알려주세요.',
+          created_at: '2025-05-11T06:24:39.669Z',
+        },
+        {
+          id: 2,
+          question: '안녕하세요! 무엇을 도와드릴까요?',
+          answer: '앱 사용법을 알려주세요.',
+          created_at: '2025-05-11T06:24:39.669Z',
+        },
+        {
+          id: 3,
+          question: '안녕하세요! 무엇을 도와드릴까요?',
+          answer: '앱 사용법을 알려주세요.',
+          created_at: '2025-05-11T06:24:39.669Z',
+        },
+        {
+          id: 4,
+          question: '안녕하세요! 무엇을 도와드릴까요?',
+          answer: '앱 사용법을 알려주세요.',
+          created_at: '2025-05-11T06:24:39.669Z',
+        },
       ],
     });
   }),
-  http.post('http://localhost:8081/api/cages/:cageId/llm', ({ request }) => {
+  http.post('http://localhost:8081/api/chats/:petId/query', ({ request }) => {
     return HttpResponse.json({
-      message: '앱 사용법은 이렇게 사용하는 거야~',
+      answer: '앱 사용법은 이렇게 사용하는 거야~',
     });
   }),
   http.get(
-    'http://localhost:8081/api/cages/:cageId/state',
+    'http://localhost:8081/api/pets/:petId/state',
     ({ request, params }) => {
       const states = ['sleeping', 'standing'];
       const randomState = states[Math.floor(Math.random() * states.length)];

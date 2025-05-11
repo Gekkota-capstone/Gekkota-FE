@@ -9,8 +9,8 @@ export interface CageData {
   species: string;
 }
 
-export const postCage = async (data: CageData) => {
-  const response = await fetch('https://example.com/api/cage', {
+export const postPet = async (data: CageData) => {
+  const response = await fetch('https://example.com/api/pets', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -29,19 +29,19 @@ export const postCage = async (data: CageData) => {
 // src/api/health.ts
 // src/api/post.ts
 export async function postHealthRecord({
-  cageId,
+  cageId: petId,
   data,
 }: {
   cageId: number;
   data: {
     weight: string;
-    shedding: string;
+    shedding_status: string;
     memo: string;
-    photo?: string; // 선택 사항
+    date: string;
   };
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/health`,
+    `http://localhost:8081/api/pet-healths/${petId}`,
     {
       method: 'POST',
       headers: {
@@ -59,7 +59,7 @@ export async function postHealthRecord({
 // src/api/feed.ts
 // src/api/post.ts
 export async function postFeedRecord({
-  cageId,
+  cageId: petId,
   data,
 }: {
   cageId: number;
@@ -73,7 +73,7 @@ export async function postFeedRecord({
   };
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/feed`,
+    `http://localhost:8081/api/pet-feeds/${petId}`,
     {
       method: 'POST',
       headers: {
@@ -91,7 +91,7 @@ export async function postFeedRecord({
 // src/api/feed.ts
 // src/api/post.ts
 export async function postCleanRecord({
-  cageId,
+  cageId: petId,
   data,
 }: {
   cageId: number;
@@ -101,7 +101,7 @@ export async function postCleanRecord({
   };
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/clean`,
+    `http://localhost:8081/api/pet-cleans/${petId}`,
     {
       method: 'POST',
       headers: {
@@ -117,16 +117,16 @@ export async function postCleanRecord({
 }
 
 export async function postLLMMessage({
-  cageId,
+  cageId: petId,
   data,
 }: {
   cageId: number;
   data: {
-    message: string;
+    question: string;
   };
-}): Promise<{ message: string }> {
+}): Promise<{ answer: string }> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/llm`,
+    `http://localhost:8081/api/chats/${petId}/query`,
     {
       method: 'POST',
       headers: {

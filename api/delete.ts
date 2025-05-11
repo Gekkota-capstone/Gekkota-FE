@@ -9,7 +9,7 @@ export async function deleteHealthRecord({
   cardId: number;
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/health?cardId=${cardId}`,
+    `http://localhost:8081/api/pet-healths/${cageId}/health?cardId=${cardId}`,
     {
       method: 'DELETE',
     }

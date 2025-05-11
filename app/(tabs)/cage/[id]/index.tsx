@@ -2,7 +2,7 @@ import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Feather from '@expo/vector-icons/Feather';
-import { usePetContext } from '@/contexts/PetContext'
+import { usePetContext } from '@/contexts/PetContext';
 import {
   SafeAreaView,
   Text,
@@ -15,10 +15,8 @@ import { useGetCageState } from '@/hooks/useGetCageState';
 import { useEffect } from 'react';
 
 const cageImages = {
-  sleeping: require('@/assets/images/sleep_pet.png'),
-  standing: require('@/assets/images/standding_pet.png'),
-  active: require('@/assets/images/sleep_pet.png'),
-  eating: require('@/assets/images/standding_pet.png'),
+  active: require('@/assets/images/standding_pet.png'),
+  stealth: require('@/assets/images/stealth_pet.png'),
 };
 export default function PetDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -36,7 +34,7 @@ export default function PetDetailScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.cageContainer}>
         <Image
-          source={cageImages[data?.state ?? 'sleeping']}
+          source={cageImages[data?.is_hiding ? 'stealth' : 'active']}
           style={styles.cageImage}
         />
       </View>

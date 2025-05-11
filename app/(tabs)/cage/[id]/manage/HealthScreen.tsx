@@ -1,12 +1,11 @@
 import { useLocalSearchParams, Stack, router } from 'expo-router';
-import { SafeAreaView, View, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView, View, StyleSheet, ScrollView, Text } from 'react-native';
 import { colors } from '@/constants';
 import { useState } from 'react';
 import CustomButton from '@/components/PrimaryButton';
 import CustomCalendar from './components/CustomCalendar';
 import dayjs from 'dayjs';
 import { useGetHealthRecord } from '@/hooks/useGetHealthRecord';
-import { useWeightHistory } from '@/hooks/useWeightHistory';
 import HealthDetailModal from '@/components/HealthDetailModal';
 import HealthRecordCard from './components/HealthRecordCard';
 import WeightChart from './components/WeightChart';
@@ -23,10 +22,10 @@ export default function HealthScreen() {
     selectedDate.format('YYYY-MM-DD')
   );
 
-  const { data: weightData } = useWeightHistory(
-    Number(id),
-    selectedDate.format('YYYY-MM-DD')
-  );
+  // const { data: weightData } = useWeightHistory(
+  //   Number(id),
+  //   selectedDate.format('YYYY-MM-DD')
+  // );
   const [isModalVisible, setModalVisible] = useState(false);
   const openAddModal = () => setModalVisible(true);
   const closeAddModal = () => setModalVisible(false);
@@ -35,14 +34,20 @@ export default function HealthScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* ✅ WeightChart에 data만 전달 */}
-        {weightData && <WeightChart data={weightData} />}
-
         <CustomCalendar
           selectedDate={selectedDate}
           onSelectDate={setSelectedDate}
         />
-
         {healthData && (
+          <WeightChart
+            data={{
+              monthOfWeight: healthData.monthOfWeight,
+              yearOfWeight: healthData.yearOfWeight,
+            }}
+          />
+        )}
+
+        {healthData?.date && healthData.memo && (
           <HealthRecordCard
             onPress={() => setHealthVisible(true)}
             data={{
@@ -54,6 +59,7 @@ export default function HealthScreen() {
             }}
           />
         )}
+        <Text>기록이 없습니다.</Text>
 
         <View style={{ height: 80 }} />
       </ScrollView>
@@ -65,7 +71,7 @@ export default function HealthScreen() {
         />
       </View>
 
-      {healthData && (
+      {healthData?.date && healthData.memo && (
         <HealthDetailModal
           visible={healthVisible}
           onClose={() => setHealthVisible(false)}
