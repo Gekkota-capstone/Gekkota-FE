@@ -1,4 +1,31 @@
 import { http, HttpResponse } from 'msw';
+const feedData = [
+  {
+    date: '2025-05-01',
+    food_type: '누에',
+    food_size: '중',
+    food_amount: 2,
+    amount_unit: '마리',
+    message: '',
+  },
+  {
+    date: '2025-05-06',
+    food_type: '사료',
+    food_size: '소',
+    food_amount: 3,
+    amount_unit: 'g',
+    message: '정기 급여',
+  },
+  {
+    date: '2025-05-08',
+    food_type: '밀웜',
+    food_size: '대',
+    food_amount: 5,
+    amount_unit: '마리',
+    message: '',
+  },
+  // 필요에 따라 더 많은 데이터 추가
+];
 
 export const handlers = [
   http.get('http://localhost:8081/api/pets', () => {
@@ -191,27 +218,50 @@ export const handlers = [
       message: '도마뱀이 성공적으로 삭제되었습니다.',
     });
   }),
+
   http.get(
-    'http://localhost:8081/api/pet-feeds/:petId',
-    ({ request, params }) => {
-      const { cageId } = params;
+  'http://localhost:8081/api/pet-feeds/:petId',
+  ({ request, params }) => {
+    const { cageId } = params;
 
-      const requestUrl = new URL(request.url);
-      const date = requestUrl.searchParams.get('date');
+    const mockData = [
+      {
+        date: '2025-05-01',
+        food_type: '누에',
+        food_size: '중',
+        food_amount: 2,
+        amount_unit: '마리',
+        memo: '',
+      },
+      {
+        date: '2025-05-06',
+        food_type: '귀뚜라미',
+        food_size: '소',
+        food_amount: 3,
+        amount_unit: 'g',
+      },
+      {
+        date: '2025-05-11',
+        food_type: '채소',
+        memo: '상추 3장 급여함',
+      },
+    ];
 
-      if (date === '2025-05-01') {
-        return HttpResponse.json({
-          date: '2025-05-01',
-          food_type: '누에',
-          food_size: '중',
-          food_amount: 2,
-          amount_unit: '마리',
-          message: '',
-        });
-      }
-      return HttpResponse.json(null);
+    const requestUrl = new URL(request.url);
+    const date = requestUrl.searchParams.get('date');
+    if (!date) {
+      // 날짜가 없으면 전체 데이터 반환
+      return HttpResponse.json(mockData);
     }
-  ),
+    
+    const filteredData = mockData.filter((data) => data.date === date);
+    if (filteredData.length === 0) {
+      return HttpResponse.json([]); // 데이터가 없을 때 빈 배열 반환
+    }
+    return HttpResponse.json(filteredData);
+  }
+),
+
   http.get(
     'http://localhost:8081/api/pet-cleans/:petId',
     ({ request, params }) => {

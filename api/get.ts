@@ -123,6 +123,21 @@ export async function getFeedRecord({
   return await response.json();
 }
 
+
+export async function getAllFeedRecords({
+  cageId: petId,
+}: {
+  cageId: number;
+}): Promise<FeedRecordResponse> {
+  const response = await fetchWithAuth(
+    `http://localhost:8081/api/pet-feeds/${petId}`
+  );
+  if (!response.ok) {
+    throw new Error('전체 급여 데이터를 가져오는 중 오류 발생');
+  }
+  return await response.json();
+}
+
 export async function getCleanRecord({
   cageId,
   date,

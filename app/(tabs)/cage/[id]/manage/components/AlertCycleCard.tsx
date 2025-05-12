@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
+import NumberPickerModal from '@/components/NumberPickerModal';
 
 interface AlertCycleCardProps {
   recentDate: string;
   nextDate: string;
   dDay: number;
-  alertText: string;
+  feedingInterval: number;
+  onSelectInterval: (interval: number) => void;
   onPressCycle: () => void;
   onPressAlert: () => void;
 }
@@ -16,10 +18,23 @@ function AlertCycleCard({
   recentDate,
   nextDate,
   dDay,
-  alertText,
+  feedingInterval,
+  onSelectInterval,
   onPressCycle,
   onPressAlert,
 }: AlertCycleCardProps) {
+
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const handleSelectNumber = (selectedNumber: number) => {
+    setModalVisible(false);
+    onSelectInterval(selectedNumber);
+  };
+
+  const openModal = () => {
+    setModalVisible(true); // 알림 버튼 클릭 시 모달 열기
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.topRow}>
@@ -48,18 +63,25 @@ function AlertCycleCard({
 
       {/* 알림 */}
       <TouchableOpacity
-        onPress={onPressAlert}
+        onPress={openModal}
         style={styles.alertRow}
       >
         <Text style={styles.label}>알림</Text>
-        <View style={styles.alertRight}>
-          <Text style={styles.alertText}>{alertText}</Text>
+        <View
+          style={styles.alertRight}
+
+        >
+          <Text style={styles.alertText}>{feedingInterval}일 간격으로</Text>
           <Ionicons
             name='chevron-forward-outline'
             size={20}
           />
         </View>
       </TouchableOpacity>
+      <NumberPickerModal
+        visible={isModalVisible} // 모달 상태 관리
+        onSelectNumber={handleSelectNumber} // 숫자 선택 처리
+      />
     </View>
   );
 }
