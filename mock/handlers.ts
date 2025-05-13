@@ -224,7 +224,7 @@ export const handlers = [
   ({ request, params }) => {
     const { cageId } = params;
 
-    const mockData = [
+    const feedData = [
       {
         date: '2025-05-01',
         food_type: '누에',
@@ -251,10 +251,10 @@ export const handlers = [
     const date = requestUrl.searchParams.get('date');
     if (!date) {
       // 날짜가 없으면 전체 데이터 반환
-      return HttpResponse.json(mockData);
+      return HttpResponse.json(feedData);
     }
     
-    const filteredData = mockData.filter((data) => data.date === date);
+    const filteredData = feedData.filter((data) => data.date === date);
     if (filteredData.length === 0) {
       return HttpResponse.json([]); // 데이터가 없을 때 빈 배열 반환
     }
