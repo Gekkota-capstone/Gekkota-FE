@@ -6,7 +6,7 @@ export function useDeleteFeedRecord(cageId: number, onSuccess: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (cardId: number) => deleteFeedRecord({ cageId, cardId }),
+    mutationFn: (date: string) => deleteFeedRecord({ cageId, date }),
     onSuccess: () => {
       onSuccess();
       console.log('삭제성공');

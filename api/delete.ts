@@ -3,13 +3,13 @@ import { fetchWithAuth } from './util';
 // src/api/health.ts
 export async function deleteHealthRecord({
   cageId,
-  cardId,
+  date,
 }: {
   cageId: number;
-  cardId: number;
+  date: string;
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/pet-healths/${cageId}/health?cardId=${cardId}`,
+    `https://api.saffir.co.kr/pet-healths/${cageId}?date=${date}`,
     {
       method: 'DELETE',
     }
@@ -23,13 +23,13 @@ export async function deleteHealthRecord({
 // src/api/health.ts
 export async function deleteFeedRecord({
   cageId,
-  cardId,
+  date,
 }: {
   cageId: number;
-  cardId: number;
+  date: string;
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/feed?cardId=${cardId}`,
+    `https://api.saffir.co.kr/cages/${cageId}?date=${date}`,
     {
       method: 'DELETE',
     }
@@ -43,13 +43,13 @@ export async function deleteFeedRecord({
 // src/api/health.ts
 export async function deleteCleanRecord({
   cageId,
-  cardId,
+  date,
 }: {
   cageId: number;
-  cardId: number;
+  date: string;
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/cages/${cageId}/clean?cardId=${cardId}`,
+    `https://api.saffir.co.kr/cages/${cageId}?date=${date}`,
     {
       method: 'DELETE',
     }

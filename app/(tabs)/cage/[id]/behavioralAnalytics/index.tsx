@@ -38,20 +38,27 @@ export default function BehavioralAnalyticsScreen() {
     }
   );
 
-  const hourly = data?.activityGraph.timeOfActivity || [];
-  const daily = data?.activityGraph.recentDatOfActivit || [];
+  const hourly = data?.timeOfActivity || [];
+  const daily = data?.recentDatOfActivity || [];
+  const groupSize = 3;
 
   const labels =
     chartType === 'hourly'
-      ? hourly.map((item) => item.hour)
+      ? Array.from(
+          { length: 24 / groupSize },
+          (_, i) => `${i * groupSize}-${i * groupSize + groupSize - 1}`
+        )
       : daily.map((item) => item.day);
 
   const values =
     chartType === 'hourly'
-      ? hourly.map((item) => item.value)
+      ? Array.from({ length: 24 / groupSize }, (_, i) => {
+          const group = hourly.slice(i * groupSize, i * groupSize + groupSize);
+          const total = group.reduce((sum, item) => sum + item.value, 0);
+          return total / group.length;
+        })
       : daily.map((item) => item.value);
-
-  const isAbnormal = !!data?.abnormalBehavior;
+  const isAbnormal = data?.abnormalBehavior !== 'none';
 
   const getTimeRangeLabel = (start: number, end: number) =>
     `${start < 12 ? `오전 ${start}` : `오후 ${start - 12}`}시 ~ ${

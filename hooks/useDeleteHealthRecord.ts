@@ -6,7 +6,7 @@ export function useDeleteHealthRecord(cageId: number, onSuccess: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (cardId: number) => deleteHealthRecord({ cageId, cardId }),
+    mutationFn: (date: string) => deleteHealthRecord({ cageId, date }),
     onSuccess: () => {
       onSuccess();
       console.log('삭제성공');

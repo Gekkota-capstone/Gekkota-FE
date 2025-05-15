@@ -87,7 +87,7 @@ export default function HealthDetailModal({
         </View>
         <TouchableOpacity
           style={styles.delete}
-          onPress={() => deleteHealth(data.id)}
+          onPress={() => deleteHealth(data.date)}
         >
           <Ionicons
             name='trash-bin-outline'

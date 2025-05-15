@@ -10,20 +10,27 @@ export interface CageData {
 }
 
 export const postPet = async (data: CageData) => {
-  const response = await fetch('https://example.com/api/pets', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer YOUR_ACCESS_TOKEN',
-    },
-    body: JSON.stringify(data),
-  });
+  try {
+    const response = await fetchWithAuth('https://api.saffir.co.kr/pets/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
 
-  if (!response.ok) {
-    throw new Error('도마뱀 등록에 실패했습니다.');
+    if (!response.ok) {
+      const errorText = await response.text(); // 혹은 response.json() 시도 가능
+      throw new Error(
+        `도마뱀 등록 실패: ${response.status} ${response.statusText}\n${errorText}`
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('❌ postPet error:', error);
+    throw error; // 다시 throw 해서 상위에서 catch 가능
   }
-
-  return response.json(); // or return true
 };
 
 // src/api/health.ts
@@ -41,7 +48,7 @@ export async function postHealthRecord({
   };
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/pet-healths/${petId}`,
+    `https://api.saffir.co.kr/pet-healths/${petId}`,
     {
       method: 'POST',
       headers: {
@@ -73,7 +80,7 @@ export async function postFeedRecord({
   };
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/pet-feeds/${petId}`,
+    `https://api.saffir.co.kr/pet-feeds/${petId}`,
     {
       method: 'POST',
       headers: {
@@ -101,7 +108,7 @@ export async function postCleanRecord({
   };
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/pet-cleans/${petId}`,
+    `https://api.saffir.co.kr/pet-cleans/${petId}`,
     {
       method: 'POST',
       headers: {
@@ -126,7 +133,7 @@ export async function postLLMMessage({
   };
 }): Promise<{ answer: string }> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/chats/${petId}/query`,
+    `https://api.saffir.co.kr/chats/${petId}/query`,
     {
       method: 'POST',
       headers: {
@@ -155,16 +162,13 @@ export async function postUserInfo({
   nickname: string;
   profile: string;
 }> {
-  const response = await fetchWithAuth(
-    `http://localhost:8081/api/user/me/profile`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }
-  );
+  const response = await fetchWithAuth(`https://api.saffir.co.kr/users/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
 
   if (!response.ok) {
     throw new Error('유저 정보중 오류 발생');
@@ -175,7 +179,7 @@ export async function postUserInfo({
 }
 
 export async function postDevicesInfo(): Promise<DevicesInfo> {
-  const response = await fetchWithAuth(`http://localhost:8081/api/devices`, {
+  const response = await fetchWithAuth(`https://api.saffir.co.kr/devices`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

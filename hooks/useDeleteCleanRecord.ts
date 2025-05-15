@@ -6,7 +6,7 @@ export function useDeleteCleanRecord(cageId: number, onSuccess: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (cardId: number) => deleteCleanRecord({ cageId, cardId }),
+    mutationFn: (date: string) => deleteCleanRecord({ cageId, date }),
     onSuccess: () => {
       onSuccess();
       console.log('삭제성공');
