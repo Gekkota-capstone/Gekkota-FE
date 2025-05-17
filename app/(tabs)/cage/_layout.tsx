@@ -1,93 +1,127 @@
 import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { Text, TouchableOpacity } from 'react-native';
-import { usePetContext } from '@/contexts/PetContext'
+import { Text, TouchableOpacity, View } from 'react-native';
+import { usePetContext } from '@/contexts/PetContext';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function CageLayout() {
-  const { petId, setPetId } = usePetContext(); //context를 이용하여 전역에서 관리. PetDetailScreen에서 id 
-
+  const { petId, setPetId } = usePetContext(); //context를 이용하여 전역에서 관리. PetDetailScreen에서 id
+  const queryClient = useQueryClient();
   return (
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: {
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: {
+          backgroundColor: colors.WHITE,
+        },
+      }}
+    >
+      <Stack.Screen
+        name='index'
+        options={{
+          headerShown: true,
+          headerTintColor: colors.BLACK,
+          headerStyle: {
             backgroundColor: colors.WHITE,
           },
+          headerTitleAlign: 'left',
+          headerTitle: () => (
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: '700',
+                color: colors.BLACK,
+                width: '100%',
+                textAlign: 'left',
+              }}
+            >
+              홈
+            </Text>
+          ),
         }}
-      >
-        <Stack.Screen
-          name='index'
-          options={{
-            headerShown: true,
-            headerTintColor: colors.BLACK,
-            headerStyle: {
-              backgroundColor: colors.WHITE,
-            },
-            headerTitleAlign: 'left',
-            headerTitle: () => (
-              <Text
-                style={{
-                  fontSize: 24,
-                  fontWeight: '700',
-                  color: colors.BLACK,
-                  width: '100%',
-                  textAlign: 'left',
-                }}
-              >
-                홈
-              </Text>
-            ),
-          }}
-        />
-        <Stack.Screen
-          name='[id]/index'
-          options={{
-            headerShown: true,
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => router.back()}
-                style={{ paddingLeft: 4 }}
-              >
-                <Ionicons name='chevron-back' size={24} color={colors.BLACK} />
-              </TouchableOpacity>
-            ),
-            headerRight: () => (
+      />
+      <Stack.Screen
+        name='[id]/index'
+        options={{
+          headerShown: true,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{ paddingLeft: 4 }}
+            >
+              <Ionicons
+                name='chevron-back'
+                size={24}
+                color={colors.BLACK}
+              />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <View style={{ flexDirection: 'row', paddingLeft: 4 }}>
               <TouchableOpacity
                 onPress={() => {
                   if (petId) {
-                    console.log("💡 id 값:", petId);
-                    router.push(`/cage/${petId}/setting`);
+                    console.log('💡 id 값:', petId);
+                    queryClient.invalidateQueries({
+                      queryKey: ['state', petId],
+                    });
                   } else {
-                    console.error("❌ id 값이 없습니다!");
+                    console.error('❌ id 값이 없습니다!');
                   }
                 }}
                 style={{ paddingLeft: 4 }}
               >
-                <Ionicons name='settings' size={24} color={colors.BLACK} />
+                <Ionicons
+                  name='reload'
+                  size={24}
+                  color={colors.BLACK}
+                />
               </TouchableOpacity>
-            ),
-            headerTitleAlign: 'center',
-            title: '',
-          }}
-        />
-        <Stack.Screen
-          name='[id]/setting'
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            headerLeft: () => (
               <TouchableOpacity
-                onPress={() => router.back()}
+                onPress={() => {
+                  if (petId) {
+                    console.log('💡 id 값:', petId);
+                    router.push(`/cage/${petId}/setting`);
+                  } else {
+                    console.error('❌ id 값이 없습니다!');
+                  }
+                }}
                 style={{ paddingLeft: 4 }}
               >
-                <Ionicons name='chevron-back' size={24} color={colors.BLACK} />
+                <Ionicons
+                  name='settings'
+                  size={24}
+                  color={colors.BLACK}
+                />
               </TouchableOpacity>
-            ),
-            headerTitleAlign: 'center',
-            title: '',
-          }}
-        />
-      </Stack>
+            </View>
+          ),
+          headerTitleAlign: 'center',
+          title: '',
+        }}
+      />
+      <Stack.Screen
+        name='[id]/setting'
+        options={{
+          headerShown: true,
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{ paddingLeft: 4 }}
+            >
+              <Ionicons
+                name='chevron-back'
+                size={24}
+                color={colors.BLACK}
+              />
+            </TouchableOpacity>
+          ),
+          headerTitleAlign: 'center',
+          title: '',
+        }}
+      />
+    </Stack>
   );
 }
