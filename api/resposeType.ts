@@ -9,11 +9,9 @@ export type CageList = {
 export interface BehaviorAnalyticsResponse {
   abnormalBehavior: string;
   highlightVideoUrl: string[] | null;
-  bioPattern: {
-    wakeUp: { start: number; end: number };
-    sleep: { start: number; end: number };
-    mostActive: { start: number; end: number };
-  };
+
+  mostActive: { start: number; end: number };
+
   heatmapImageUrl: string | null;
 
   recentDatOfActivity: { day: string; value: number }[];
