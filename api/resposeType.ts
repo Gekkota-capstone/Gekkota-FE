@@ -1,5 +1,5 @@
 export type CageList = {
-  id: number;
+  pet_id: string;
   name: string;
   species: string;
   gender: string;
@@ -8,7 +8,7 @@ export type CageList = {
 
 export interface BehaviorAnalyticsResponse {
   abnormalBehavior: string;
-  highlightVideoUrl: string | null;
+  highlightVideoUrl: string[] | null;
   bioPattern: {
     wakeUp: { start: number; end: number };
     sleep: { start: number; end: number };
@@ -85,8 +85,5 @@ export interface CageState {
 }
 
 export interface DevicesInfo {
-  sn: string;
-  IP: string;
   rtsp_url: string;
-  device_id: string;
 }

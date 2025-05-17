@@ -1,11 +1,11 @@
 import { useLocalSearchParams } from 'expo-router';
-import { SafeAreaView, View, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView, View, ScrollView, StyleSheet, Text } from 'react-native';
 import { colors } from '@/constants';
 import React, { useState } from 'react';
 import AlertCycleCard from './components/AlertCycleCard';
 import CustomCalendar from './components/CustomCalendar';
 import ModalComponent from '@/app/(tabs)/cage/[id]/manage/addClean';
-import { useGetCleanRecord } from '@/hooks/useGetCleanRecord'
+import { useGetCleanRecord } from '@/hooks/useGetCleanRecord';
 import CleanDetailModal from '@/components/CleanDetailModal';
 import CleanRecordCard from './components/CleanRecordCard';
 import CustomButton from '@/components/PrimaryButton';
@@ -20,22 +20,25 @@ export default function CleanScreen() {
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
 
-  const { data: cleanData } = useGetCleanRecord(
-    Number(id),
+  const { data: cleanData, isLoading } = useGetCleanRecord(
+    id as string,
     selectedDate.format('YYYY-MM-DD')
   );
-
+  console.log(cleanData);
+  if (isLoading) {
+    return <Text>로딩중</Text>;
+  }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <AlertCycleCard
+        {/* <AlertCycleCard
           recentDate='12/2'
           nextDate='12/8'
           dDay={1}
           alertText='7일 간격으로'
-          onPressCycle={() => { }}
-          onPressAlert={() => { }}
-        />
+          onPressCycle={() => {}}
+          onPressAlert={() => {}}
+        /> */}
         <CustomCalendar
           selectedDate={selectedDate}
           onSelectDate={setSelectedDate}
@@ -46,7 +49,7 @@ export default function CleanScreen() {
             onPress={() => setCleanVisible(true)}
             data={{
               date: cleanData.date,
-              memo: cleanData.memo
+              memo: cleanData.memo,
             }}
           />
         )}
@@ -59,7 +62,7 @@ export default function CleanScreen() {
           data={{
             id: cleanData.id,
             date: cleanData.date,
-            memo: cleanData.memo
+            memo: cleanData.memo,
           }}
         />
       )}

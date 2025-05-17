@@ -2,11 +2,12 @@ import { postLLMMessage } from '@/api/post';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 // src/hooks/usePostLLMMessage.ts
-export function usePostLLMMessage(cageId: number) {
+export function usePostLLMMessage(cageId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: { message: string }) => postLLMMessage({ cageId, data }),
+    mutationFn: (data: { question: string }) =>
+      postLLMMessage({ cageId, data }),
     onSuccess: () => {},
   });
 }

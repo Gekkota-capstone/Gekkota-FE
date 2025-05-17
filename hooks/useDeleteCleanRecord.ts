@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteCleanRecord } from '@/api/delete';
 
-export function useDeleteCleanRecord(cageId: number, onSuccess: () => void) {
+export function useDeleteCleanRecord(cageId: string, onSuccess: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({

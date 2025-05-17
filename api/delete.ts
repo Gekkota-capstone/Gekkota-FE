@@ -5,7 +5,7 @@ export async function deleteHealthRecord({
   cageId,
   date,
 }: {
-  cageId: number;
+  cageId: string;
   date: string;
 }): Promise<void> {
   const response = await fetchWithAuth(
@@ -25,7 +25,7 @@ export async function deleteFeedRecord({
   cageId,
   date,
 }: {
-  cageId: number;
+  cageId: string;
   date: string;
 }): Promise<void> {
   const response = await fetchWithAuth(
@@ -45,7 +45,7 @@ export async function deleteCleanRecord({
   cageId,
   date,
 }: {
-  cageId: number;
+  cageId: string;
   date: string;
 }): Promise<void> {
   const response = await fetchWithAuth(

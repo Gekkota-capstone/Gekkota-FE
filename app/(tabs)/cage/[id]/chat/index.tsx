@@ -27,8 +27,8 @@ export default function ChatScreen() {
   const [input, setInput] = useState('');
   const flatListRef = useRef<FlatList>(null);
 
-  const { data, isLoading } = useGetLLMMessage(Number(id));
-  const { mutateAsync: sendMessage } = usePostLLMMessage(Number(id));
+  const { data, isLoading } = useGetLLMMessage(id as string);
+  const { mutateAsync: sendMessage } = usePostLLMMessage(id as string);
 
   // 서버에서 받아온 messages 파싱
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function ChatScreen() {
     setInput('');
 
     try {
-      const response = await sendMessage({ message: text });
+      const response = await sendMessage({ question: text });
       const aiMessage: MessageBubble = {
         id: `local-${Date.now()}-a`,
         say: 'AI',

@@ -25,13 +25,14 @@ export default function BehavioralAnalyticsScreen() {
   const { width: screenWidth } = useWindowDimensions();
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const { data, isLoading } = useBehaviorAnalytics(
-    Number(id),
+    id as string,
     selectedDate.format('YYYY-MM-DD')
   );
+
   const [chartType, setChartType] = useState<'hourly' | 'daily'>('hourly');
 
   const videoPlayer = useVideoPlayer(
-    data?.highlightVideoUrl ?? '',
+    data?.highlightVideoUrl?.[0] ?? '',
     (player) => {
       player.loop = true;
       player.play();
@@ -65,6 +66,9 @@ export default function BehavioralAnalyticsScreen() {
       end < 12 ? `오전 ${end}` : `오후 ${end - 12}`
     }시`;
 
+  if (isLoading) {
+    return <Text>로딩중</Text>;
+  }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -80,7 +84,7 @@ export default function BehavioralAnalyticsScreen() {
         {isAbnormal ? (
           <View style={styles.warningBox}>
             <Text style={styles.warningTitle}>이상 행동</Text>
-            <Text style={styles.warningDesc}>{data.abnormalBehavior}</Text>
+            <Text style={styles.warningDesc}>{data?.abnormalBehavior}</Text>
           </View>
         ) : (
           <View style={styles.safeBox}>

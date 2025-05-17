@@ -21,49 +21,59 @@ export default function FeedScreen() {
   const [nextDate, setNextDate] = useState<string | null>(null);
   const [feedingInterval, setFeedingInterval] = useState<number>(1);
 
-  const { data: feedData } = useGetFeedRecord(
-    Number(id),
+  const { data: feedData, isLoading } = useGetFeedRecord(
+    id as string,
     selectedDate.format('YYYY-MM-DD')
   );
-  const { data: allData = {} } = useGetFeedRecord(Number(id));
+  const { data: allData = {} } = useGetFeedRecord(id as string);
 
   useEffect(() => {
-  if (allData && typeof allData === 'object' && Object.keys(allData).length > 0) {
-    const sortedFeedRecords = Object.values(allData).sort((a, b) => {
-      const dateA = dayjs(a.date);
-      const dateB = dayjs(b.date);
-      if (!dateA.isValid() || !dateB.isValid()) {
-        console.error('Invalid date format:', a.date, b.date);
-        return 0;
-      }
-      return dateB.isBefore(dateA) ? -1 : 1;
-    });
+    if (
+      allData &&
+      typeof allData === 'object' &&
+      Object.keys(allData).length > 0
+    ) {
+      const sortedFeedRecords = Object.values(allData).sort((a, b) => {
+        const dateA = dayjs(a.date);
+        const dateB = dayjs(b.date);
+        if (!dateA.isValid() || !dateB.isValid()) {
+          console.error('Invalid date format:', a.date, b.date);
+          return 0;
+        }
+        return dateB.isBefore(dateA) ? -1 : 1;
+      });
 
-    const recentFeedDate = sortedFeedRecords[0]?.date;
-    setRecentDate(recentFeedDate);
+      const recentFeedDate = sortedFeedRecords[0]?.date;
+      setRecentDate(recentFeedDate);
 
-    if (recentFeedDate) {
-      const calculatedNextDate = dayjs(recentFeedDate)
-        .add(feedingInterval, 'day')
-        .format('YYYY/MM/DD');
-      setNextDate(calculatedNextDate);
+      if (recentFeedDate) {
+        const calculatedNextDate = dayjs(recentFeedDate)
+          .add(feedingInterval, 'day')
+          .format('YYYY/MM/DD');
+        setNextDate(calculatedNextDate);
 
-      if (dayjs(calculatedNextDate).isBefore(dayjs(), 'day')) {
-        // 현실 날짜보다 이전일 경우 일단 0으로 설정. 후에 알림문구 띄우는걸로 변경
-        setDDay(0);
+        if (dayjs(calculatedNextDate).isBefore(dayjs(), 'day')) {
+          // 현실 날짜보다 이전일 경우 일단 0으로 설정. 후에 알림문구 띄우는걸로 변경
+          setDDay(0);
+        } else {
+          const difference = dayjs(calculatedNextDate)
+            .startOf('day')
+            .diff(dayjs().startOf('day'), 'day');
+          setDDay(difference);
+        }
       } else {
-        const difference = dayjs(calculatedNextDate).startOf('day').diff(dayjs().startOf('day'), 'day');
-        setDDay(difference);
+        setNextDate('-');
+        setDDay(0);
       }
-    } else {
-      setNextDate('-');
-      setDDay(0);
     }
-  }
-}, [allData, feedingInterval]);
+  }, [allData, feedingInterval]);
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
+
+  if (isLoading) {
+    return <Text>로딩중</Text>;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -74,8 +84,8 @@ export default function FeedScreen() {
           dDay={dDay}
           feedingInterval={feedingInterval}
           onSelectInterval={(interval) => setFeedingInterval(interval)}
-          onPressCycle={() => { }}
-          onPressAlert={() => { }}
+          onPressCycle={() => {}}
+          onPressAlert={() => {}}
         />
         <CustomCalendar
           selectedDate={selectedDate}

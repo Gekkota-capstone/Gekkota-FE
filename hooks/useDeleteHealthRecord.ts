@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteHealthRecord } from '@/api/delete';
 
-export function useDeleteHealthRecord(cageId: number, onSuccess: () => void) {
+export function useDeleteHealthRecord(cageId: string, onSuccess: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({

@@ -2,7 +2,7 @@ import { Link, router } from 'expo-router';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface PetCardProps {
-  id: number;
+  id: string;
   name: string;
   species: string;
   gender: string;
@@ -20,9 +20,10 @@ export default function CageListCard({
     <TouchableOpacity
       onPress={() => {
         router.push(`/cage/${id}`);
-        console.log(`id값은? ${id}`);  // id 값 확인용
+        console.log(`id값은? ${id}`); // id 값 확인용
       }}
-      style={styles.container}>
+      style={styles.container}
+    >
       <Image
         style={styles.image}
         source={

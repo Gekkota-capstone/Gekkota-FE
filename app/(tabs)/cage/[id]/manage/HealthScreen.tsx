@@ -17,8 +17,8 @@ export default function HealthScreen() {
 
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
-  const { data: healthData } = useGetHealthRecord(
-    Number(id),
+  const { data: healthData, isLoading } = useGetHealthRecord(
+    id as string,
     selectedDate.format('YYYY-MM-DD')
   );
 
@@ -29,6 +29,9 @@ export default function HealthScreen() {
   const [isModalVisible, setModalVisible] = useState(false);
   const openAddModal = () => setModalVisible(true);
   const closeAddModal = () => setModalVisible(false);
+  if (isLoading) {
+    return <Text>로딩중</Text>;
+  }
 
   return (
     <SafeAreaView style={styles.container}>

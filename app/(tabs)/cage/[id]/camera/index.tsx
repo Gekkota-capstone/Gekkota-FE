@@ -61,7 +61,7 @@ export default function CameraScreen() {
           <VLCPlayer
             style={styles.video}
             videoAspectRatio='16:9'
-            source={{ uri: url }}
+            source={{ uri: 'rtsp://192.168.0.159:8554/stream' }}
             autoplay={true}
             paused={false}
             onBuffering={() => {
@@ -83,7 +83,7 @@ export default function CameraScreen() {
           <VLCPlayer
             style={styles.video}
             videoAspectRatio='16:9'
-            source={{ uri: url }}
+            source={{ uri: 'rtsp://192.168.0.159:8554/stream' }}
           />
         </View>
       </ScrollView>

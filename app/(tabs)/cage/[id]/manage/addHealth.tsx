@@ -32,7 +32,7 @@ const sheddingOptions = [
 
 export default function HealthModal({ isVisible, onClose }: HealthModalProps) {
   const { id } = useLocalSearchParams();
-  const postHealth = usePostHealthRecord(Number(id));
+  const postHealth = usePostHealthRecord(id as string);
   const formattedDate = dayjs().format('YYYY-MM-DD');
   const { control, handleSubmit, watch, setValue } = useForm({
     defaultValues: {

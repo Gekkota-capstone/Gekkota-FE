@@ -11,6 +11,7 @@ import { useGetList } from '@/hooks/useGetList';
 
 export default function HomeScreen() {
   const { data, isLoading, error } = useGetList();
+  console.log(data);
 
   if (isLoading) return <Text style={styles.loading}>로딩 중...</Text>;
   if (error || !data) return <Text style={styles.loading}>에러 발생</Text>;
@@ -27,7 +28,7 @@ export default function HomeScreen() {
         renderItem={({ item }) => (
           <TouchableOpacity>
             <CageListCard
-              id={item.id}
+              id={item.pet_id}
               name={item.name}
               species={item.species}
               gender={item.gender}

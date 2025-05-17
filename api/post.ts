@@ -39,7 +39,7 @@ export async function postHealthRecord({
   cageId: petId,
   data,
 }: {
-  cageId: number;
+  cageId: string;
   data: {
     weight: string;
     shedding_status: string;
@@ -69,7 +69,7 @@ export async function postFeedRecord({
   cageId: petId,
   data,
 }: {
-  cageId: number;
+  cageId: string;
   data: {
     date: string;
     food_type: string;
@@ -127,7 +127,7 @@ export async function postLLMMessage({
   cageId: petId,
   data,
 }: {
-  cageId: number;
+  cageId: string;
   data: {
     question: string;
   };
@@ -179,12 +179,16 @@ export async function postUserInfo({
 }
 
 export async function postDevicesInfo(): Promise<DevicesInfo> {
-  const response = await fetchWithAuth(`https://api.saffir.co.kr/devices`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const response = await fetchWithAuth(
+    `https://api.saffir.co.kr/rtsp
+`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error('기기 데이터를 불러오는 중 오류 발생');

@@ -25,7 +25,7 @@ export async function getPets(): Promise<CageList> {
 
 export async function getPetInfo(petId: string) {
   const response = await getPets(); // 기존 리스트 전부 가져오기
-  const petData = response.find((item) => item.id === Number(petId)); // petId가 숫자형으로 되어 있으므로 Number로 변환
+  const petData = response.find((item) => item.pet_id === petId);
 
   if (!petData) {
     throw new Error('해당 ID의 도마뱀 정보를 찾을 수 없습니다.');
@@ -39,7 +39,7 @@ export async function getBehaviorAnalytics({
   cageId: petid,
   date,
 }: {
-  cageId: number;
+  cageId: string;
   date: string;
 }): Promise<BehaviorAnalyticsResponse> {
   const response = await fetchWithAuth(
@@ -73,7 +73,7 @@ export async function getHealthRecord({
   cageId,
   date,
 }: {
-  cageId: number;
+  cageId: string;
   date: string;
 }): Promise<HealthRecordResponse> {
   const response = await fetchWithAuth(
@@ -109,7 +109,7 @@ export async function getFeedRecord({
   cageId: petId,
   date,
 }: {
-  cageId: number;
+  cageId: string;
   date: string;
 }): Promise<FeedRecordResponse> {
   const response = await fetchWithAuth(
@@ -126,10 +126,10 @@ export async function getFeedRecord({
 export async function getAllFeedRecords({
   cageId: petId,
 }: {
-  cageId: number;
+  cageId: string;
 }): Promise<FeedRecordResponse> {
   const response = await fetchWithAuth(
-    `http://localhost:8081/api/pet-feeds/${petId}`
+    `https://api.saffir.co.kr/pet-feeds//${petId}`
   );
   if (!response.ok) {
     throw new Error('전체 급여 데이터를 가져오는 중 오류 발생');
@@ -141,16 +141,16 @@ export async function getCleanRecord({
   cageId,
   date,
 }: {
-  cageId: number;
+  cageId: string;
   date: string;
 }): Promise<CleanRecordResponse> {
   const response = await fetchWithAuth(
-    `https://api.saffir.co.kr/pet-cleans/${cageId}?date=${date}`
+    `https://api.saffir.co.kr/pet-cleans/${cageId}?clean_date=${date}`
   );
 
-  if (!response.ok) {
-    throw new Error('청소 데이터를 가져오는 중 오류 발생');
-  }
+  // if (!response.ok) {
+  //   throw new Error('청소 데이터를 가져오는 중 오류 발생');
+  // }
 
   return await response.json();
 }
@@ -158,7 +158,7 @@ export async function getCleanRecord({
 export async function getLLMMessage({
   cageId: petId,
 }: {
-  cageId: number;
+  cageId: string;
 }): Promise<LLMMessageResponse> {
   const response = await fetchWithAuth(
     `https://api.saffir.co.kr/chats/${petId}`
@@ -174,7 +174,7 @@ export async function getLLMMessage({
 export async function getCageState({
   cageId: petId,
 }: {
-  cageId: number;
+  cageId: string;
 }): Promise<CageState> {
   const response = await fetchWithAuth(
     `https://api.saffir.co.kr/pets/${petId}/state`

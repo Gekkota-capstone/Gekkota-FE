@@ -1,10 +1,10 @@
 import { getCageState } from '@/api/get';
 import { useQuery } from '@tanstack/react-query';
 
-export function useGetCageState(cageId: number) {
+export function useGetCageState(cageId: string) {
   return useQuery({
     queryKey: ['state', cageId],
     queryFn: () => getCageState({ cageId }),
-    refetchInterval: 5000,
+    refetchInterval: 10000,
   });
 }
