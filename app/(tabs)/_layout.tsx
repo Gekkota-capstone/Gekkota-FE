@@ -1,7 +1,7 @@
 import { Tabs, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
-import { Text } from 'react-native'
+import { Text } from 'react-native';
 
 export default function TabLayout() {
   return (
@@ -74,19 +74,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <Ionicons
               name='person-circle-outline'
-              size={26}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name='explore'
-        options={{
-          title: '테스트',
-          tabBarIcon: ({ color }) => (
-            <Ionicons
-              name='hammer-outline'
               size={26}
               color={color}
             />
