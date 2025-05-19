@@ -106,7 +106,7 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
             {/* 타이틀 */}
             <View style={styles.titleContainer}>
               <Image
-                source={require('@/assets/images/feed/feeding.png')}
+                source={require('@/assets/images/manage/feeding.png')}
                 style={styles.titleImage}
               />
               <Text style={styles.titleText}>급여</Text>

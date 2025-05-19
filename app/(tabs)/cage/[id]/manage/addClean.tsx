@@ -69,7 +69,7 @@ export default function CleanModal({
             {/* 타이틀 */}
             <View style={styles.titleContainer}>
               <Image
-                source={require('@/assets/images/manage/clean.png')}
+                source={require('@/assets/images/manage/cleaning.png')}
                 style={styles.titleImage}
               />
               <Text style={styles.titleText}>청소</Text>

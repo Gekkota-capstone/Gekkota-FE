@@ -8,7 +8,7 @@ interface AlertCycleCardProps {
   recentDate: string;
   nextDate: string;
   dDay: number;
-  feedingInterval: number;
+  interval: number;
   onSelectInterval: (interval: number) => void;
   onPressCycle: () => void;
   onPressAlert: () => void;
@@ -18,7 +18,7 @@ function AlertCycleCard({
   recentDate,
   nextDate,
   dDay,
-  feedingInterval,
+  interval,
   onSelectInterval,
   onPressCycle,
   onPressAlert,
@@ -71,7 +71,7 @@ function AlertCycleCard({
           style={styles.alertRight}
 
         >
-          <Text style={styles.alertText}>{feedingInterval}일 간격으로</Text>
+          <Text style={styles.alertText}>{interval}일 간격으로</Text>
           <Ionicons
             name='chevron-forward-outline'
             size={20}

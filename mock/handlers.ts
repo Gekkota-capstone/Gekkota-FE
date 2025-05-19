@@ -222,50 +222,81 @@ export const handlers = [
   http.get(
   'http://localhost:8081/api/pet-feeds/:petId',
   ({ request, params }) => {
-    const { cageId } = params;
+    const { petId } = params;
 
-    const feedData = [
-      {
-        date: '2025-05-01',
-        food_type: '누에',
-        food_size: '중',
-        food_amount: 2,
-        amount_unit: '마리',
-        memo: '',
-      },
-      {
-        date: '2025-05-06',
-        food_type: '귀뚜라미',
-        food_size: '소',
-        food_amount: 3,
-        amount_unit: 'g',
-      },
-      {
-        date: '2025-05-11',
-        food_type: '채소',
-        memo: '상추 3장 급여함',
-      },
-    ];
+    // 여러 도마뱀의 데이터를 시뮬레이션하기 위한 샘플 데이터
+    const feedDataMap: { [key: string]: any } = {
+      "1": [
+        {
+          date: '2025-05-01',
+          food_type: '누에',
+          food_size: '중',
+          food_amount: 2,
+          amount_unit: '마리',
+          memo: '',
+        },
+        {
+          date: '2025-05-06',
+          food_type: '귀뚜라미',
+          food_size: '소',
+          food_amount: 3,
+          amount_unit: 'g',
+        },
+      ],
+      "2": [
+        {
+          date: '2025-05-03',
+          food_type: '채소',
+          food_size: '대',
+          food_amount: 1,
+          amount_unit: '개',
+          memo: '브로콜리 급여',
+        },
+        {
+          date: '2025-05-10',
+          food_type: '밀웜',
+          food_size: '소',
+          food_amount: 5,
+          amount_unit: '마리',
+        },
+      ],
+      "3": [
+        {
+          date: '2025-05-02',
+          food_type: '채소',
+          food_size: '중',
+          food_amount: 2,
+          amount_unit: '장',
+          memo: '상추 급여',
+        }
+      ]
+    };
+
+    // 요청한 petId에 맞는 데이터를 반환, 없으면 빈 배열
+    const feedData = feedDataMap[petId as string] || [];
 
     const requestUrl = new URL(request.url);
     const date = requestUrl.searchParams.get('date');
+    
     if (!date) {
-      // 날짜가 없으면 전체 데이터 반환
       return HttpResponse.json(feedData);
     }
     
-    const filteredData = feedData.filter((data) => data.date === date);
-    if (filteredData.length === 0) {
-      return HttpResponse.json([]); // 데이터가 없을 때 빈 배열 반환
-    }
+    const filteredData = feedData.filter((data: {
+  date: string;
+  food_type: string;
+  food_size?: string;
+  food_amount?: number;
+  amount_unit?: string;
+  memo?: string;
+}) => data.date === date);
     return HttpResponse.json(filteredData);
   }
 ),
-
   http.get(
     'http://localhost:8081/api/pet-cleans/:petId',
     ({ request, params }) => {
-      const { cageId } = params;
+      const { petId } = params;
 
       const requestUrl = new URL(request.url);
       const date = requestUrl.searchParams.get('date');
