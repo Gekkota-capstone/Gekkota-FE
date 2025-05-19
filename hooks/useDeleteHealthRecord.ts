@@ -2,11 +2,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteHealthRecord } from '@/api/delete';
 
-export function useDeleteHealthRecord(cageId: number, onSuccess: () => void) {
+export function useDeleteHealthRecord(cageId: string, onSuccess: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (cardId: number) => deleteHealthRecord({ cageId, cardId }),
+    mutationFn: (date: string) => deleteHealthRecord({ cageId, date }),
     onSuccess: () => {
       onSuccess();
       console.log('삭제성공');

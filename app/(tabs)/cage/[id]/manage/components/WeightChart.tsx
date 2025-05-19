@@ -26,16 +26,43 @@ interface WeightChartProps {
 
 export default function WeightChart({ data }: WeightChartProps) {
   const [period, setPeriod] = useState<'monthly' | 'yearly'>('monthly');
-
+  const chunkSize = 5;
+  const totalDays = data.monthOfWeight.length;
   const chartData =
     period === 'monthly'
       ? {
-          labels: data.monthOfWeight.map((d) => d.day ?? ''),
-          datasets: [{ data: data.monthOfWeight.map((d) => d.value) }],
+          labels: Array.from(
+            { length: Math.ceil(totalDays / chunkSize) },
+            (_, i) => {
+              const startDay = data.monthOfWeight[i * chunkSize]?.day ?? '';
+              const endDay =
+                data.monthOfWeight[
+                  Math.min(i * chunkSize + chunkSize - 1, totalDays - 1)
+                ]?.day ?? '';
+              return `${startDay}~${endDay}`;
+            }
+          ),
+          datasets: [
+            {
+              data: Array.from(
+                { length: Math.ceil(data.monthOfWeight.length / 5) },
+                (_, i) => {
+                  const chunk = data.monthOfWeight.slice(i * 5, i * 5 + 5);
+                  const values = chunk
+                    .map((d) => d.value)
+                    .filter((v): v is number => v != null);
+                  const avg = values.length
+                    ? values.reduce((a, b) => a + b, 0) / values.length
+                    : 0;
+                  return +avg.toFixed(2);
+                }
+              ),
+            },
+          ],
         }
       : {
           labels: data.yearOfWeight.map((d) => d.month ?? ''),
-          datasets: [{ data: data.yearOfWeight.map((d) => d.value) }],
+          datasets: [{ data: data.yearOfWeight.map((d) => d.value ?? 0) }],
         };
 
   return (

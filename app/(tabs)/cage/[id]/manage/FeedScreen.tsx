@@ -27,52 +27,48 @@ export default function FeedScreen() {
   // 컨텍스트에서 저장된 데이터 불러오기
   const storedCycleData = feedCycleData[petId];
 
-  const { data: feedData } = useGetFeedRecord(
-    Number(petId),
+  const { data: feedData, isLoading } = useGetFeedRecord(
+    id as string,
     selectedDate.format('YYYY-MM-DD')
   );
 
-  const { data: allData = {} } = useGetFeedRecord(Number(petId));
+  const { data: allData = {} } = useGetFeedRecord(id as string);
 
-const updateFeedCycleData = (newInterval: number) => {
-  setInterval(newInterval);
+  const updateFeedCycleData = (newInterval: number) => {
+    setInterval(newInterval);
 
-  if (recentDate) {
-    const calculatedNextDate = dayjs(recentDate)
-      .add(newInterval, 'day')
-      .format('YYYY/MM/DD');
+    if (recentDate) {
+      const calculatedNextDate = dayjs(recentDate)
+        .add(newInterval, 'day')
+        .format('YYYY/MM/DD');
 
-    const difference = dayjs(calculatedNextDate)
-      .startOf('day')
-      .diff(dayjs().startOf('day'), 'day');
+      const difference = dayjs(calculatedNextDate)
+        .startOf('day')
+        .diff(dayjs().startOf('day'), 'day');
 
-    // 상태 업데이트
-    setNextDate(calculatedNextDate);
-    setDDay(difference > 0 ? difference : 0);
+      // 상태 업데이트
+      setNextDate(calculatedNextDate);
+      setDDay(difference > 0 ? difference : 0);
 
-    // 컨텍스트에 동기화
-    setFeedCycleData(petId, {
-      recentDate,
-      nextDate: calculatedNextDate,
-      dDay: difference > 0 ? difference : 0,
-      interval: newInterval,
-    });
-  } else {
-    // 만약 recentDate가 없을 경우
-    setNextDate(null);
-    setDDay(0);
-    setFeedCycleData(petId, {
-      recentDate: null,
-      nextDate: null,
-      dDay: 0,
-      interval: newInterval,
-    });
-  }
-};
-
-
-
-
+      // 컨텍스트에 동기화
+      setFeedCycleData(petId, {
+        recentDate,
+        nextDate: calculatedNextDate,
+        dDay: difference > 0 ? difference : 0,
+        interval: newInterval,
+      });
+    } else {
+      // 만약 recentDate가 없을 경우
+      setNextDate(null);
+      setDDay(0);
+      setFeedCycleData(petId, {
+        recentDate: null,
+        nextDate: null,
+        dDay: 0,
+        interval: newInterval,
+      });
+    }
+  };
 
   useEffect(() => {
     if (allData && typeof allData === 'object' && Object.keys(allData).length > 0) {
@@ -143,8 +139,8 @@ const updateFeedCycleData = (newInterval: number) => {
           dDay={displayDDay}
           interval={displayFeedingInterval}
           onSelectInterval={updateFeedCycleData}
-          onPressCycle={() => {}}
-          onPressAlert={() => {}}
+          onPressCycle={() => { }}
+          onPressAlert={() => { }}
         />
         <CustomCalendar
           selectedDate={selectedDate}

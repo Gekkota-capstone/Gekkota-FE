@@ -46,6 +46,9 @@ export default function CustomCalendar({
 
   const handleSelectDate = (dateString: string) => {
     const newDate = dayjs(dateString);
+
+    if (newDate.isAfter(dayjs(), 'day')) return;
+
     onSelectDate(newDate);
     setCurrentWeekStart(newDate.startOf('week'));
     setCalendarVisible(false);
@@ -112,6 +115,7 @@ export default function CustomCalendar({
               onDayPress={(day: { dateString: string }) =>
                 handleSelectDate(day.dateString)
               }
+              maxDate={dayjs().format('YYYY-MM-DD')} // 오늘까지만 선택 가능
               markedDates={{
                 [selectedDate.format('YYYY-MM-DD')]: {
                   selected: true,

@@ -7,148 +7,148 @@ import { useDeleteCleanRecord } from '@/hooks/useDeleteCleanRecord';
 import { useLocalSearchParams } from 'expo-router';
 
 interface CleanRecordData {
-    id: number;
-    date: string;
-    memo: string | null;
+  id: number;
+  date: string;
+  memo: string | null;
 }
 
 interface CleanDetailModalProps {
-    visible: boolean;
-    onClose: () => void;
-    data: CleanRecordData;
+  visible: boolean;
+  onClose: () => void;
+  data: CleanRecordData;
 }
 
 export default function CleanDetailModal({
-    visible,
-    onClose,
-    data,
+  visible,
+  onClose,
+  data,
 }: CleanDetailModalProps) {
-    const { id } = useLocalSearchParams();
-    const { mutate: deleteClean } = useDeleteCleanRecord(Number(id), onClose);
-    return (
-        <Modal
-            isVisible={visible}
-            onBackdropPress={onClose}
-            animationIn='slideInUp'
-            animationOut='slideOutDown'
-            backdropOpacity={0.5}
-            style={styles.modalWrapper}
-        >
-            <View style={styles.modalContent}>
-                {/* 헤더 */}
-                <View style={styles.header}>
-                    <TouchableOpacity onPress={onClose}>
-                        <Ionicons
-                            name='close-outline'
-                            size={25}
-                            style={styles.headerIcon}
-                        />
-                    </TouchableOpacity>
-                    <Text style={styles.headerText}>청소 기록</Text>
-                    <View />
-                </View>
+  const { id } = useLocalSearchParams();
+  const { mutate: deleteClean } = useDeleteCleanRecord(id as string, onClose);
+  return (
+    <Modal
+      isVisible={visible}
+      onBackdropPress={onClose}
+      animationIn='slideInUp'
+      animationOut='slideOutDown'
+      backdropOpacity={0.5}
+      style={styles.modalWrapper}
+    >
+      <View style={styles.modalContent}>
+        {/* 헤더 */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={onClose}>
+            <Ionicons
+              name='close-outline'
+              size={25}
+              style={styles.headerIcon}
+            />
+          </TouchableOpacity>
+          <Text style={styles.headerText}>청소 기록</Text>
+          <View />
+        </View>
 
-                {/* 본문 */}
-                <View style={styles.body}>
-                    <View style={styles.row}>
-                        <Text style={styles.label}>날짜</Text>
-                        <Text style={styles.value}>{data.date}</Text>
-                    </View>
+        {/* 본문 */}
+        <View style={styles.body}>
+          <View style={styles.row}>
+            <Text style={styles.label}>날짜</Text>
+            <Text style={styles.value}>{data.date}</Text>
+          </View>
 
-                    {data.memo && (
-                        <View style={styles.memoContainer}>
-                            <Text style={styles.label}>메모</Text>
-                            <Text style={styles.memoText}>
-                                {data.memo || '기록된 메모가 없습니다.'}
-                            </Text>
-                        </View>
-                    )}
-                </View>
-                <TouchableOpacity
-                    style={styles.delete}
-                    onPress={() => deleteClean(data.id)}
-                >
-                    <Ionicons
-                        name='trash-bin-outline'
-                        size={15}
-                    ></Ionicons>
-                    <Text style={styles.deleteText}>삭제하기</Text>
-                </TouchableOpacity>
+          {data.memo && (
+            <View style={styles.memoContainer}>
+              <Text style={styles.label}>메모</Text>
+              <Text style={styles.memoText}>
+                {data.memo || '기록된 메모가 없습니다.'}
+              </Text>
             </View>
-        </Modal>
-    );
+          )}
+        </View>
+        <TouchableOpacity
+          style={styles.delete}
+          onPress={() => deleteClean(data.date)}
+        >
+          <Ionicons
+            name='trash-bin-outline'
+            size={15}
+          ></Ionicons>
+          <Text style={styles.deleteText}>삭제하기</Text>
+        </TouchableOpacity>
+      </View>
+    </Modal>
+  );
 }
 
 const styles = StyleSheet.create({
-    modalWrapper: {
-        justifyContent: 'flex-end',
-        margin: 0,
-    },
-    modalContent: {
-        backgroundColor: colors.WHITE,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        padding: 20,
-        minHeight: '60%',
-        maxHeight: '90%',
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 20,
-    },
-    headerIcon: {
-        opacity: 0.5,
-    },
-    headerText: {
-        fontSize: 18,
-        fontWeight: '700',
-        color: colors.BLACK,
-        textAlign: 'center',
-    },
-    body: {
-        gap: 16,
-    },
-    row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    label: {
-        fontSize: 14,
-        fontWeight: '500',
-        color: colors.GRAY_700,
-    },
-    value: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: colors.BLACK,
-    },
-    memoContainer: {
-        marginTop: 10,
-    },
-    memoText: {
-        fontSize: 14,
-        color: colors.GRAY_700,
-        lineHeight: 20,
-    },
-    image: {
-        width: '100%',
-        height: 180,
-        borderRadius: 12,
-        backgroundColor: colors.GRAY_200,
-        marginTop: 16,
-    },
-    delete: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 50,
-        opacity: 0.5,
-    },
-    deleteText: {
-        fontSize: 13,
-        color: colors.GRAY_700,
-        marginLeft: 3,
-    },
+  modalWrapper: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: colors.WHITE,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    minHeight: '60%',
+    maxHeight: '90%',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  headerIcon: {
+    opacity: 0.5,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.BLACK,
+    textAlign: 'center',
+  },
+  body: {
+    gap: 16,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: colors.GRAY_700,
+  },
+  value: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.BLACK,
+  },
+  memoContainer: {
+    marginTop: 10,
+  },
+  memoText: {
+    fontSize: 14,
+    color: colors.GRAY_700,
+    lineHeight: 20,
+  },
+  image: {
+    width: '100%',
+    height: 180,
+    borderRadius: 12,
+    backgroundColor: colors.GRAY_200,
+    marginTop: 16,
+  },
+  delete: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 50,
+    opacity: 0.5,
+  },
+  deleteText: {
+    fontSize: 13,
+    color: colors.GRAY_700,
+    marginLeft: 3,
+  },
 });

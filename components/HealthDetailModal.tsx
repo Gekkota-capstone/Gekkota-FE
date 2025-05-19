@@ -27,7 +27,7 @@ export default function HealthDetailModal({
   data,
 }: HealthDetailModalProps) {
   const { id } = useLocalSearchParams();
-  const { mutate: deleteHealth } = useDeleteHealthRecord(Number(id), onClose);
+  const { mutate: deleteHealth } = useDeleteHealthRecord(id as string, onClose);
   return (
     <Modal
       isVisible={visible}
@@ -87,7 +87,7 @@ export default function HealthDetailModal({
         </View>
         <TouchableOpacity
           style={styles.delete}
-          onPress={() => deleteHealth(data.id)}
+          onPress={() => deleteHealth(data.date)}
         >
           <Ionicons
             name='trash-bin-outline'

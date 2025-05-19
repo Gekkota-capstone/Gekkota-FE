@@ -1,15 +1,22 @@
-import { SafeAreaView, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  SafeAreaView,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import RegisterButton from '@/components/RegisterButton';
 import CageListCard from '@/components/CageListCard';
 import { useGetList } from '@/hooks/useGetList';
 
 export default function HomeScreen() {
   const { data, isLoading, error } = useGetList();
+  console.log(data);
 
   if (isLoading) return <Text style={styles.loading}>로딩 중...</Text>;
   if (error || !data) return <Text style={styles.loading}>에러 발생</Text>;
 
-  const list = Array.isArray(data.list) ? data.list : [data.list];
+  const list = Array.isArray(data) ? data : [data];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -17,11 +24,11 @@ export default function HomeScreen() {
       <Text style={styles.subtitle}>나의 반려동물</Text>
       <FlatList
         data={list}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity>
             <CageListCard
-              id={item.id}
+              id={item.pet_id}
               name={item.name}
               species={item.species}
               gender={item.gender}

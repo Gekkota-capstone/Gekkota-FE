@@ -21,7 +21,7 @@ async function enableMocking() {
   console.log('msw 시작');
 }
 
-enableMocking();
+// enableMocking();
 
 DevClient.openMenu();
 
@@ -43,7 +43,8 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView>
       <QueryClientProvider client={queryClient}>
-        <PetProvider> {/* ✅ 모든 자식 컴포넌트가 PetContext에 접근 가능 */}
+        <PetProvider>
+          {/* ✅ 모든 자식 컴포넌트가 PetContext에 접근 가능 */}
           <Stack>
             <Stack.Screen
               name='(tabs)'

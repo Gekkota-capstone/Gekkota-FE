@@ -1,26 +1,21 @@
-export interface CageList {
-  list: {
-    id: number;
-    name: string;
-    species: string;
-    gender: string;
-    birthdate: string;
-  }[];
-}
+export type CageList = {
+  pet_id: string;
+  name: string;
+  species: string;
+  gender: string;
+  birthdate: string;
+}[];
 
 export interface BehaviorAnalyticsResponse {
   abnormalBehavior: string;
-  highlightVideoUrl: string | null;
-  bioPattern: {
-    wakeUp: { start: number; end: number };
-    sleep: { start: number; end: number };
-    mostActive: { start: number; end: number };
-  };
+  highlightVideoUrl: string[] | null;
+
+  mostActive: { start: number; end: number };
+
   heatmapImageUrl: string | null;
-  activityGraph: {
-    recentDatOfActivit: { day: string; value: number }[];
-    timeOfActivity: { hour: string; value: number }[];
-  };
+
+  recentDatOfActivity: { day: string; value: number }[];
+  timeOfActivity: { hour: string; value: number }[];
 }
 
 export interface LiveCameras {
@@ -88,8 +83,5 @@ export interface CageState {
 }
 
 export interface DevicesInfo {
-  sn: string;
-  IP: string;
   rtsp_url: string;
-  device_id: string;
 }

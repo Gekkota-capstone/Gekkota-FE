@@ -21,7 +21,7 @@ const cageImages = {
 export default function PetDetailScreen() {
   const { id } = useLocalSearchParams();
   const { setPetId } = usePetContext(); //현재 페이지의 id PetContext에 저장
-  const { data } = useGetCageState(Number(id));
+  const { data } = useGetCageState(id as string);
   const router = useRouter();
 
   useEffect(() => {

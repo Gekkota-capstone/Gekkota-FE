@@ -1,12 +1,13 @@
 import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { Text, TouchableOpacity } from 'react-native';
-import { usePetContext } from '@/contexts/PetContext'
+import { Text, TouchableOpacity, View } from 'react-native';
+import { usePetContext } from '@/contexts/PetContext';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function CageLayout() {
-  const { petId, setPetId } = usePetContext(); //context를 이용하여 전역에서 관리. PetDetailScreen에서 id 
-
+  const { petId, setPetId } = usePetContext(); //context를 이용하여 전역에서 관리. PetDetailScreen에서 id
+  const queryClient = useQueryClient();
   return (
     <Stack
       screenOptions={{
@@ -67,6 +68,8 @@ export default function CageLayout() {
           title: '',
         }}
       />
+      {/* 위에서 잘못된 부분 삭제함 */}
+
       <Stack.Screen
         name='[id]/index'
         options={{

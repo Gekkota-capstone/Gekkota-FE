@@ -25,39 +25,48 @@ export default function BehavioralAnalyticsScreen() {
   const { width: screenWidth } = useWindowDimensions();
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const { data, isLoading } = useBehaviorAnalytics(
-    Number(id),
+    id as string,
     selectedDate.format('YYYY-MM-DD')
   );
+
   const [chartType, setChartType] = useState<'hourly' | 'daily'>('hourly');
 
-  const videoPlayer = useVideoPlayer(
-    data?.highlightVideoUrl ?? '',
-    (player) => {
-      player.loop = true;
-      player.play();
-    }
-  );
+  const videoUrl = data?.highlightVideoUrl?.[0];
 
-  const hourly = data?.activityGraph.timeOfActivity || [];
-  const daily = data?.activityGraph.recentDatOfActivit || [];
+  const videoPlayer = useVideoPlayer(videoUrl ?? '', (player) => {
+    player.loop = true;
+    player.play();
+  });
+
+  const hourly = data?.timeOfActivity || [];
+  const daily = data?.recentDatOfActivity || [];
+  const groupSize = 3;
 
   const labels =
     chartType === 'hourly'
-      ? hourly.map((item) => item.hour)
+      ? Array.from(
+          { length: 24 / groupSize },
+          (_, i) => `${i * groupSize}-${i * groupSize + groupSize - 1}`
+        )
       : daily.map((item) => item.day);
 
   const values =
     chartType === 'hourly'
-      ? hourly.map((item) => item.value)
-      : daily.map((item) => item.value);
-
-  const isAbnormal = !!data?.abnormalBehavior;
-
+      ? Array.from({ length: 24 / groupSize }, (_, i) => {
+          const group = hourly.slice(i * groupSize, i * groupSize + groupSize);
+          const validValues = group.map((item) => item.value ?? 0);
+          const total = validValues.reduce((sum, val) => sum + val, 0);
+          return group.length ? total / group.length : 0;
+        })
+      : daily.map((item) => item.value ?? 0);
   const getTimeRangeLabel = (start: number, end: number) =>
     `${start < 12 ? `오전 ${start}` : `오후 ${start - 12}`}시 ~ ${
       end < 12 ? `오전 ${end}` : `오후 ${end - 12}`
     }시`;
 
+  if (isLoading) {
+    return <Text>로딩중</Text>;
+  }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -70,16 +79,12 @@ export default function BehavioralAnalyticsScreen() {
         />
 
         {/* 이상행동 경고 */}
-        {isAbnormal ? (
+        {
           <View style={styles.warningBox}>
             <Text style={styles.warningTitle}>이상 행동</Text>
-            <Text style={styles.warningDesc}>{data.abnormalBehavior}</Text>
+            <Text style={styles.warningDesc}>{data?.abnormalBehavior}</Text>
           </View>
-        ) : (
-          <View style={styles.safeBox}>
-            <Text style={styles.safeText}>이상행동 없음</Text>
-          </View>
-        )}
+        }
 
         {/* 하이라이트 영상 */}
         {data?.highlightVideoUrl && (
@@ -97,29 +102,13 @@ export default function BehavioralAnalyticsScreen() {
         )}
 
         {/* 생체 패턴 */}
-        {data?.bioPattern && (
+        {data?.mostActive && (
           <View style={styles.patternBox}>
             <Text style={styles.patternTitle}>생체 패턴</Text>
-            <Text>
-              기상:{' '}
-              {getTimeRangeLabel(
-                data.bioPattern.wakeUp.start,
-                data.bioPattern.wakeUp.end
-              )}
-            </Text>
-            <Text>
-              수면:{' '}
-              {getTimeRangeLabel(
-                data.bioPattern.sleep.start,
-                data.bioPattern.sleep.end
-              )}
-            </Text>
+
             <Text style={styles.subPattern}>
               *최다 활동 시간:{' '}
-              {getTimeRangeLabel(
-                data.bioPattern.mostActive.start,
-                data.bioPattern.mostActive.end
-              )}
+              {getTimeRangeLabel(data.mostActive.start, data.mostActive.end)}
             </Text>
           </View>
         )}
