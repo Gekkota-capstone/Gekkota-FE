@@ -17,7 +17,8 @@ export default function PetNameDropdown({ isVisible, onPress, onClose }: PetName
     if (isLoading) return <Text style={styles.loading}>로딩 중...</Text>;
     if (error || !data) return <Text style={styles.loading}>에러 발생</Text>;
 
-    const list = Array.isArray(data.list) ? data.list : [data.list];
+    const list = Array.isArray(data) ? data : [data];
+
 
     return (
         <View>

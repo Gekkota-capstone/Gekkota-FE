@@ -18,7 +18,7 @@ export default function NotificationScreen() {
   // 알림 목록 만들기: feedCycleData와 cleanCycleData 각각을 알림 형태로 변환
   const feedNotifications = Object.entries(feedCycleData).map(([petId, cycle]) => {
     const dDay = cycle.dDay;
-    const status = dDay === 0 ? '알림' : dDay < 0 ? '지연' : '예정';
+    const status = dDay === 0 ? '알림' : '지연';
     return {
       id: `feed-${petId}`,
       name: petId, // 나중에 pet 이름 매핑 가능
@@ -31,7 +31,7 @@ export default function NotificationScreen() {
 
   const cleanNotifications = Object.entries(cleanCycleData).map(([petId, cycle]) => {
     const dDay = cycle.dDay;
-    const status = dDay === 0 ? '알림' : dDay < 0 ? '지연' : '예정';
+    const status = dDay === 0 ? '알림' : '지연';
     return {
       id: `clean-${petId}`,
       name: petId,
@@ -64,7 +64,7 @@ export default function NotificationScreen() {
               name={item.name}
               type={item.type}
               status={item.status}
-              time={item.dDay.toString()}
+              time={1} //useEffect로 들어올때마다 현재시간이랑 비교해서 계산해넣기
             />
           )}
           contentContainerStyle={{ paddingHorizontal: 16 }}
@@ -74,7 +74,7 @@ export default function NotificationScreen() {
       <PetNameDropdown
         isVisible={isModalVisible}
         onClose={closeModal}
-        onPress={() => console.log('찍어')}
+        onPress={() => console.log('눌렀다~')}
       />
     </View>
   );

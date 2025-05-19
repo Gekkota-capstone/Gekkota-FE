@@ -18,6 +18,7 @@ export default function FeedScreen() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [feedVisible, setFeedVisible] = useState(false);
+
   const [dDay, setDDay] = useState<number>(0);
   const [recentDate, setRecentDate] = useState<string | null>(null);
   const [nextDate, setNextDate] = useState<string | null>(null);
@@ -33,6 +34,11 @@ export default function FeedScreen() {
   );
 
   const { data: allData = {} } = useGetFeedRecord(id as string);
+
+   console.log(feedData);
+    if (isLoading) {
+      return <Text>로딩중</Text>;
+    }
 
   const updateFeedCycleData = (newInterval: number) => {
     setInterval(newInterval);

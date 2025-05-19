@@ -6,7 +6,7 @@ interface NotificationCardProps {
     name: string;
     type: '급여' | '청소' | string;
     status: '알림' | '지연' | string;
-    time: string;
+    time: number;
 }
 
 export default function NotificationCard({ name, type, status, time }: NotificationCardProps) {

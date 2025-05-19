@@ -155,6 +155,20 @@ export async function getCleanRecord({
   return await response.json();
 }
 
+export async function getAllCleanRecords({
+  cageId: petId,
+}: {
+  cageId: string;
+}): Promise<CleanRecordResponse> {
+  const response = await fetchWithAuth(
+    `https://api.saffir.co.kr/pet-cleans//${petId}`
+  );
+  if (!response.ok) {
+    throw new Error('전체 청소 데이터를 가져오는 중 오류 발생');
+  }
+  return await response.json();
+}
+
 export async function getLLMMessage({
   cageId: petId,
 }: {
