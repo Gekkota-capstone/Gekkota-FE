@@ -24,7 +24,7 @@ export default function CleanDetailModal({
   data,
 }: CleanDetailModalProps) {
   const { id } = useLocalSearchParams();
-  const { mutate: deleteClean } = useDeleteCleanRecord(Number(id), onClose);
+  const { mutate: deleteClean } = useDeleteCleanRecord(id as string, onClose);
   return (
     <Modal
       isVisible={visible}

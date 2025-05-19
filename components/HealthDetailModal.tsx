@@ -27,7 +27,7 @@ export default function HealthDetailModal({
   data,
 }: HealthDetailModalProps) {
   const { id } = useLocalSearchParams();
-  const { mutate: deleteHealth } = useDeleteHealthRecord(Number(id), onClose);
+  const { mutate: deleteHealth } = useDeleteHealthRecord(id as string, onClose);
   return (
     <Modal
       isVisible={visible}

@@ -36,7 +36,7 @@ export default function FeedDetailModal({
   data,
 }: FeedDetailModalProps) {
   const { id } = useLocalSearchParams();
-  const { mutate: deleteFeed } = useDeleteFeedRecord(Number(id), onClose);
+  const { mutate: deleteFeed } = useDeleteFeedRecord(id as string, onClose);
   return (
     <Modal
       isVisible={visible}
