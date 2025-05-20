@@ -33,6 +33,10 @@ export default function FeedScreen() {
     selectedDate.format('YYYY-MM-DD')
   );
 
+  if (isLoading) {
+    return <Text>로딩중</Text>;
+  }
+
   const updateFeedCycleData = (newInterval: number) => {
     setInterval(newInterval);
 
@@ -133,13 +137,17 @@ export default function FeedScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <AlertCycleCard
-          recentDate={displayRecentDate ? dayjs(displayRecentDate).format('MM/DD') : '-'}
-          nextDate={displayNextDate ? dayjs(displayNextDate).format('MM/DD') : '-'}
+          recentDate={
+            displayRecentDate ? dayjs(displayRecentDate).format('MM/DD') : '-'
+          }
+          nextDate={
+            displayNextDate ? dayjs(displayNextDate).format('MM/DD') : '-'
+          }
           dDay={displayDDay}
           interval={displayFeedingInterval}
           onSelectInterval={updateFeedCycleData}
-          onPressCycle={() => { }}
-          onPressAlert={() => { }}
+          onPressCycle={() => {}}
+          onPressAlert={() => {}}
         />
         <CustomCalendar
           selectedDate={selectedDate}

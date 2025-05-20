@@ -22,10 +22,12 @@ export default function HealthScreen() {
     selectedDate.format('YYYY-MM-DD')
   );
 
+  console.log(selectedDate);
   // const { data: weightData } = useWeightHistory(
   //   Number(id),
   //   selectedDate.format('YYYY-MM-DD')
   // );
+
   const [isModalVisible, setModalVisible] = useState(false);
   const openAddModal = () => setModalVisible(true);
   const closeAddModal = () => setModalVisible(false);
@@ -91,6 +93,7 @@ export default function HealthScreen() {
       <HealthModal
         isVisible={isModalVisible}
         onClose={closeAddModal}
+        date={selectedDate.format('YYYY-MM-DD')}
       />
     </SafeAreaView>
   );

@@ -20,6 +20,7 @@ import dayjs from 'dayjs';
 interface HealthModalProps {
   isVisible: boolean;
   onClose: () => void;
+  date: string;
 }
 
 const sheddingOptions = [
@@ -30,17 +31,20 @@ const sheddingOptions = [
   '탈피 실패',
 ];
 
-export default function HealthModal({ isVisible, onClose }: HealthModalProps) {
+export default function HealthModal({
+  isVisible,
+  date,
+  onClose,
+}: HealthModalProps) {
   const { id } = useLocalSearchParams();
   const postHealth = usePostHealthRecord(id as string);
-  const formattedDate = dayjs().format('YYYY-MM-DD');
   const { control, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
       weight: '',
       shedding: '해당없음',
       memo: '',
       // photo: '',
-      date: formattedDate,
+      date: date,
     },
   });
 
