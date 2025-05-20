@@ -89,7 +89,7 @@ export async function postFeedRecord({
       body: JSON.stringify(data),
     }
   );
-
+  console.log(response);
   if (!response.ok) {
     throw new Error('급여 생성 중 오류 발생');
   }
@@ -101,7 +101,7 @@ export async function postCleanRecord({
   cageId: petId,
   data,
 }: {
-  cageId: number;
+  cageId: string;
   data: {
     date: string;
     memo?: string;
@@ -189,7 +189,7 @@ export async function postDevicesInfo(): Promise<DevicesInfo> {
       },
     }
   );
-
+  console.log(response);
   if (!response.ok) {
     throw new Error('기기 데이터를 불러오는 중 오류 발생');
   }

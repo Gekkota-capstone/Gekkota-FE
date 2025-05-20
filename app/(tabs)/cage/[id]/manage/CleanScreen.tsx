@@ -74,57 +74,57 @@ export default function CleanScreen() {
     }
   };
 
-  useEffect(() => {
-    if (allData && typeof allData === 'object' && Object.keys(allData).length > 0) {
-      const sortedFeedRecords = Object.values(allData).sort((a, b) => {
-        const dateA = dayjs(a.date);
-        const dateB = dayjs(b.date);
-        if (!dateA.isValid() || !dateB.isValid()) {
-          console.error('Invalid date format:', a.date, b.date);
-          return 0;
-        }
-        return dateB.isBefore(dateA) ? -1 : 1;
-      });
+  // useEffect(() => {
+  //   if (allData && typeof allData === 'object' && Object.keys(allData).length > 0) {
+  //     const sortedFeedRecords = Object.values(allData).sort((a, b) => {
+  //       const dateA = dayjs(a.date);
+  //       const dateB = dayjs(b.date);
+  //       if (!dateA.isValid() || !dateB.isValid()) {
+  //         console.error('Invalid date format:', a.date, b.date);
+  //         return 0;
+  //       }
+  //       return dateB.isBefore(dateA) ? -1 : 1;
+  //     });
 
-      const recentFeedDate = sortedFeedRecords[0]?.date;
-      setRecentDate(recentFeedDate);
+  //     const recentFeedDate = sortedFeedRecords[0]?.date;
+  //     setRecentDate(recentFeedDate);
 
-      if (recentFeedDate) {
-        const calculatedNextDate = dayjs(recentFeedDate)
-          .add(interval, 'day')
-          .format('YYYY/MM/DD');
+  //     if (recentFeedDate) {
+  //       const calculatedNextDate = dayjs(recentFeedDate)
+  //         .add(interval, 'day')
+  //         .format('YYYY/MM/DD');
 
-        if (dayjs(calculatedNextDate).isBefore(dayjs(), 'day')) {
-          // 현실 날짜보다 이전일 경우 일단 0으로 설정. 후에 알림문구 띄우는걸로 변경
-        } else {
-          const difference = dayjs(calculatedNextDate).startOf('day').diff(dayjs().startOf('day'), 'day');
-          setRecentDate(recentFeedDate);
-          setNextDate(calculatedNextDate);
-          setDDay(difference > 0 ? difference : 0);
-          setInterval(interval);
+  //       if (dayjs(calculatedNextDate).isBefore(dayjs(), 'day')) {
+  //         // 현실 날짜보다 이전일 경우 일단 0으로 설정. 후에 알림문구 띄우는걸로 변경
+  //       } else {
+  //         const difference = dayjs(calculatedNextDate).startOf('day').diff(dayjs().startOf('day'), 'day');
+  //         setRecentDate(recentFeedDate);
+  //         setNextDate(calculatedNextDate);
+  //         setDDay(difference > 0 ? difference : 0);
+  //         setInterval(interval);
 
-          // 컨텍스트에 저장
-          setCleanCycleData(petId, {
-            recentDate: recentFeedDate,
-            nextDate: calculatedNextDate,
-            dDay: difference > 0 ? difference : 0,
-            interval: interval,
-          });
-        }
-      } else {
-        setRecentDate(null);
-        setNextDate(null);
-        setDDay(0);
-        setInterval(0);
-        setCleanCycleData(petId, {
-          recentDate: null,
-          nextDate: null,
-          dDay: 0,
-          interval: 0
-        });
-      }
-    }
-  }, [allData, interval]);
+  //         // 컨텍스트에 저장
+  //         setCleanCycleData(petId, {
+  //           recentDate: recentFeedDate,
+  //           nextDate: calculatedNextDate,
+  //           dDay: difference > 0 ? difference : 0,
+  //           interval: interval,
+  //         });
+  //       }
+  //     } else {
+  //       setRecentDate(null);
+  //       setNextDate(null);
+  //       setDDay(0);
+  //       setInterval(0);
+  //       setCleanCycleData(petId, {
+  //         recentDate: null,
+  //         nextDate: null,
+  //         dDay: 0,
+  //         interval: 0
+  //       });
+  //     }
+  //   }
+  // }, [allData, interval]);
 
   const displayRecentDate = storedCycleData?.recentDate ?? recentDate;
   const displayNextDate = storedCycleData?.nextDate ?? nextDate;

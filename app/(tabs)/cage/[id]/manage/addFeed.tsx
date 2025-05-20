@@ -16,16 +16,19 @@ import { ScrollView } from 'react-native-gesture-handler';
 import FeedSelector from './components/FeedSelector';
 import FeedSizeSelector from './components/FeedSizeSelector';
 import FeedQuantity from './components/FeedQuantity';
-import { router } from 'expo-router';
-import dayjs from 'dayjs';
+import { useLocalSearchParams } from 'expo-router';
+import { usePostFeedRecord } from '@/hooks/usePostFeedRecord';
 
 interface ModalComponentProps {
   isVisible: boolean;
   onClose: () => void;
+  selectedDate: string;
 }
 
-const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
-  const formattedDate = dayjs().format('YYYY-MM-DD');
+const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selectedDate }) => {
+  const { id } = useLocalSearchParams();
+  const postFeed = usePostFeedRecord(id as string);
+
   const { control, handleSubmit, watch, setValue } = useForm<{
     date: string;
     feed: {
@@ -37,7 +40,7 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
     };
   }>({
     defaultValues: {
-      date: formattedDate,
+      date: selectedDate,
       feed: {
         food_type: '사료',
         food_size: null,
@@ -74,8 +77,15 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
   }, [foodType]);
 
   const onSubmit = (data: any) => {
-    console.log(data);
-    router.back();
+    postFeed.mutate(data, {
+      onSuccess: () => {
+        console.log('✅ 성공적으로 저장됨');
+        onClose();
+      },
+      onError: (err) => {
+        console.error('❌ 저장 실패:', err);
+      },
+    });
   };
 
   return (
@@ -115,7 +125,7 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose }) => {
             {/* 날짜 */}
             <Text style={styles.labelText}>날짜</Text>
             <TouchableOpacity style={styles.lineContainer}>
-              <Text style={styles.dateText}>{date}</Text>
+              <Text style={styles.dateText}>{selectedDate}</Text>
             </TouchableOpacity>
 
             {/* 먹이 */}
