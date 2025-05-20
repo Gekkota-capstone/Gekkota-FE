@@ -31,7 +31,6 @@ export default function CleanScreen() {
     id as string,
     selectedDate.format('YYYY-MM-DD')
   );
-  const { data: allData = {} } = useGetCleanRecord(id as string);
 
   console.log(cleanData);
   if (isLoading) {
@@ -138,13 +137,17 @@ export default function CleanScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <AlertCycleCard
-          recentDate={displayRecentDate ? dayjs(displayRecentDate).format('MM/DD') : '-'}
-          nextDate={displayNextDate ? dayjs(displayNextDate).format('MM/DD') : '-'}
+          recentDate={
+            displayRecentDate ? dayjs(displayRecentDate).format('MM/DD') : '-'
+          }
+          nextDate={
+            displayNextDate ? dayjs(displayNextDate).format('MM/DD') : '-'
+          }
           dDay={displayDDay}
           interval={displayFeedingInterval}
           onSelectInterval={updateCleanCycleData}
-          onPressCycle={() => { }}
-          onPressAlert={() => { }}
+          onPressCycle={() => {}}
+          onPressAlert={() => {}}
         />
         <CustomCalendar
           selectedDate={selectedDate}
