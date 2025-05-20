@@ -31,53 +31,49 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
 
   const { control, handleSubmit, watch, setValue } = useForm<{
     date: string;
-    feed: {
-      food_type: string;
-      food_size: string | null;
-      food_amount: number | null;
-      amount_unit: string | null;
-      memo?: string | null;
-    };
+    food_type: string;
+    food_size: string | null;
+    food_amount: number | null;
+    amount_unit: string | null;
+    memo?: string | null;
+
   }>({
     defaultValues: {
-      date: selectedDate,
-      feed: {
-        food_type: '사료',
-        food_size: null,
-        food_amount: 0,
-        amount_unit: 'g',
-        memo: null,
-      },
+      food_type: '사료',
+      food_size: null,
+      food_amount: 0,
+      amount_unit: 'g',
+      memo: null,
     },
   });
 
   const [showUnitToggle, setShowUnitToggle] = useState(false);
 
-  const foodType = watch('feed.food_type');
+  const foodType = watch('food_type');
   const date = watch('date');
-  const unit = watch('feed.amount_unit');
+  const unit = watch('amount_unit');
 
   useEffect(() => {
     if (foodType === '사료') {
-      setValue('feed.amount_unit', 'ml');
+      setValue('amount_unit', 'ml');
       setShowUnitToggle(true);
-      setValue('feed.food_size', null);
-      setValue('feed.memo', null);
+      setValue('food_size', null);
+      setValue('memo', null);
     } else if (
       ['귀뚜라미', '밀웜', '슈퍼밀웜', '왁스웜', '누에'].includes(foodType)
     ) {
-      setValue('feed.amount_unit', '마리');
+      setValue('amount_unit', '마리');
       setShowUnitToggle(false);
-      setValue('feed.memo', null);
+      setValue('memo', null);
     } else if (['과일', '채소'].includes(foodType)) {
-      setValue('feed.food_size', null);
-      setValue('feed.amount_unit', null);
-      setValue('feed.food_amount', null);
+      setValue('food_size', null);
+      setValue('amount_unit', null);
+      setValue('food_amount', null);
     }
   }, [foodType]);
 
   const onSubmit = (data: any) => {
-    postFeed.mutate(data, {
+    postFeed.mutate({...data, date: selectedDate}, {
       onSuccess: () => {
         console.log('✅ 성공적으로 저장됨');
         onClose();
@@ -88,6 +84,7 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
     });
   };
 
+  //console.log(selectedDate);
   return (
     <Modal
       isVisible={isVisible}
@@ -132,7 +129,7 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
             <Text style={styles.labelText}>먹이</Text>
             <Controller
               control={control}
-              name='feed.food_type'
+              name='food_type'
               render={({ field: { value, onChange } }) => (
                 <FeedSelector
                   value={value}
@@ -145,7 +142,7 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
             {foodType && !['과일', '채소', '사료'].includes(foodType) && (
               <Controller
                 control={control}
-                name='feed.food_size'
+                name='food_size'
                 render={({ field: { value, onChange } }) => (
                   <>
                     <Text style={styles.labelText}>먹이 사이즈</Text>
@@ -166,13 +163,13 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
                 {/* quantityUnit 컨트롤러 */}
                 <Controller
                   control={control}
-                  name='feed.food_amount'
+                  name='food_amount'
                   render={({
                     field: { value: quantityVal, onChange: onChangeQuantity },
                   }) => (
                     <Controller
                       control={control}
-                      name='feed.amount_unit'
+                      name='amount_unit'
                       render={({
                         field: { value: unitVal, onChange: onChangeUnit },
                       }) => (
@@ -195,7 +192,7 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
             {['과일', '채소'].includes(foodType) && (
               <Controller
                 control={control}
-                name='feed.memo'
+                name='memo'
                 render={({ field: { value, onChange } }) => (
                   <>
                     <Text style={styles.labelText}>상세 기록</Text>

@@ -33,13 +33,6 @@ export default function FeedScreen() {
     selectedDate.format('YYYY-MM-DD')
   );
 
-  const { data: allData = {} } = useGetFeedRecord(id as string);
-
-   console.log(feedData);
-    if (isLoading) {
-      return <Text>로딩중</Text>;
-    }
-
   const updateFeedCycleData = (newInterval: number) => {
     setInterval(newInterval);
 
@@ -153,16 +146,16 @@ export default function FeedScreen() {
           onSelectDate={setSelectedDate}
         />
 
-        {Array.isArray(feedData) && feedData.length > 0 && (
+        {feedData?.date && (
           <FeedRecordCard
             onPress={() => setFeedVisible(true)}
             data={{
-              date: feedData[0].date,
-              food_type: feedData[0].food_type,
-              food_size: feedData[0].food_size,
-              food_amount: feedData[0].food_amount,
-              amount_unit: feedData[0].amount_unit,
-              memo: feedData[0].memo,
+              date: feedData.date,
+              food_type: feedData.food_type,
+              food_size: feedData.food_size,
+              food_amount: feedData.food_amount,
+              amount_unit: feedData.amount_unit,
+              memo: feedData.memo,
             }}
           />
         )}

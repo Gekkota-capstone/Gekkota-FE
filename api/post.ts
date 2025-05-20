@@ -79,6 +79,7 @@ export async function postFeedRecord({
     memo?: string;
   };
 }): Promise<void> {
+  console.log(data)
   const response = await fetchWithAuth(
     `https://api.saffir.co.kr/pet-feeds/${petId}`,
     {
@@ -89,7 +90,7 @@ export async function postFeedRecord({
       body: JSON.stringify(data),
     }
   );
-  console.log(response);
+  console.log(data);
   if (!response.ok) {
     throw new Error('급여 생성 중 오류 발생');
   }
