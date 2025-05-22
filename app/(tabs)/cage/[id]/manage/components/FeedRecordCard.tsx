@@ -34,7 +34,7 @@ export default function FeedRecordCard({
           style={styles.description}
           numberOfLines={2}
         >
-          {data.memo || '기록된 메모가 없습니다.'}
+          {data.memo}
         </Text>
       </View>
     </Pressable>

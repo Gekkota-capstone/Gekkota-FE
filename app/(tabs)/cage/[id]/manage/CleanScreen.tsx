@@ -154,7 +154,7 @@ export default function CleanScreen() {
           onSelectDate={setSelectedDate}
         />
 
-        {cleanData && (
+        {cleanData?.date && (
           <CleanRecordCard
             onPress={() => setCleanVisible(true)}
             data={{
@@ -185,6 +185,7 @@ export default function CleanScreen() {
       <ModalComponent
         isVisible={isModalVisible}
         onClose={closeModal}
+        selectedDate={selectedDate.format('YYYY-MM-DD')}
       />
     </SafeAreaView>
   );

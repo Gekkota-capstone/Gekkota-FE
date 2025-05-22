@@ -50,7 +50,6 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
   const [showUnitToggle, setShowUnitToggle] = useState(false);
 
   const foodType = watch('food_type');
-  const date = watch('date');
   const unit = watch('amount_unit');
 
   useEffect(() => {

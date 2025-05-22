@@ -12,35 +12,41 @@ import Modal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
 import { ScrollView } from 'react-native-gesture-handler';
-import { router } from 'expo-router';
-import dayjs from 'dayjs';
+import { router, useLocalSearchParams } from 'expo-router';
+import { usePostCleanRecord } from '@/hooks/usePostCleanRecord';
 
 interface ModalComponentProps {
   isVisible: boolean;
   onClose: () => void;
+  selectedDate: string;
 }
-export default function CleanModal({
-  isVisible,
-  onClose,
-}: ModalComponentProps) {
-  const formattedDate = dayjs().format('YYYY-MM-DD');
+export default function CleanModal({ isVisible, onClose, selectedDate }: ModalComponentProps) {
+const { id } = useLocalSearchParams();
+const postClean = usePostCleanRecord(id as string);
+
 
   const { control, handleSubmit, watch } = useForm<{
     date: string;
     memo: string;
   }>({
     defaultValues: {
-      date: formattedDate,
       memo: '',
     },
   });
 
-  const date = watch('date');
 
   const onSubmit = (data: any) => {
-    console.log(data);
-    router.back();
+    postClean.mutate({ ...data, date: selectedDate }, {
+      onSuccess: () => {
+        console.log('✅ 성공적으로 저장됨');
+        onClose();
+      },
+      onError: (err) => {
+        console.error('❌ 저장 실패:', err);
+      },
+    });
   };
+
   return (
     <Modal
       isVisible={isVisible}
@@ -78,7 +84,7 @@ export default function CleanModal({
             {/* 날짜 */}
             <Text style={styles.labelText}>날짜</Text>
             <TouchableOpacity style={styles.lineContainer}>
-              <Text style={styles.dateText}>{date}</Text>
+              <Text style={styles.dateText}>{selectedDate}</Text>
             </TouchableOpacity>
 
             {/* 메모 (조건부 렌더링) */}
