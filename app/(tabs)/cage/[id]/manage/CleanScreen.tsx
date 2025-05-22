@@ -165,7 +165,7 @@ export default function CleanScreen() {
         )}
       </ScrollView>
 
-      {cleanData && (
+      {cleanData?.date && (
         <CleanDetailModal
           visible={cleanVisible}
           onClose={() => setCleanVisible(false)}

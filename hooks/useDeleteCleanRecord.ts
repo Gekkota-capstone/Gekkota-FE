@@ -7,10 +7,11 @@ export function useDeleteCleanRecord(cageId: string, onSuccess: () => void) {
 
   return useMutation({
     mutationFn: (date: string) => deleteCleanRecord({ cageId, date }),
-    onSuccess: () => {
+    onSuccess: (_,date) => {
       onSuccess();
       console.log('삭제성공');
-      queryClient.invalidateQueries({ queryKey: ['CleanRecord', cageId] });
+      queryClient.invalidateQueries({ queryKey: ['cleanRecord', cageId, date] });
+      queryClient.invalidateQueries({ queryKey: ['cleanRecordList', cageId] });
     },
   });
 }

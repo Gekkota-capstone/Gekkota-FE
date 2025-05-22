@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
 import { useDeleteFeedRecord } from '@/hooks/useDeleteFeedRecord';
 import { useLocalSearchParams } from 'expo-router';
+import { useGetFeedRecord } from '@/hooks/useGetFeedRecord';
 
 interface FeedRecordData {
   id: number;
@@ -28,15 +29,17 @@ interface FeedDetailModalProps {
   visible: boolean;
   onClose: () => void;
   data: FeedRecordData;
+  refetch: () => void;
 }
 
 export default function FeedDetailModal({
   visible,
   onClose,
   data,
+  refetch
 }: FeedDetailModalProps) {
   const { id } = useLocalSearchParams();
-  const { mutate: deleteFeed } = useDeleteFeedRecord(id as string, onClose);
+const { mutate: deleteFeed } = useDeleteFeedRecord(id as string, onClose);
   return (
     <Modal
       isVisible={visible}

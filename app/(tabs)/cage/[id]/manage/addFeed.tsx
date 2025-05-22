@@ -71,6 +71,12 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
     }
   }, [foodType]);
 
+  const resetInfo = () => {
+    setValue('food_amount', null);
+    setValue('food_size', null);
+    setValue('memo', null);
+  }
+
   const onSubmit = (data: any) => {
     postFeed.mutate({...data, date: selectedDate}, {
       onSuccess: () => {
@@ -209,7 +215,9 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
             )}
 
             {/* 삭제하기 */}
-            <TouchableOpacity style={styles.delete}>
+            <TouchableOpacity 
+            style={styles.delete}
+            onPress={ resetInfo }>
               <Ionicons
                 name='trash-bin-outline'
                 size={15}

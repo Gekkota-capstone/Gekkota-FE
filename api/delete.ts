@@ -29,7 +29,7 @@ export async function deleteFeedRecord({
   date: string;
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `https://api.saffir.co.kr/cages/${cageId}?date=${date}`,
+    `https://api.saffir.co.kr/pet-feeds/${cageId}?date=${date}`,
     {
       method: 'DELETE',
     }
@@ -49,7 +49,7 @@ export async function deleteCleanRecord({
   date: string;
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `https://api.saffir.co.kr/cages/${cageId}?date=${date}`,
+    `https://api.saffir.co.kr/pet-cleans/${cageId}?clean_date=${date}`,
     {
       method: 'DELETE',
     }

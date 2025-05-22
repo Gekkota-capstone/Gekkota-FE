@@ -28,7 +28,7 @@ export default function FeedScreen() {
   // 컨텍스트에서 저장된 데이터 불러오기
   const storedCycleData = feedCycleData[petId];
 
-  const { data: feedData, isLoading } = useGetFeedRecord(
+  const { data: feedData, isLoading, refetch } = useGetFeedRecord(
     id as string,
     selectedDate.format('YYYY-MM-DD')
   );
@@ -176,10 +176,11 @@ export default function FeedScreen() {
         onPress={openModal}
       />
 
-      {feedData && (
+      {feedData?.date && feedData?.food_type && (
         <FeedDetailModal
           visible={feedVisible}
           onClose={() => setFeedVisible(false)}
+          refetch={ refetch }
           data={{
             id: feedData.id,
             date: feedData.date,

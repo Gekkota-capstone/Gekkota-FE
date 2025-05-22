@@ -7,9 +7,9 @@ export function usePostCleanRecord(cageId: string) {
     return useMutation({
         mutationFn: (data: {
             date: string;
-            memo?: string;
+            memo: string;
         }) => postCleanRecord({ cageId, data }),
-        onSuccess: () => {
+        onSuccess: (_,date) => {
             queryClient.invalidateQueries({ queryKey: ['cleanRecord', cageId] });
         },
     });
