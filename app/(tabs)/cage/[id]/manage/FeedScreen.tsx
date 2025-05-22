@@ -1,8 +1,9 @@
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, View, ScrollView, StyleSheet, Text } from 'react-native';
 import { colors } from '@/constants';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useGetFeedRecord } from '@/hooks/useGetFeedRecord';
+import { useGetAllFeedRecords } from '@/hooks/useGetAllFeedRecords';
 import AlertCycleCard from './components/AlertCycleCard';
 import FeedRecordCard from './components/FeedRecordCard';
 import FeedDetailModal from '@/components/FeedDetailModal';
@@ -15,6 +16,7 @@ import { usePetContext } from '@/contexts/PetContext';
 export default function FeedScreen() {
   const { id } = useLocalSearchParams();
   const petId = id as string;
+
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [feedVisible, setFeedVisible] = useState(false);
@@ -24,14 +26,18 @@ export default function FeedScreen() {
   const [nextDate, setNextDate] = useState<string | null>(null);
   const [interval, setInterval] = useState<number>(1);
 
+  const intervalRef = useRef(interval);
+
   const { feedCycleData, setFeedCycleData } = usePetContext();
-  // 컨텍스트에서 저장된 데이터 불러오기
   const storedCycleData = feedCycleData[petId];
 
   const { data: feedData, isLoading, refetch } = useGetFeedRecord(
-    id as string,
+    petId,
     selectedDate.format('YYYY-MM-DD')
   );
+
+  //전체 급여기록 조회
+  const { data: allData = {} } = useGetAllFeedRecords(petId);
 
   if (isLoading) {
     return <Text>로딩중</Text>;
@@ -40,6 +46,7 @@ export default function FeedScreen() {
   const updateFeedCycleData = (newInterval: number) => {
     setInterval(newInterval);
 
+    //다음 급여 날짜 계산
     if (recentDate) {
       const calculatedNextDate = dayjs(recentDate)
         .add(newInterval, 'day')
@@ -74,6 +81,8 @@ export default function FeedScreen() {
   };
 
   // useEffect(() => {
+  //   intervalRef.current = interval;
+
   //   if (allData && typeof allData === 'object' && Object.keys(allData).length > 0) {
   //     const sortedFeedRecords = Object.values(allData).sort((a, b) => {
   //       const dateA = dayjs(a.date);
@@ -85,6 +94,7 @@ export default function FeedScreen() {
   //       return dateB.isBefore(dateA) ? -1 : 1;
   //     });
 
+  //     //정렬 데이터의 첫번째 배열이 가장 최근 급여일
   //     const recentFeedDate = sortedFeedRecords[0]?.date;
   //     setRecentDate(recentFeedDate);
 
@@ -123,7 +133,8 @@ export default function FeedScreen() {
   //       });
   //     }
   //   }
-  // }, [allData]);
+  // }, [allData, interval]);
+
 
   const displayRecentDate = storedCycleData?.recentDate ?? recentDate;
   const displayNextDate = storedCycleData?.nextDate ?? nextDate;
@@ -132,6 +143,10 @@ export default function FeedScreen() {
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
+
+  if (isLoading) {
+    return <Text>로딩중</Text>;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -146,8 +161,8 @@ export default function FeedScreen() {
           dDay={displayDDay}
           interval={displayFeedingInterval}
           onSelectInterval={updateFeedCycleData}
-          onPressCycle={() => {}}
-          onPressAlert={() => {}}
+          onPressCycle={() => { }}
+          onPressAlert={() => { }}
         />
         <CustomCalendar
           selectedDate={selectedDate}
@@ -180,7 +195,7 @@ export default function FeedScreen() {
         <FeedDetailModal
           visible={feedVisible}
           onClose={() => setFeedVisible(false)}
-          refetch={ refetch }
+          refetch={refetch}
           data={{
             id: feedData.id,
             date: feedData.date,

@@ -32,7 +32,6 @@ export default function CleanScreen() {
     selectedDate.format('YYYY-MM-DD')
   );
 
-  console.log(cleanData);
   if (isLoading) {
     return <Text>로딩중</Text>;
   }
