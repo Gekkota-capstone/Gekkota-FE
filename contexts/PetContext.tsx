@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import dayjs from 'dayjs';
 
 interface CycleData {
   recentDate: string | null;
@@ -13,8 +14,8 @@ interface PetContextType {
   setPetId: (id: string) => void;
   feedCycleData: { [key: string]: CycleData };
   cleanCycleData: { [key: string]: CycleData };
-  setFeedCycleData: (id: string, data: CycleData) => void;
-  setCleanCycleData: (id: string, data: CycleData) => void;
+  setFeedCycleData: (id: string, data: Partial<CycleData>) => void;
+  setCleanCycleData: (id: string, data: Partial<CycleData>) => void;
 }
 
 const PetContext = createContext<PetContextType | undefined>(undefined);
@@ -45,18 +46,60 @@ export const PetProvider = ({ children }: { children: ReactNode }) => {
     AsyncStorage.setItem('cleanCycleData', JSON.stringify(cleanCycleData));
   }, [feedCycleData, cleanCycleData]);
 
+  const calculateCycleData = (
+    id: string,
+    data: Partial<CycleData>,
+    prevData: CycleData | undefined
+  ): CycleData => {
+    const today = dayjs().startOf('day');
+
+    const recentDateStr = data.recentDate ?? prevData?.recentDate ?? '-';
+    const interval = data.interval ?? prevData?.interval ?? 0;
+
+    const recentDate = recentDateStr ? dayjs(recentDateStr) : null;
+
+    const nextDate = recentDate
+      ? recentDate.add(interval, 'day')
+      : null;
+
+    const dDay = nextDate ? nextDate.diff(today, 'day') : 0;
+
+    return {
+      recentDate: recentDate ? recentDate.format('YYYY-MM-DD') : null,  // 내부에선 포맷 유지
+      interval,
+      nextDate: nextDate ? nextDate.format('YYYY-MM-DD') : null,
+      dDay,
+    };
+  };
+
+
   // 개별 도마뱀 ID의 Cycle Data 업데이트 함수
-  const setFeedCycleData = (id: string, data: CycleData) => {
+  const setFeedCycleData = (id: string, data: Partial<CycleData>) => {
+    const prev = cleanCycleData[id];
+
+    const merged = {
+      ...prev,
+      ...data, // 일부만 와도 덮어씌워짐
+    };
+    const calculated = calculateCycleData(id, merged, prev);
     setFeedCycleDataState((prevState) => ({
       ...prevState,
-      [id]: data,
+      [id]: calculated,
     }));
   };
 
-  const setCleanCycleData = (id: string, data: CycleData) => {
+  //nextDate와 dDay 계산
+  const setCleanCycleData = (id: string, data: Partial<CycleData>) => {
+    const prev = cleanCycleData[id];
+
+    const merged = {
+      ...prev,
+      ...data, // 일부만 와도 덮어씌워짐
+    };
+    const calculated = calculateCycleData(id, merged, prev);
     setCleanCycleDataState((prevState) => ({
       ...prevState,
-      [id]: data,
+      [id]: calculated,
     }));
   };
 

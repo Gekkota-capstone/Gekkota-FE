@@ -16,15 +16,30 @@ interface CleanDetailModalProps {
   visible: boolean;
   onClose: () => void;
   data: CleanRecordData;
+  onDeleted: () => void;
 }
 
 export default function CleanDetailModal({
   visible,
   onClose,
   data,
+  onDeleted
 }: CleanDetailModalProps) {
   const { id } = useLocalSearchParams();
   const { mutate: deleteClean } = useDeleteCleanRecord(id as string, onClose);
+
+  const handleDelete = () => {
+    deleteClean(data.date, {
+      onSuccess: () => {
+        onDeleted();  // 삭제 성공 후 호출
+        onClose();    // 모달 닫기 등
+      },
+      onError: (error) => {
+        console.error('삭제 실패:', error);
+      }
+    });
+  };
+
   return (
     <Modal
       isVisible={visible}
@@ -66,7 +81,7 @@ export default function CleanDetailModal({
         </View>
         <TouchableOpacity
           style={styles.delete}
-          onPress={() => deleteClean(data.date)}
+          onPress={handleDelete}
         >
           <Ionicons
             name='trash-bin-outline'

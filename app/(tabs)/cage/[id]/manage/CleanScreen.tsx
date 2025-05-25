@@ -6,6 +6,7 @@ import AlertCycleCard from './components/AlertCycleCard';
 import CustomCalendar from './components/CustomCalendar';
 import ModalComponent from '@/app/(tabs)/cage/[id]/manage/addClean';
 import { useGetCleanRecord } from '@/hooks/useGetCleanRecord';
+import { useGetAllCleanRecords } from '@/hooks/useGetAllCleanRecords';
 import CleanDetailModal from '@/components/CleanDetailModal';
 import CleanRecordCard from './components/CleanRecordCard';
 import CustomButton from '@/components/PrimaryButton';
@@ -19,134 +20,101 @@ export default function CleanScreen() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
-  const [dDay, setDDay] = useState<number>(0);
   const [recentDate, setRecentDate] = useState<string | null>(null);
-  const [nextDate, setNextDate] = useState<string | null>(null);
   const [interval, setInterval] = useState<number>(1);
+
+  const [startDate, setStartDate] = useState<string | null>(null); //조회할 시작 날짜
+  const [endDate, setEndDate] = useState<string | null>(null); //조회할 마지막 날짜
 
   const { cleanCycleData, setCleanCycleData } = usePetContext();
   const storedCycleData = cleanCycleData[petId];
 
   const { data: cleanData, isLoading } = useGetCleanRecord(
-    id as string,
+    petId,
     selectedDate.format('YYYY-MM-DD')
   );
 
-  if (isLoading) {
-    return <Text>로딩중</Text>;
-  }
+  // startDate, endDate 초기화 (최근 1년치)
+  useEffect(() => {
+    const today = dayjs();
+    const lastYear = today.subtract(1, 'year');
+
+    setStartDate(lastYear.format('YYYY-MM-DD'));
+    setEndDate(today.format('YYYY-MM-DD'));
+  }, []);
+
+  //전체 청소기록 조회
+  const { data: allData, refetch } = useGetAllCleanRecords({
+    cageId: petId,
+    startDate: startDate ?? '',
+    endDate: endDate ?? '',
+  });
+
+  // data가 바뀔 때마다 최근 날짜 찾기
+  useEffect(() => {
+    if (!startDate || !endDate) return;
+    console.log('📌 호출 조건 만족' + startDate + endDate);
+    console.log('📦 allData:', allData);
+    if (allData && allData.length > 0) {
+      const sorted = allData.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      setRecentDate(sorted[0].date);
+    }
+  }, [allData, setRecentDate, startDate, endDate]);
+
+  const handleAfterDelete = () => {
+    setCleanCycleData(petId, {
+      recentDate,
+    });
+    refetch();
+  };
 
   const updateCleanCycleData = (newInterval: number) => {
     setInterval(newInterval);
 
+    // recentDate가 있으면 context에서 계산되도록 넘기기
     if (recentDate) {
-      const calculatedNextDate = dayjs(recentDate)
-        .add(newInterval, 'day')
-        .format('YYYY/MM/DD');
-
-      const difference = dayjs(calculatedNextDate)
-        .startOf('day')
-        .diff(dayjs().startOf('day'), 'day');
-
-      // 상태 업데이트
-      setNextDate(calculatedNextDate);
-      setDDay(difference > 0 ? difference : 0);
-
-      // 컨텍스트에 동기화
       setCleanCycleData(petId, {
-        recentDate,
-        nextDate: calculatedNextDate,
-        dDay: difference > 0 ? difference : 0,
+        recentDate, // YYYY-MM-DD 포맷이면 그대로 전달
         interval: newInterval,
       });
     } else {
-      // 만약 recentDate가 없을 경우
-      setNextDate(null);
-      setDDay(0);
+      // recentDate가 없으면 recentDate는 null, interval만 넘기기
       setCleanCycleData(petId, {
         recentDate: null,
-        nextDate: null,
-        dDay: 0,
         interval: newInterval,
       });
     }
   };
 
-  // useEffect(() => {
-  //   if (allData && typeof allData === 'object' && Object.keys(allData).length > 0) {
-  //     const sortedFeedRecords = Object.values(allData).sort((a, b) => {
-  //       const dateA = dayjs(a.date);
-  //       const dateB = dayjs(b.date);
-  //       if (!dateA.isValid() || !dateB.isValid()) {
-  //         console.error('Invalid date format:', a.date, b.date);
-  //         return 0;
-  //       }
-  //       return dateB.isBefore(dateA) ? -1 : 1;
-  //     });
-
-  //     const recentFeedDate = sortedFeedRecords[0]?.date;
-  //     setRecentDate(recentFeedDate);
-
-  //     if (recentFeedDate) {
-  //       const calculatedNextDate = dayjs(recentFeedDate)
-  //         .add(interval, 'day')
-  //         .format('YYYY/MM/DD');
-
-  //       if (dayjs(calculatedNextDate).isBefore(dayjs(), 'day')) {
-  //         // 현실 날짜보다 이전일 경우 일단 0으로 설정. 후에 알림문구 띄우는걸로 변경
-  //       } else {
-  //         const difference = dayjs(calculatedNextDate).startOf('day').diff(dayjs().startOf('day'), 'day');
-  //         setRecentDate(recentFeedDate);
-  //         setNextDate(calculatedNextDate);
-  //         setDDay(difference > 0 ? difference : 0);
-  //         setInterval(interval);
-
-  //         // 컨텍스트에 저장
-  //         setCleanCycleData(petId, {
-  //           recentDate: recentFeedDate,
-  //           nextDate: calculatedNextDate,
-  //           dDay: difference > 0 ? difference : 0,
-  //           interval: interval,
-  //         });
-  //       }
-  //     } else {
-  //       setRecentDate(null);
-  //       setNextDate(null);
-  //       setDDay(0);
-  //       setInterval(0);
-  //       setCleanCycleData(petId, {
-  //         recentDate: null,
-  //         nextDate: null,
-  //         dDay: 0,
-  //         interval: 0
-  //       });
-  //     }
-  //   }
-  // }, [allData, interval]);
-
-  const displayRecentDate = storedCycleData?.recentDate ?? recentDate;
-  const displayNextDate = storedCycleData?.nextDate ?? nextDate;
-  const displayDDay = storedCycleData?.dDay ?? dDay;
-  const displayFeedingInterval = storedCycleData?.interval ?? interval;
+  const displayRecentDate = storedCycleData?.recentDate ? dayjs(storedCycleData.recentDate).format('MM/DD') : '등록 필요';
+  const displayFeedingInterval = storedCycleData?.interval ?? 0;
+  const displayNextDate = storedCycleData?.nextDate ? dayjs(storedCycleData.nextDate).format('MM/DD') : '-';
+  const displayDDay = storedCycleData?.dDay ?? 0;
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
+
+  if (isLoading) {
+    return <Text>로딩중</Text>;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <AlertCycleCard
           recentDate={
-            displayRecentDate ? dayjs(displayRecentDate).format('MM/DD') : '-'
+            displayRecentDate
           }
           nextDate={
-            displayNextDate ? dayjs(displayNextDate).format('MM/DD') : '-'
+            displayNextDate
           }
           dDay={displayDDay}
           interval={displayFeedingInterval}
           onSelectInterval={updateCleanCycleData}
-          onPressCycle={() => {}}
-          onPressAlert={() => {}}
+          onPressCycle={() => { }}
+          onPressAlert={() => { }}
         />
         <CustomCalendar
           selectedDate={selectedDate}
@@ -173,6 +141,7 @@ export default function CleanScreen() {
             date: cleanData.date,
             memo: cleanData.memo,
           }}
+          onDeleted={handleAfterDelete}
         />
       )}
 

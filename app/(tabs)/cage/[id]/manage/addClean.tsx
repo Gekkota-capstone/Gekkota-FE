@@ -14,6 +14,7 @@ import { colors } from '@/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import { router, useLocalSearchParams } from 'expo-router';
 import { usePostCleanRecord } from '@/hooks/usePostCleanRecord';
+import { usePetContext } from '@/contexts/PetContext';
 
 interface ModalComponentProps {
   isVisible: boolean;
@@ -21,9 +22,10 @@ interface ModalComponentProps {
   selectedDate: string;
 }
 export default function CleanModal({ isVisible, onClose, selectedDate }: ModalComponentProps) {
-const { id } = useLocalSearchParams();
-const postClean = usePostCleanRecord(id as string);
-
+  const { id } = useLocalSearchParams();
+  const petId = id as string;
+  const postClean = usePostCleanRecord(id as string);
+  const { cleanCycleData, setCleanCycleData } = usePetContext();
 
   const { control, handleSubmit, watch } = useForm<{
     date: string;
@@ -38,6 +40,10 @@ const postClean = usePostCleanRecord(id as string);
   const onSubmit = (data: any) => {
     postClean.mutate({ ...data, date: selectedDate }, {
       onSuccess: () => {
+        setCleanCycleData(petId, {
+          recentDate: selectedDate,
+        });
+
         console.log('✅ 성공적으로 저장됨');
         onClose();
       },

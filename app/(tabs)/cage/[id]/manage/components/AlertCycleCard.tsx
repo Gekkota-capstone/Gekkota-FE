@@ -5,8 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import NumberPickerModal from '@/components/NumberPickerModal';
 
 interface AlertCycleCardProps {
-  recentDate: string;
-  nextDate: string;
+  recentDate: string | null;
+  nextDate: string | null;
   dDay: number;
   interval: number;
   onSelectInterval: (interval: number) => void;

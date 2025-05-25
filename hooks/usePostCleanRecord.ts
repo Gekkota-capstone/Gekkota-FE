@@ -9,8 +9,9 @@ export function usePostCleanRecord(cageId: string) {
             date: string;
             memo: string;
         }) => postCleanRecord({ cageId, data }),
-        onSuccess: (_,date) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['cleanRecord', cageId] });
+            queryClient.invalidateQueries({ queryKey: ['cleanRecords', cageId] });
         },
     });
 }
