@@ -24,17 +24,20 @@ export async function deleteHealthRecord({
 export async function deleteFeedRecord({
   cageId,
   date,
+  food_type,
 }: {
   cageId: string;
   date: string;
+  food_type: string;
 }): Promise<void> {
   const response = await fetchWithAuth(
-    `https://api.saffir.co.kr/pet-feeds/${cageId}?date=${date}`,
+    `https://api.saffir.co.kr/pet-feeds/${cageId}?date=${date}&food_type=${food_type}`,
     {
       method: 'DELETE',
     }
   );
 
+  console.log(response.json());
   if (!response.ok) {
     throw new Error('급여 기록 삭제 중 오류 발생');
   }

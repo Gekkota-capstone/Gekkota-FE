@@ -36,10 +36,10 @@ export default function FeedDetailModal({
   visible,
   onClose,
   data,
-  refetch
+  refetch,
 }: FeedDetailModalProps) {
   const { id } = useLocalSearchParams();
-const { mutate: deleteFeed } = useDeleteFeedRecord(id as string, onClose);
+  const { mutate: deleteFeed } = useDeleteFeedRecord(id as string, onClose);
   return (
     <Modal
       isVisible={visible}
@@ -103,7 +103,9 @@ const { mutate: deleteFeed } = useDeleteFeedRecord(id as string, onClose);
         </View>
         <TouchableOpacity
           style={styles.delete}
-          onPress={() => deleteFeed(data.date)}
+          onPress={() =>
+            deleteFeed({ date: data.date, food_type: data.food_type })
+          }
         >
           <Ionicons
             name='trash-bin-outline'
