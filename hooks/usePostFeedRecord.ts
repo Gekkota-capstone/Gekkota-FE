@@ -15,6 +15,7 @@ export function usePostFeedRecord(cageId: string) {
     }) => postFeedRecord({ cageId, data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feedRecord', cageId] });
+      queryClient.invalidateQueries({ queryKey: ['feedRecords', cageId] });
     },
   });
 }

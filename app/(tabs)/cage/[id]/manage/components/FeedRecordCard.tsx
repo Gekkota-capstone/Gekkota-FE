@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light_gray,
     padding: 16,
     borderRadius: 10,
-    marginVertical: 12,
+    marginVertical: 5,
     elevation: 2,
   },
   title: {
