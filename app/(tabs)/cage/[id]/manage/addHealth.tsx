@@ -11,7 +11,7 @@ import Modal from 'react-native-modal';
 import { useForm, Controller } from 'react-hook-form';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
-import CustomButton from '@/components/PrimaryButton';
+import PrimaryButton from '@/components/PrimaryButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import { usePostHealthRecord } from '@/hooks/usePostHealthRecord';
 import { useLocalSearchParams } from 'expo-router';
@@ -179,7 +179,7 @@ export default function HealthModal({
           <View
             style={{ width: '100%', alignItems: 'center', marginBottom: 20 }}
           >
-            <CustomButton
+            <PrimaryButton
               title='저장'
               onPress={handleSubmit(onSubmit)}
             />

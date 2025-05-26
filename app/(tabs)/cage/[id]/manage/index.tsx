@@ -3,12 +3,11 @@ import { useLocalSearchParams, Stack } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import Tab from '@/components/Tab';
-import FeedScreen from './FeedScreen';
-import CleanScreen from './CleanScreen'
-import HealthScreen from './HealthScreen';
-import { colors } from '@/constants';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { colors } from '@/constants';
+import FeedScreen from './FeedScreen';
+import CleanScreen from './CleanScreen';
+import HealthScreen from './HealthScreen';
 export default function ManageScreen() {
   const { id } = useLocalSearchParams();
   const pagerRef = useRef<PagerView>(null);
@@ -39,15 +38,9 @@ export default function ManageScreen() {
         initialPage={0}
         onPageSelected={(e) => setCurrentTab(e.nativeEvent.position)}
       >
-        <View>
-          <FeedScreen key='1' />
-        </View>
-        <View>
-          <CleanScreen key='2' />
-        </View>
-        <View>
-          <HealthScreen key='3' />
-        </View>
+        <FeedScreen key='1' />
+        <CleanScreen key='2' />
+        <HealthScreen key='3' />
       </PagerView>
     </View>
   );

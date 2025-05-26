@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { useGetPetInfo } from '@/hooks/useGetPetInfo';
 import { usePetContext } from '@/contexts/PetContext';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants';
-import CustomButton from '@/components/PrimaryButton';
+import PrimaryButton from '@/components/PrimaryButton';
 import DatePicker from '@/components/DatePicker';
 import ModalSelector from '@/components/Modal';
 import DeleteModal from '@/components/DeleteModal';
@@ -13,7 +19,9 @@ import { useUpdatePetInfo } from '@/hooks/useUpdatePetInfo';
 
 export default function SettingScreen() {
   const { petId } = usePetContext(); // Context에서 petId 가져오기
-  const { data, error, isLoading } = petId ? useGetPetInfo(petId) : { data: null, error: null, isLoading: false };
+  const { data, error, isLoading } = petId
+    ? useGetPetInfo(petId)
+    : { data: null, error: null, isLoading: false };
 
   const [name, setName] = useState(data?.name || '');
   const [gender, setGender] = useState(data?.gender || '');
@@ -37,9 +45,8 @@ export default function SettingScreen() {
   };
 
   const toggleGenderModal = () => setGenderModalVisible(!isGenderModalVisible);
-  const toggleSpeciesModal = () => setSpeciesModalVisible(!isSpeciesModalVisible);
-
-  
+  const toggleSpeciesModal = () =>
+    setSpeciesModalVisible(!isSpeciesModalVisible);
 
   const genderOptions = [
     { key: 'male', label: '남아' },
@@ -49,8 +56,8 @@ export default function SettingScreen() {
 
   const speciesOptions = [
     { key: '크레스티드 게코', label: '크레스티드 게코' },
-    { key: '레오파드 게코', label: '레오파드 게코' }
-  ]
+    { key: '레오파드 게코', label: '레오파드 게코' },
+  ];
 
   useEffect(() => {
     if (data) {
@@ -82,15 +89,21 @@ export default function SettingScreen() {
       petId: petId as string,
       updatedData: { name, species, gender, birthdate },
     });
-
   };
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: '정보 수정', headerTitleAlign: 'center' }} />
+      <Stack.Screen
+        options={{ title: '정보 수정', headerTitleAlign: 'center' }}
+      />
 
       <Text style={styles.title}>이름</Text>
-      <TextInput style={styles.input} value={name} onChangeText={setName} editable={true} />
+      <TextInput
+        style={styles.input}
+        value={name}
+        onChangeText={setName}
+        editable={true}
+      />
       <View style={styles.separator} />
 
       <Text style={styles.title}>성별</Text>
@@ -101,7 +114,11 @@ export default function SettingScreen() {
           onPress={toggleGenderModal}
           editable={false}
         />
-        <Ionicons style={[styles.ionicons, { marginTop: 20 }]} name="chevron-down-outline" size={15} />
+        <Ionicons
+          style={[styles.ionicons, { marginTop: 20 }]}
+          name='chevron-down-outline'
+          size={15}
+        />
       </View>
       <ModalSelector
         isVisible={isGenderModalVisible}
@@ -109,7 +126,7 @@ export default function SettingScreen() {
         onSelect={handleSelectGender}
         data={genderOptions}
         selectedOption={gender}
-        title="성별 선택"
+        title='성별 선택'
       />
       <View style={styles.separator} />
 
@@ -121,7 +138,11 @@ export default function SettingScreen() {
           editable={false}
           onPress={toggleSpeciesModal}
         />
-        <Ionicons style={[styles.ionicons, { marginTop: 20 }]} name="chevron-down-outline" size={15} />
+        <Ionicons
+          style={[styles.ionicons, { marginTop: 20 }]}
+          name='chevron-down-outline'
+          size={15}
+        />
       </View>
       <ModalSelector
         isVisible={isSpeciesModalVisible}
@@ -129,7 +150,7 @@ export default function SettingScreen() {
         onSelect={handleSelectSpecies}
         data={speciesOptions}
         selectedOption={species}
-        title="종 선택"
+        title='종 선택'
       />
       <View style={styles.separator} />
 
@@ -139,26 +160,32 @@ export default function SettingScreen() {
         textStyle={{ color: 'black', opacity: 1 }}
         value={birthdate}
         onChange={setBirthdate}
-      >
-      </DatePicker>
+      ></DatePicker>
 
       <TouchableOpacity
         style={styles.delete}
-        onPress={() => setShowDeleteModal(true)}>
-        <Ionicons style={styles.ionicons} name="close-circle-outline" size={16} />
+        onPress={() => setShowDeleteModal(true)}
+      >
+        <Ionicons
+          style={styles.ionicons}
+          name='close-circle-outline'
+          size={16}
+        />
         <Text style={styles.deleteText}>반려동물 정보 지우기</Text>
       </TouchableOpacity>
-      <DeleteModal visible={showDeleteModal} onClose={() => setShowDeleteModal(false)} />
+      <DeleteModal
+        visible={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+      />
 
       <View style={{ position: 'absolute', bottom: 30, alignItems: 'center' }}>
-        <CustomButton
+        <PrimaryButton
           title='수정'
           onPress={() => handleUpdate()}
         />
       </View>
-
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -167,7 +194,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   separator: {
     alignItems: 'center',
@@ -190,31 +217,30 @@ const styles = StyleSheet.create({
     fontWeight: 'semibold',
     marginTop: 20,
     height: 20,
-    width: '85%'
+    width: '85%',
   },
   overlay: {
     justifyContent: 'flex-end',
   },
   modalSelector: {
     alignSelf: 'flex-start',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   select: {
     flexDirection: 'row',
-    marginRight: 30
+    marginRight: 30,
   },
   ionicons: {
     opacity: 0.5,
-    color: colors.gray
+    color: colors.gray,
   },
   delete: {
     marginTop: 150,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   deleteText: {
     marginLeft: 5,
     color: colors.gray,
-    opacity: 0.5
-  }
-
+    opacity: 0.5,
+  },
 });

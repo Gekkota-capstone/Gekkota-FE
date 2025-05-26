@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import CustomButton from '@/components/PrimaryButton';
+import PrimaryButton from '@/components/PrimaryButton';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import Modal from 'react-native-modal';
@@ -25,7 +25,11 @@ interface ModalComponentProps {
   selectedDate: string;
 }
 
-const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selectedDate }) => {
+const FeedModal: React.FC<ModalComponentProps> = ({
+  isVisible,
+  onClose,
+  selectedDate,
+}) => {
   const { id } = useLocalSearchParams();
   const postFeed = usePostFeedRecord(id as string);
 
@@ -36,7 +40,6 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
     food_amount: number | null;
     amount_unit: string | null;
     memo?: string | null;
-
   }>({
     defaultValues: {
       food_type: '사료',
@@ -75,18 +78,21 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
     setValue('food_amount', null);
     setValue('food_size', null);
     setValue('memo', null);
-  }
+  };
 
   const onSubmit = (data: any) => {
-    postFeed.mutate({...data, date: selectedDate}, {
-      onSuccess: () => {
-        console.log('✅ 성공적으로 저장됨');
-        onClose();
-      },
-      onError: (err) => {
-        console.error('❌ 저장 실패:', err);
-      },
-    });
+    postFeed.mutate(
+      { ...data, date: selectedDate },
+      {
+        onSuccess: () => {
+          console.log('✅ 성공적으로 저장됨');
+          onClose();
+        },
+        onError: (err) => {
+          console.error('❌ 저장 실패:', err);
+        },
+      }
+    );
   };
 
   //console.log(selectedDate);
@@ -215,9 +221,10 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
             )}
 
             {/* 삭제하기 */}
-            <TouchableOpacity 
-            style={styles.delete}
-            onPress={ resetInfo }>
+            <TouchableOpacity
+              style={styles.delete}
+              onPress={resetInfo}
+            >
               <Ionicons
                 name='trash-bin-outline'
                 size={15}
@@ -226,7 +233,7 @@ const FeedModal: React.FC<ModalComponentProps> = ({ isVisible, onClose, selected
             </TouchableOpacity>
           </ScrollView>
 
-          <CustomButton
+          <PrimaryButton
             title='저장'
             onPress={handleSubmit(onSubmit)}
           />

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import CustomButton from '@/components/PrimaryButton';
+import PrimaryButton from '@/components/PrimaryButton';
 import { Controller, useForm } from 'react-hook-form';
 import Modal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,7 +21,11 @@ interface ModalComponentProps {
   onClose: () => void;
   selectedDate: string;
 }
-export default function CleanModal({ isVisible, onClose, selectedDate }: ModalComponentProps) {
+export default function CleanModal({
+  isVisible,
+  onClose,
+  selectedDate,
+}: ModalComponentProps) {
   const { id } = useLocalSearchParams();
   const petId = id as string;
   const postClean = usePostCleanRecord(id as string);
@@ -36,21 +40,23 @@ export default function CleanModal({ isVisible, onClose, selectedDate }: ModalCo
     },
   });
 
-
   const onSubmit = (data: any) => {
-    postClean.mutate({ ...data, date: selectedDate }, {
-      onSuccess: () => {
-        setCleanCycleData(petId, {
-          recentDate: selectedDate,
-        });
+    postClean.mutate(
+      { ...data, date: selectedDate },
+      {
+        onSuccess: () => {
+          setCleanCycleData(petId, {
+            recentDate: selectedDate,
+          });
 
-        console.log('✅ 성공적으로 저장됨');
-        onClose();
-      },
-      onError: (err) => {
-        console.error('❌ 저장 실패:', err);
-      },
-    });
+          console.log('✅ 성공적으로 저장됨');
+          onClose();
+        },
+        onError: (err) => {
+          console.error('❌ 저장 실패:', err);
+        },
+      }
+    );
   };
 
   return (
@@ -122,7 +128,7 @@ export default function CleanModal({ isVisible, onClose, selectedDate }: ModalCo
             </TouchableOpacity>
           </ScrollView>
 
-          <CustomButton
+          <PrimaryButton
             title='저장'
             onPress={handleSubmit(onSubmit)}
           />

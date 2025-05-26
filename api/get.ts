@@ -111,7 +111,7 @@ export async function getFeedRecord({
 }: {
   cageId: string;
   date: string;
-}): Promise<FeedRecordResponse> {
+}): Promise<FeedRecordResponse[]> {
   const response = await fetchWithAuth(
     `https://api.saffir.co.kr/pet-feeds/${petId}?date=${date}`
   );
@@ -132,7 +132,7 @@ export async function getAllFeedRecords({
   startDate: string;
   endDate: string;
 }): Promise<FeedRecordResponse[]> {
-  const url = `https://api.saffir.co.kr/pet-feeds/${petId}/date-range?start_date=${startDate}&end_date=${endDate}`
+  const url = `https://api.saffir.co.kr/pet-feeds/${petId}/date-range?start_date=${startDate}&end_date=${endDate}`;
   const response = await fetchWithAuth(url);
   if (!response.ok) {
     throw new Error('전체 급여 데이터를 가져오는 중 오류 발생');
@@ -142,7 +142,6 @@ export async function getAllFeedRecords({
   //console.log('✅ 실제 API에서 받은 응답:', json);
   return json;
 }
-
 
 export async function getCleanRecord({
   cageId,
@@ -176,7 +175,7 @@ export async function getAllCleanRecords({
 
   const response = await fetch(url, {
     headers: {
-      'Authorization': 'Bearer YOUR_TOKEN_HERE', // fetchWithAuth 대신 직접 넣어보기
+      Authorization: 'Bearer YOUR_TOKEN_HERE', // fetchWithAuth 대신 직접 넣어보기
     },
   });
 
@@ -192,7 +191,6 @@ export async function getAllCleanRecords({
   console.log('응답 데이터:', data);
   return data;
 }
-
 
 export async function getLLMMessage({
   cageId: petId,

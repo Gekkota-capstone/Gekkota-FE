@@ -9,7 +9,7 @@ import { useGetCleanRecord } from '@/hooks/useGetCleanRecord';
 import { useGetAllCleanRecords } from '@/hooks/useGetAllCleanRecords';
 import CleanDetailModal from '@/components/CleanDetailModal';
 import CleanRecordCard from './components/CleanRecordCard';
-import CustomButton from '@/components/PrimaryButton';
+import PrimaryButton from '@/components/PrimaryButton';
 import dayjs from 'dayjs';
 import { usePetContext } from '@/contexts/PetContext';
 
@@ -88,9 +88,13 @@ export default function CleanScreen() {
     }
   };
 
-  const displayRecentDate = storedCycleData?.recentDate ? dayjs(storedCycleData.recentDate).format('MM/DD') : '등록 필요';
+  const displayRecentDate = storedCycleData?.recentDate
+    ? dayjs(storedCycleData.recentDate).format('MM/DD')
+    : '등록 필요';
   const displayFeedingInterval = storedCycleData?.interval ?? 0;
-  const displayNextDate = storedCycleData?.nextDate ? dayjs(storedCycleData.nextDate).format('MM/DD') : '-';
+  const displayNextDate = storedCycleData?.nextDate
+    ? dayjs(storedCycleData.nextDate).format('MM/DD')
+    : '-';
   const displayDDay = storedCycleData?.dDay ?? 0;
 
   const openModal = () => setModalVisible(true);
@@ -104,17 +108,13 @@ export default function CleanScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <AlertCycleCard
-          recentDate={
-            displayRecentDate
-          }
-          nextDate={
-            displayNextDate
-          }
+          recentDate={displayRecentDate}
+          nextDate={displayNextDate}
           dDay={displayDDay}
           interval={displayFeedingInterval}
           onSelectInterval={updateCleanCycleData}
-          onPressCycle={() => { }}
-          onPressAlert={() => { }}
+          onPressCycle={() => {}}
+          onPressAlert={() => {}}
         />
         <CustomCalendar
           selectedDate={selectedDate}
@@ -145,7 +145,7 @@ export default function CleanScreen() {
         />
       )}
 
-      <CustomButton
+      <PrimaryButton
         title='추가하기'
         onPress={openModal}
       />
@@ -165,7 +165,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.WHITE,
     paddingHorizontal: 16,
     alignItems: 'center',
-    justifyContent: 'center',
     marginBottom: 15,
   },
   scrollContent: {

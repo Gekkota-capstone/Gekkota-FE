@@ -2,7 +2,7 @@ import { useLocalSearchParams, Stack, router } from 'expo-router';
 import { SafeAreaView, View, StyleSheet, ScrollView, Text } from 'react-native';
 import { colors } from '@/constants';
 import { useState } from 'react';
-import CustomButton from '@/components/PrimaryButton';
+import PrimaryButton from '@/components/PrimaryButton';
 import CustomCalendar from './components/CustomCalendar';
 import dayjs from 'dayjs';
 import { useGetHealthRecord } from '@/hooks/useGetHealthRecord';
@@ -70,7 +70,7 @@ export default function HealthScreen() {
       </ScrollView>
 
       <View style={styles.fixedButtonContainer}>
-        <CustomButton
+        <PrimaryButton
           title='추가하기'
           onPress={openAddModal}
         />

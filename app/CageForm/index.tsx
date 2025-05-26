@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import CustomButton from '@/components/PrimaryButton';
+import PrimaryButton from '@/components/PrimaryButton';
 import DatePicker from '@/components/DatePicker';
 import { usePostCage } from '@/hooks/usePostCage';
 import dayjs from 'dayjs';
@@ -124,7 +124,6 @@ const cageForm = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-
       <View style={styles.progressBar}>
         <View style={[styles.fillBar, { width: progressBarWidth(step) }]} />
       </View>
@@ -139,7 +138,8 @@ const cageForm = () => {
               <TouchableOpacity
                 style={[
                   styles.button,
-                  selectedSpecies === '크레스티드 게코' && styles.selectedButton,
+                  selectedSpecies === '크레스티드 게코' &&
+                    styles.selectedButton,
                 ]}
                 onPress={() => {
                   setSelectedSepecies('크레스티드 게코');
@@ -194,7 +194,7 @@ const cageForm = () => {
               </Text>
             </View>
           </View>
-          <CustomButton
+          <PrimaryButton
             title='다음'
             onPress={handleNext}
             isDisabled={selectedSpecies === null}
@@ -224,7 +224,7 @@ const cageForm = () => {
               </>
             )}
           />
-          <CustomButton
+          <PrimaryButton
             title='다음'
             onPress={handleNext}
             isDisabled={error !== null}
@@ -321,7 +321,7 @@ const cageForm = () => {
               <Text style={styles.unknownText}>미구분</Text>
             </View>
           </View>
-          <CustomButton
+          <PrimaryButton
             title='다음'
             onPress={handleNext}
             isDisabled={selectedGender === null}
@@ -347,7 +347,7 @@ const cageForm = () => {
             )}
           />
 
-          <CustomButton
+          <PrimaryButton
             title='생성'
             onPress={handleSubmit(onSubmit)}
           />

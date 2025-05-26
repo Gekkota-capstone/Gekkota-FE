@@ -1,17 +1,18 @@
-import { useLocalSearchParams } from 'expo-router';
-import { SafeAreaView, View, ScrollView, StyleSheet, Text } from 'react-native';
-import { colors } from '@/constants';
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { useGetFeedRecord } from '@/hooks/useGetFeedRecord';
+import { usePetContext } from '@/contexts/PetContext';
 import { useGetAllFeedRecords } from '@/hooks/useGetAllFeedRecords';
+import { useGetFeedRecord } from '@/hooks/useGetFeedRecord';
+import dayjs from 'dayjs';
+import { useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import AlertCycleCard from './components/AlertCycleCard';
+import CustomCalendar from './components/CustomCalendar';
 import FeedRecordCard from './components/FeedRecordCard';
 import FeedDetailModal from '@/components/FeedDetailModal';
-import CustomCalendar from './components/CustomCalendar';
 import FeedModal from './addFeed';
-import CustomButton from '@/components/PrimaryButton';
-import dayjs from 'dayjs';
-import { usePetContext } from '@/contexts/PetContext';
+import { colors } from '@/constants';
+import PrimaryButton from '@/components/PrimaryButton';
 
 export default function FeedScreen() {
   const { id } = useLocalSearchParams();
@@ -27,16 +28,18 @@ export default function FeedScreen() {
   const [recentDate, setRecentDate] = useState<string | null>(null);
   const [nextDate, setNextDate] = useState<string | null>(null);
   const [interval, setInterval] = useState<number>(1);
+  const [selectedFeed, setSelectedFeed] = useState<any | null>(null);
 
   const intervalRef = useRef(interval);
 
   const { feedCycleData, setFeedCycleData } = usePetContext();
   const storedCycleData = feedCycleData[petId];
 
-  const { data: feedData, isLoading, refetch } = useGetFeedRecord(
-    petId,
-    selectedDate.format('YYYY-MM-DD')
-  );
+  const {
+    data: feedData,
+    isLoading,
+    refetch,
+  } = useGetFeedRecord(petId, selectedDate.format('YYYY-MM-DD'));
 
   useEffect(() => {
     const today = dayjs();
@@ -84,9 +87,13 @@ export default function FeedScreen() {
     }
   };
 
-  const displayRecentDate = storedCycleData?.recentDate ? dayjs(storedCycleData.recentDate).format('MM/DD') : '등록 필요';
+  const displayRecentDate = storedCycleData?.recentDate
+    ? dayjs(storedCycleData.recentDate).format('MM/DD')
+    : '등록 필요';
   const displayFeedingInterval = storedCycleData?.interval ?? 0;
-  const displayNextDate = storedCycleData?.nextDate ? dayjs(storedCycleData.nextDate).format('MM/DD') : '-';
+  const displayNextDate = storedCycleData?.nextDate
+    ? dayjs(storedCycleData.nextDate).format('MM/DD')
+    : '-';
   const displayDDay = storedCycleData?.dDay ?? 0;
 
   const openModal = () => setModalVisible(true);
@@ -100,62 +107,63 @@ export default function FeedScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <AlertCycleCard
-          recentDate={
-            displayRecentDate
-          }
-          nextDate={
-            displayNextDate
-          }
+          recentDate={displayRecentDate}
+          nextDate={displayNextDate}
           dDay={displayDDay}
           interval={displayFeedingInterval}
           onSelectInterval={updateFeedCycleData}
-          onPressCycle={() => { }}
-          onPressAlert={() => { }}
+          onPressCycle={() => {}}
+          onPressAlert={() => {}}
         />
         <CustomCalendar
           selectedDate={selectedDate}
           onSelectDate={setSelectedDate}
         />
 
-        {feedData?.date && (
-          <FeedRecordCard
-            onPress={() => setFeedVisible(true)}
-            data={{
-              date: feedData.date,
-              food_type: feedData.food_type,
-              food_size: feedData.food_size,
-              food_amount: feedData.food_amount,
-              amount_unit: feedData.amount_unit,
-              memo: feedData.memo,
-            }}
-          />
+        {/* feedData가 배열일 때 map 사용 */}
+        {Array.isArray(feedData) && feedData.length > 0 ? (
+          feedData.map((item) => {
+            if (!item.food_type) return null;
+            return (
+              <FeedRecordCard
+                key={item.id}
+                onPress={() => setSelectedFeed(item)}
+                data={{
+                  date: item.date,
+                  food_type: item.food_type,
+                  food_size: item.food_size,
+                  food_amount: item.food_amount,
+                  amount_unit: item.amount_unit,
+                  memo: item.memo,
+                }}
+              />
+            );
+          })
+        ) : (
+          <Text>급여 기록이 없습니다.</Text>
         )}
-
-        <View style={{ height: 80 }} />
       </ScrollView>
 
-      <CustomButton
-        title='추가하기'
-        onPress={openModal}
-      />
-
-      {feedData?.date && feedData?.food_type && (
+      {selectedFeed && (
         <FeedDetailModal
-          visible={feedVisible}
-          onClose={() => setFeedVisible(false)}
+          visible={!!selectedFeed}
+          onClose={() => setSelectedFeed(null)}
           refetch={refetch}
           data={{
-            id: feedData.id,
-            date: feedData.date,
-            food_type: feedData.food_type,
-            food_size: feedData.food_size,
-            food_amount: feedData.food_amount,
-            amount_unit: feedData.amount_unit,
-            memo: feedData.memo,
+            id: selectedFeed.id,
+            date: selectedFeed.date,
+            food_type: selectedFeed.food_type,
+            food_size: selectedFeed.food_size,
+            food_amount: selectedFeed.food_amount,
+            amount_unit: selectedFeed.amount_unit,
+            memo: selectedFeed.memo,
           }}
         />
       )}
-
+      <PrimaryButton
+        title='추가하기'
+        onPress={openModal}
+      />
       <FeedModal
         isVisible={isModalVisible}
         onClose={closeModal}

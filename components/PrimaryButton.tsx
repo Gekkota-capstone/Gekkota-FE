@@ -1,19 +1,27 @@
-// 기본 버튼
 import React from 'react';
-import { StyleSheet, View, ViewStyle, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { colors } from '@/constants'
+import {
+  StyleSheet,
+  View,
+  ViewStyle,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
+import { colors } from '@/constants';
 
 interface PrimaryButtonProps {
-  onPress: () => void; 
-  title: string; 
+  onPress: () => void;
+  title: string;
   isDisabled?: boolean;
-  style?: ViewStyle | object; 
+  style?: ViewStyle | object;
   textStyle?: object;
 }
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 
-const PrimaryButton: React.FC<PrimaryButtonProps> = ({ onPress, title, isDisabled, style, textStyle }) => {
+export default function PrimaryButton(props: PrimaryButtonProps) {
+  const { onPress, title, isDisabled, style, textStyle } = props;
+
   const handlePress = () => {
     if (!isDisabled) {
       onPress();
@@ -31,7 +39,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({ onPress, title, isDisable
       </TouchableOpacity>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -48,14 +56,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   buttonText: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     textAlign: 'center',
   },
   disabledButton: {
     backgroundColor: colors.disabledBlue,
-  }
+  },
 });
-
-export default PrimaryButton;
