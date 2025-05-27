@@ -27,9 +27,9 @@ export default function CageListCard({
       <Image
         style={styles.image}
         source={
-          species === 'leopard'
+          species === '레오파드 게코'
             ? require('@/assets/images/leopard.png')
-            : require('@/assets/images/leopard_bw.png')
+            : require('@/assets/images/crested.png')
         }
       />
       <View style={styles.info}>

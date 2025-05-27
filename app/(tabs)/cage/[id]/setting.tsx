@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useGetPetInfo } from '@/hooks/useGetPetInfo';
 import { usePetContext } from '@/contexts/PetContext';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,12 +16,16 @@ import DatePicker from '@/components/DatePicker';
 import ModalSelector from '@/components/Modal';
 import DeleteModal from '@/components/DeleteModal';
 import { useUpdatePetInfo } from '@/hooks/useUpdatePetInfo';
+import { useDeletePet } from '@/hooks/useDeletePet';
 
 export default function SettingScreen() {
   const { petId } = usePetContext(); // Context에서 petId 가져오기
   const { data, error, isLoading } = petId
     ? useGetPetInfo(petId)
     : { data: null, error: null, isLoading: false };
+  const { mutate: deleteMutate } = useDeletePet(petId as string, () =>
+    router.replace('/cage')
+  );
 
   const [name, setName] = useState(data?.name || '');
   const [gender, setGender] = useState(data?.gender || '');
@@ -164,7 +168,9 @@ export default function SettingScreen() {
 
       <TouchableOpacity
         style={styles.delete}
-        onPress={() => setShowDeleteModal(true)}
+        onPress={() => {
+          setShowDeleteModal(true);
+        }}
       >
         <Ionicons
           style={styles.ionicons}
@@ -176,6 +182,7 @@ export default function SettingScreen() {
       <DeleteModal
         visible={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
+        onDelete={deleteMutate}
       />
 
       <View style={{ position: 'absolute', bottom: 30, alignItems: 'center' }}>

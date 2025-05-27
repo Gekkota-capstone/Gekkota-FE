@@ -62,3 +62,16 @@ export async function deleteCleanRecord({
     throw new Error('청소 기록 삭제 중 오류 발생');
   }
 }
+
+export async function deletePet({ petId }: { petId: string }): Promise<void> {
+  const response = await fetchWithAuth(
+    `https://api.saffir.co.kr/pets/${petId}`,
+    {
+      method: 'DELETE',
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('펫 기록 삭제 중 오류 발생');
+  }
+}

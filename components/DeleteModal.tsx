@@ -12,9 +12,10 @@ import PrimaryButton from '@/components/PrimaryButton';
 type Props = {
   visible: boolean;
   onClose: () => void;
+  onDelete: () => void;
 };
 
-const DeleteModal = ({ visible, onClose }: Props) => {
+const DeleteModal = ({ visible, onClose, onDelete }: Props) => {
   return (
     <Modal
       visible={visible}
@@ -36,7 +37,10 @@ const DeleteModal = ({ visible, onClose }: Props) => {
               onPress={onClose}
               style={styles.button}
             />
-            <TouchableOpacity style={styles.delete}>
+            <TouchableOpacity
+              style={styles.delete}
+              onPress={onDelete}
+            >
               <Text style={styles.deleteText}>정보 지우기</Text>
               <View style={styles.separator} />
             </TouchableOpacity>
