@@ -95,7 +95,7 @@ export default function CleanScreen() {
   const displayNextDate = storedCycleData?.nextDate
     ? dayjs(storedCycleData.nextDate).format('MM/DD')
     : '-';
-  const displayDDay = storedCycleData?.dDay ?? 0;
+  const displayDDay = storedCycleData?.dDay ?? 'D-Day';
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
@@ -121,7 +121,7 @@ export default function CleanScreen() {
           onSelectDate={setSelectedDate}
         />
 
-        {cleanData?.date && (
+        {cleanData?.memo && (
           <CleanRecordCard
             onPress={() => setCleanVisible(true)}
             data={{
@@ -132,7 +132,7 @@ export default function CleanScreen() {
         )}
       </ScrollView>
 
-      {cleanData?.date && (
+      {cleanData?.memo && (
         <CleanDetailModal
           visible={cleanVisible}
           onClose={() => setCleanVisible(false)}

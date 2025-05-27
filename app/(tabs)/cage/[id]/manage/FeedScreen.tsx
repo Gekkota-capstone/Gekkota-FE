@@ -94,7 +94,7 @@ export default function FeedScreen() {
   const displayNextDate = storedCycleData?.nextDate
     ? dayjs(storedCycleData.nextDate).format('MM/DD')
     : '-';
-  const displayDDay = storedCycleData?.dDay ?? 0;
+  const displayDDay = storedCycleData?.dDay ?? 'D-Day';
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);

@@ -18,7 +18,7 @@ export default function NotificationScreen() {
   // 알림 목록 만들기: feedCycleData와 cleanCycleData 각각을 알림 형태로 변환
   const feedNotifications = Object.entries(feedCycleData).map(([petId, cycle]) => {
     const dDay = cycle.dDay;
-    const status = dDay === 0 ? '알림' : '지연';
+    const status = dDay === 'D-Day' ? '알림' : '지연';
     return {
       id: `feed-${petId}`,
       name: petId, // 나중에 pet 이름 매핑 가능
@@ -31,7 +31,7 @@ export default function NotificationScreen() {
 
   const cleanNotifications = Object.entries(cleanCycleData).map(([petId, cycle]) => {
     const dDay = cycle.dDay;
-    const status = dDay === 0 ? '알림' : '지연';
+    const status = dDay === 'D-Day' ? '알림' : '지연';
     return {
       id: `clean-${petId}`,
       name: petId,

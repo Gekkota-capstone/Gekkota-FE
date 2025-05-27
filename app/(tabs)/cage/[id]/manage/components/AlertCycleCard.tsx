@@ -7,7 +7,7 @@ import NumberPickerModal from '@/components/NumberPickerModal';
 interface AlertCycleCardProps {
   recentDate: string | null;
   nextDate: string | null;
-  dDay: number;
+  dDay: string | 'D-Day';
   interval: number;
   onSelectInterval: (interval: number) => void;
   onPressCycle: () => void;
@@ -50,7 +50,7 @@ function AlertCycleCard({
           <View style={styles.progressBar}>
             <View style={[styles.filledBar, { width: 157 }]} />
             <View style={styles.labelOverlay}>
-              <Text style={styles.progressText}>D-{dDay}</Text>
+              <Text style={styles.progressText}>{dDay}</Text>
             </View>
           </View>
         </TouchableOpacity>
