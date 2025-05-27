@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, View, ScrollView, StyleSheet, Text } from 'react-native';
 import { colors } from '@/constants';
-import React, { useEffect, useState } from 'react';
+import React, { useDebugValue, useEffect, useState } from 'react';
 import AlertCycleCard from './components/AlertCycleCard';
 import CustomCalendar from './components/CustomCalendar';
 import ModalComponent from '@/app/(tabs)/cage/[id]/manage/addClean';
@@ -50,6 +50,11 @@ export default function CleanScreen() {
     endDate: endDate ?? '',
   });
 
+  useEffect(() => {
+    updateCleanCycleData(storedCycleData?.interval); // 처음 마운트되었을 때 실행
+  }, []);
+
+
   // data가 바뀔 때마다 최근 날짜 찾기
   useEffect(() => {
     if (!startDate || !endDate) return;
@@ -63,12 +68,26 @@ export default function CleanScreen() {
     }
   }, [allData, setRecentDate, startDate, endDate]);
 
-  const handleAfterDelete = () => {
-    setCleanCycleData(petId, {
-      recentDate,
-    });
-    refetch();
+  const handleAfterDelete = async () => {
+    const { data: updatedData } = await refetch(); // 최신 데이터를 받아옴
+    if (updatedData && updatedData.length > 0) {
+      const sorted = updatedData.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      const latestDate = sorted[0].date;
+      setCleanCycleData(petId, {
+        recentDate: latestDate,
+        interval,
+      });
+    } else {
+      // 기록이 하나도 없으면 recentDate를 null 또는 기본값으로 설정
+      setCleanCycleData(petId, {
+        recentDate: null,
+        interval,
+      });
+    }
   };
+
 
   const updateCleanCycleData = (newInterval: number) => {
     setInterval(newInterval);
@@ -113,8 +132,8 @@ export default function CleanScreen() {
           dDay={displayDDay}
           interval={displayFeedingInterval}
           onSelectInterval={updateCleanCycleData}
-          onPressCycle={() => {}}
-          onPressAlert={() => {}}
+          onPressCycle={() => { }}
+          onPressAlert={() => { }}
         />
         <CustomCalendar
           selectedDate={selectedDate}

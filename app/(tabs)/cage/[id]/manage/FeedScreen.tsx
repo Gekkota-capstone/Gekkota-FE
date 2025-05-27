@@ -30,8 +30,6 @@ export default function FeedScreen() {
   const [interval, setInterval] = useState<number>(1);
   const [selectedFeed, setSelectedFeed] = useState<any | null>(null);
 
-  const intervalRef = useRef(interval);
-
   const { feedCycleData, setFeedCycleData } = usePetContext();
   const storedCycleData = feedCycleData[petId];
 
@@ -47,7 +45,7 @@ export default function FeedScreen() {
 
     setStartDate(lastYear.format('YYYY-MM-DD'));
     setEndDate(today.format('YYYY-MM-DD'));
-  }, []);
+  }, [feedCycleData]);
 
   //전체 급여기록 조회
   const { data: allData, error } = useGetAllFeedRecords({
@@ -65,9 +63,36 @@ export default function FeedScreen() {
       const sorted = allData.sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
+      setFeedCycleData(petId, {
+        recentDate,
+        interval: storedCycleData?.interval,
+      })
       setRecentDate(sorted[0].date);
     }
-  }, [allData, setRecentDate, startDate, endDate]);
+  }, [allData, recentDate, setRecentDate, startDate, endDate]);
+
+  const handleAfterDelete = async () => {
+  console.log("호출됨");
+  const { data: updatedData } = await refetch();
+  if (updatedData && updatedData.length > 0) {
+    const sorted = updatedData.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+    const latestDate = sorted[0].date;
+    setFeedCycleData(petId, {
+      recentDate: latestDate,
+      interval: storedCycleData?.interval,
+    });
+  } else {
+    // 기록이 하나도 없으면 recentDate를 null 또는 기본값으로 설정
+    setFeedCycleData(petId, {
+      recentDate: null,
+      interval,
+    });
+  }
+};
+
+
 
   const updateFeedCycleData = (newInterval: number) => {
     setInterval(newInterval);
@@ -87,7 +112,7 @@ export default function FeedScreen() {
     }
   };
 
-  const displayRecentDate = storedCycleData?.recentDate
+  const displayRecentDate = recentDate
     ? dayjs(storedCycleData.recentDate).format('MM/DD')
     : '등록 필요';
   const displayFeedingInterval = storedCycleData?.interval ?? 0;
@@ -112,8 +137,8 @@ export default function FeedScreen() {
           dDay={displayDDay}
           interval={displayFeedingInterval}
           onSelectInterval={updateFeedCycleData}
-          onPressCycle={() => {}}
-          onPressAlert={() => {}}
+          onPressCycle={() => { }}
+          onPressAlert={() => { }}
         />
         <CustomCalendar
           selectedDate={selectedDate}
@@ -158,6 +183,7 @@ export default function FeedScreen() {
             amount_unit: selectedFeed.amount_unit,
             memo: selectedFeed.memo,
           }}
+          onDeleted={handleAfterDelete}
         />
       )}
       <PrimaryButton

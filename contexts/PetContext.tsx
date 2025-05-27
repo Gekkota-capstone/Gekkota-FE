@@ -47,56 +47,60 @@ export const PetProvider = ({ children }: { children: ReactNode }) => {
   }, [feedCycleData, cleanCycleData]);
 
   const calculateCycleData = (
-  id: string,
-  data: Partial<CycleData>,
-  prevData: CycleData | undefined
-): CycleData => {
-  const today = dayjs().startOf('day');
+    id: string,
+    data: Partial<CycleData>,
+    prevData: CycleData | undefined
+  ): CycleData => {
+    const today = dayjs().startOf('day');
 
-  const recentDateStr = data.recentDate ?? prevData?.recentDate ?? '-';
-  const interval = data.interval ?? prevData?.interval ?? 0;
+    const recentDateStr = data.recentDate ?? prevData?.recentDate ?? '-';
+    const interval = data.interval ?? prevData?.interval ?? 0;
 
-  const recentDate = recentDateStr ? dayjs(recentDateStr) : null;
+    const recentDate = recentDateStr ? dayjs(recentDateStr) : null;
 
-  const nextDate = recentDate
-    ? recentDate.add(interval, 'day')
-    : null;
+    const nextDate = recentDate
+      ? recentDate.add(interval, 'day')
+      : null;
 
-  const dayDiff = nextDate ? nextDate.diff(today, 'day') : 0;
+    const dayDiff = nextDate ? nextDate.diff(today, 'day') : 0;
 
-  // 보기 편한 D-day 포맷
-  let dDayLabel: string;
-  if (dayDiff > 0) {
-    dDayLabel = `D-${dayDiff}`;
-  } else if (dayDiff === 0) {
-    dDayLabel = 'D-day';
-  } else {
-    dDayLabel = `D+${Math.abs(dayDiff)}`;
-  }
+    // 보기 편한 D-day 포맷
+    let dDayLabel: string;
+    if (dayDiff > 0) {
+      dDayLabel = `D-${dayDiff}`;
+    } else if (dayDiff === 0) {
+      dDayLabel = 'D-day';
+    } else {
+      dDayLabel = `D+${Math.abs(dayDiff)}`;
+    }
 
-  return {
-    recentDate: recentDate ? recentDate.format('YYYY-MM-DD') : null,
-    interval,
-    nextDate: nextDate ? nextDate.format('YYYY-MM-DD') : null,
-    dDay: dDayLabel, // 여기서 포맷 적용
+    return {
+      recentDate: recentDate ? recentDate.format('YYYY-MM-DD') : null,
+      interval,
+      nextDate: nextDate ? nextDate.format('YYYY-MM-DD') : null,
+      dDay: dDayLabel, // 여기서 포맷 적용
+    };
   };
-};
 
 
   // 개별 도마뱀 ID의 Cycle Data 업데이트 함수
   const setFeedCycleData = (id: string, data: Partial<CycleData>) => {
-    const prev = cleanCycleData[id];
+    setFeedCycleDataState(prevState => {
+      const prev = prevState[id];
 
-    const merged = {
-      ...prev,
-      ...data, // 일부만 와도 덮어씌워짐
-    };
-    const calculated = calculateCycleData(id, merged, prev);
-    setFeedCycleDataState((prevState) => ({
-      ...prevState,
-      [id]: calculated,
-    }));
+      const merged = {
+        ...prev,
+        ...data,
+      };
+      const calculated = calculateCycleData(id, merged, prev);
+
+      return {
+        ...prevState,
+        [id]: calculated,
+      };
+    });
   };
+
 
   //nextDate와 dDay 계산
   const setCleanCycleData = (id: string, data: Partial<CycleData>) => {
