@@ -41,12 +41,16 @@ export default function CageLayout() {
           ),
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => { 
-                router.push(`/cage/notifications`) 
+              onPress={() => {
+                router.push(`/cage/notifications`);
               }}
               style={{ paddingLeft: 4 }}
             >
-              <Ionicons name="notifications-outline" size={24} color={colors.BLACK} />
+              <Ionicons
+                name='notifications-outline'
+                size={24}
+                color={colors.BLACK}
+              />
             </TouchableOpacity>
           ),
         }}
@@ -61,7 +65,11 @@ export default function CageLayout() {
               onPress={() => router.back()}
               style={{ paddingLeft: 4 }}
             >
-              <Ionicons name='chevron-back' size={24} color={colors.BLACK} />
+              <Ionicons
+                name='chevron-back'
+                size={24}
+                color={colors.BLACK}
+              />
             </TouchableOpacity>
           ),
           headerTitleAlign: 'center',
@@ -79,23 +87,53 @@ export default function CageLayout() {
               onPress={() => router.back()}
               style={{ paddingLeft: 4 }}
             >
-              <Ionicons name='chevron-back' size={24} color={colors.BLACK} />
+              <Ionicons
+                name='chevron-back'
+                size={24}
+                color={colors.BLACK}
+              />
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <TouchableOpacity
-              onPress={() => {
-                if (petId) {
-                  console.log("💡 id 값:", petId);
-                  router.push(`/cage/${petId}/setting`);
-                } else {
-                  console.error("❌ id 값이 없습니다!");
-                }
-              }}
-              style={{ paddingLeft: 4 }}
-            >
-              <Ionicons name='settings' size={24} color={colors.BLACK} />
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', paddingLeft: 4 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (petId) {
+                    console.log('💡 id 값:', petId);
+                    queryClient.invalidateQueries({
+                      queryKey: ['state', petId],
+                    });
+                  } else {
+                    console.error('❌ id 값이 없습니다!');
+                  }
+                }}
+                style={{ paddingLeft: 4 }}
+              >
+                <Ionicons
+                  name='reload'
+                  size={24}
+                  color={colors.BLACK}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  if (petId) {
+                    console.log('💡 id 값:', petId);
+                    router.push(`/cage/${petId}/setting`);
+                  } else {
+                    console.error('❌ id 값이 없습니다!');
+                  }
+                }}
+                style={{ paddingLeft: 4 }}
+              >
+                <Ionicons
+                  name='settings'
+                  size={24}
+                  color={colors.BLACK}
+                />
+              </TouchableOpacity>
+            </View>
           ),
           headerTitleAlign: 'center',
           title: '',
@@ -111,7 +149,11 @@ export default function CageLayout() {
               onPress={() => router.back()}
               style={{ paddingLeft: 4 }}
             >
-              <Ionicons name='chevron-back' size={24} color={colors.BLACK} />
+              <Ionicons
+                name='chevron-back'
+                size={24}
+                color={colors.BLACK}
+              />
             </TouchableOpacity>
           ),
           headerTitleAlign: 'center',
