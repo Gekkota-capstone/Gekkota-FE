@@ -5,9 +5,9 @@ export async function updatePetInfo(
   petId: string,
   updatedData: {
     name?: string;
-    birthdate?: string;
-    species?: string;
     gender?: string;
+    species?: string;
+    birthdate?: string;
   }
 ) {
   const response = await fetchWithAuth(

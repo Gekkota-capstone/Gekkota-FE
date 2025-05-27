@@ -21,7 +21,10 @@ export default function CleanScreen() {
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
   const [recentDate, setRecentDate] = useState<string | null>(null);
-  const [interval, setInterval] = useState<number>(1);
+  const [interval, setInterval] = useState<number>(() => {
+    return storedCycleData?.interval ?? 1;
+  });
+
 
   const [startDate, setStartDate] = useState<string | null>(null); //조회할 시작 날짜
   const [endDate, setEndDate] = useState<string | null>(null); //조회할 마지막 날짜
@@ -57,16 +60,25 @@ export default function CleanScreen() {
 
   // data가 바뀔 때마다 최근 날짜 찾기
   useEffect(() => {
-    if (!startDate || !endDate) return;
-    console.log('📌 호출 조건 만족' + startDate + endDate);
-    console.log('📦 allData:', allData);
-    if (allData && allData.length > 0) {
-      const sorted = allData.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
-      setRecentDate(sorted[0].date);
-    }
-  }, [allData, setRecentDate, startDate, endDate]);
+  if (!startDate || !endDate) return;
+  if (allData && allData.length > 0) {
+    const sorted = allData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const latest = sorted[0].date;
+    setRecentDate(latest);
+    setCleanCycleData(petId, {
+      recentDate: latest,
+      interval: storedCycleData.interval
+    });
+  } else {
+    setRecentDate(null);
+    setCleanCycleData(petId, {
+      recentDate: null,
+      interval,
+    });
+  }
+}, [allData, startDate, endDate, interval]);  // interval도 의존성 추가
+
+
 
   const handleAfterDelete = async () => {
     const { data: updatedData } = await refetch(); // 최신 데이터를 받아옴
@@ -77,7 +89,7 @@ export default function CleanScreen() {
       const latestDate = sorted[0].date;
       setCleanCycleData(petId, {
         recentDate: latestDate,
-        interval,
+        interval: storedCycleData?.interval,
       });
     } else {
       // 기록이 하나도 없으면 recentDate를 null 또는 기본값으로 설정
@@ -107,13 +119,16 @@ export default function CleanScreen() {
     }
   };
 
-  const displayRecentDate = storedCycleData?.recentDate
+  const displayRecentDate = storedCycleData?.recentDate && dayjs(storedCycleData.recentDate).isValid()
     ? dayjs(storedCycleData.recentDate).format('MM/DD')
     : '등록 필요';
-  const displayFeedingInterval = storedCycleData?.interval ?? 0;
-  const displayNextDate = storedCycleData?.nextDate
+
+  const displayNextDate = storedCycleData?.nextDate && dayjs(storedCycleData.nextDate).isValid()
     ? dayjs(storedCycleData.nextDate).format('MM/DD')
     : '-';
+
+  const displayFeedingInterval = storedCycleData?.interval;
+
   const displayDDay = storedCycleData?.dDay ?? 'D-Day';
 
   const openModal = () => setModalVisible(true);
