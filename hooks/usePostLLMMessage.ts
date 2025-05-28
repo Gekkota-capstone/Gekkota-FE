@@ -8,6 +8,8 @@ export function usePostLLMMessage(cageId: string) {
   return useMutation({
     mutationFn: (data: { question: string }) =>
       postLLMMessage({ cageId, data }),
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['llmMessage', cageId] });
+    },
   });
 }
