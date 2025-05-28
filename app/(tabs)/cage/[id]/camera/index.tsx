@@ -54,14 +54,6 @@ export default function CameraScreen() {
     <SafeAreaView style={styles.wrapper}>
       <Text style={styles.title}>실시간 카메라 스트리밍</Text>
       <View style={styles.videoContainer}>
-        {isLoading && (
-          <View style={styles.loaderOverlay}>
-            <ActivityIndicator
-              size='large'
-              color={colors.BLUE_500}
-            />
-          </View>
-        )}
         <VLCPlayer
           style={styles.video}
           videoAspectRatio='16:9'
