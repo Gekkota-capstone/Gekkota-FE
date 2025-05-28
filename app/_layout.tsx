@@ -8,7 +8,8 @@ import queryClient from '@/api/queryClient';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as DevClient from 'expo-dev-client';
 import PetProvider from '@/contexts/PetContext';
-
+// App.tsx 또는 루트 컴포넌트 최상단에
+import { LogBox } from 'react-native';
 SplashScreen.preventAutoHideAsync();
 
 async function enableMocking() {
@@ -21,6 +22,9 @@ async function enableMocking() {
   console.log('msw 시작');
 }
 
+LogBox.ignoreLogs([
+  'Warning: Text strings must be rendered within a <Text> component.',
+]);
 // enableMocking();
 
 DevClient.openMenu();

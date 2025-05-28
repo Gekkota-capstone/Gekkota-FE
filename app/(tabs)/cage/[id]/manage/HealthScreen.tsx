@@ -64,7 +64,6 @@ export default function HealthScreen() {
             }}
           />
         )}
-        <Text>기록이 없습니다.</Text>
 
         <View style={{ height: 80 }} />
       </ScrollView>

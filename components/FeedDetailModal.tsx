@@ -11,14 +11,14 @@ interface FeedRecordData {
   id: number;
   date: string;
   food_type:
-  | '사료'
-  | '귀뚜라미'
-  | '밀웜'
-  | '슈퍼밀웜'
-  | '왁스웜'
-  | '누에'
-  | '과일'
-  | '채소';
+    | '사료'
+    | '귀뚜라미'
+    | '밀웜'
+    | '슈퍼밀웜'
+    | '왁스웜'
+    | '누에'
+    | '과일'
+    | '채소';
   food_size: null | '극소' | '소' | '중' | '대' | '특대';
   food_amount: number | null;
   amount_unit: null | '마리' | 'ml' | 'g';
@@ -38,18 +38,16 @@ export default function FeedDetailModal({
   onClose,
   data,
   refetch,
-  onDeleted
+  onDeleted,
 }: FeedDetailModalProps) {
   const { id } = useLocalSearchParams();
   const { mutate: deleteFeed } = useDeleteFeedRecord(id as string, onClose);
 
-
   const handleDelete = () => {
-    deleteFeed({ date: data.date, food_type: data.food_type })
-    onDeleted?.();  // 삭제 성공 후 호출
-    onClose();    // 모달 닫기 등
+    deleteFeed({ date: data.date, food_type: data.food_type });
+    onDeleted(); // 삭제 성공 후 호출
+    onClose();
   };
-
 
   return (
     <Modal
@@ -71,7 +69,7 @@ export default function FeedDetailModal({
             />
           </TouchableOpacity>
           <Text style={styles.headerText}>급여 기록</Text>
-          <View />
+          <View style={{ width: 25 }} />
         </View>
 
         {/* 본문 */}
@@ -85,7 +83,6 @@ export default function FeedDetailModal({
             <Text style={styles.label}>먹이 종류</Text>
             <Text style={styles.value}>{data.food_type}</Text>
           </View>
-
           {data.food_size && (
             <View style={styles.row}>
               <Text style={styles.label}>먹이 사이즈 </Text>
@@ -97,7 +94,7 @@ export default function FeedDetailModal({
             <View style={styles.row}>
               <Text style={styles.label}>먹이 양</Text>
               <Text style={styles.value}>
-                {data.food_amount}
+                {String(data.food_amount)}
                 {data.amount_unit}
               </Text>
             </View>
@@ -119,7 +116,7 @@ export default function FeedDetailModal({
           <Ionicons
             name='trash-bin-outline'
             size={15}
-          ></Ionicons>
+          />
           <Text style={styles.deleteText}>삭제하기</Text>
         </TouchableOpacity>
       </View>

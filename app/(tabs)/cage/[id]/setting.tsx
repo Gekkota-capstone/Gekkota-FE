@@ -24,7 +24,7 @@ export default function SettingScreen() {
     ? useGetPetInfo(petId)
     : { data: null, error: null, isLoading: false };
   const { mutate: deleteMutate } = useDeletePet(petId as string, () =>
-    router.replace('/cage')
+    router.push('/cage')
   );
 
   const [name, setName] = useState(data?.name || '');

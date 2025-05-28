@@ -39,6 +39,7 @@ export default function CageLayout() {
               홈
             </Text>
           ),
+          headerLeft: () => <Text></Text>,
           headerRight: () => (
             <TouchableOpacity
               onPress={() => {

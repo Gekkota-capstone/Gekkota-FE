@@ -33,7 +33,12 @@ const cageForm = () => {
 
   //기본값 (종, 이름, 성별, 생년월일)
   const { control, handleSubmit, setValue, watch } = useForm({
-    defaultValues: { species: '', name: '', gender: '', birthdate: '' },
+    defaultValues: {
+      species: '',
+      name: '',
+      gender: '',
+      birthdate: dayjs().format('YYYY-MM-DD'),
+    },
   });
 
   // 오류 메시지 상태 관리

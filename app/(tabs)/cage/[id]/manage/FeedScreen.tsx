@@ -66,33 +66,31 @@ export default function FeedScreen() {
       setFeedCycleData(petId, {
         recentDate,
         interval: storedCycleData?.interval,
-      })
+      });
       setRecentDate(sorted[0].date);
     }
   }, [allData, recentDate, setRecentDate, startDate, endDate]);
 
   const handleAfterDelete = async () => {
-  console.log("호출됨");
-  const { data: updatedData } = await refetch();
-  if (updatedData && updatedData.length > 0) {
-    const sorted = updatedData.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
-    const latestDate = sorted[0].date;
-    setFeedCycleData(petId, {
-      recentDate: latestDate,
-      interval: storedCycleData?.interval,
-    });
-  } else {
-    // 기록이 하나도 없으면 recentDate를 null 또는 기본값으로 설정
-    setFeedCycleData(petId, {
-      recentDate: null,
-      interval,
-    });
-  }
-};
-
-
+    console.log('호출됨');
+    const { data: updatedData } = await refetch();
+    if (updatedData && updatedData.length > 0) {
+      const sorted = updatedData.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      const latestDate = sorted[0].date;
+      setFeedCycleData(petId, {
+        recentDate: latestDate,
+        interval: storedCycleData?.interval,
+      });
+    } else {
+      // 기록이 하나도 없으면 recentDate를 null 또는 기본값으로 설정
+      setFeedCycleData(petId, {
+        recentDate: null,
+        interval,
+      });
+    }
+  };
 
   const updateFeedCycleData = (newInterval: number) => {
     setInterval(newInterval);
@@ -137,8 +135,8 @@ export default function FeedScreen() {
           dDay={displayDDay}
           interval={displayFeedingInterval}
           onSelectInterval={updateFeedCycleData}
-          onPressCycle={() => { }}
-          onPressAlert={() => { }}
+          onPressCycle={() => {}}
+          onPressAlert={() => {}}
         />
         <CustomCalendar
           selectedDate={selectedDate}
@@ -151,7 +149,7 @@ export default function FeedScreen() {
             if (!item.food_type) return null;
             return (
               <FeedRecordCard
-                key={item.id}
+                key={item.id + item.food_type}
                 onPress={() => setSelectedFeed(item)}
                 data={{
                   date: item.date,
@@ -178,10 +176,10 @@ export default function FeedScreen() {
             id: selectedFeed.id,
             date: selectedFeed.date,
             food_type: selectedFeed.food_type,
-            food_size: selectedFeed.food_size,
-            food_amount: selectedFeed.food_amount,
-            amount_unit: selectedFeed.amount_unit,
-            memo: selectedFeed.memo,
+            food_size: selectedFeed.food_size || '',
+            food_amount: selectedFeed.food_amount || 0,
+            amount_unit: selectedFeed.amount_unit || '',
+            memo: selectedFeed.memo || '',
           }}
           onDeleted={handleAfterDelete}
         />
