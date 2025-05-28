@@ -14,7 +14,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import { BarChart } from 'react-native-chart-kit';
+import { BarChart, LineChart } from 'react-native-chart-kit';
 import CustomCalendar from '../manage/components/CustomCalendar';
 import { colors } from '@/constants';
 import { useState } from 'react';
@@ -81,7 +81,7 @@ export default function BehavioralAnalyticsScreen() {
         {/* 이상행동 경고 */}
         {
           <View style={styles.warningBox}>
-            <Text style={styles.warningTitle}>이상 행동</Text>
+            <Text style={styles.warningTitle}>탈피 확률</Text>
             <Text style={styles.warningDesc}>{data?.abnormalBehavior}</Text>
           </View>
         }
@@ -148,7 +148,7 @@ export default function BehavioralAnalyticsScreen() {
               </TouchableOpacity>
             ))}
           </View>
-          <BarChart
+          <LineChart
             data={{
               labels,
               datasets: [{ data: values }],
@@ -158,6 +158,7 @@ export default function BehavioralAnalyticsScreen() {
             fromZero
             yAxisLabel=''
             yAxisSuffix=''
+            bezier
             chartConfig={{
               backgroundGradientFrom: colors.WHITE,
               backgroundGradientTo: colors.WHITE,
@@ -176,13 +177,13 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.WHITE },
   scrollContainer: { padding: 20, paddingBottom: 100 },
   warningBox: {
-    backgroundColor: '#FFE3E3',
+    backgroundColor: colors.BLUE_400,
     padding: 16,
     borderRadius: 10,
     marginBottom: 20,
   },
-  warningTitle: { fontSize: 16, fontWeight: '700', color: colors.RED_500 },
-  warningDesc: { fontSize: 14, color: colors.RED_500 },
+  warningTitle: { fontSize: 16, fontWeight: '700', color: colors.WHITE },
+  warningDesc: { fontSize: 14, color: colors.WHITE },
   safeBox: {
     backgroundColor: colors.GRAY_100,
     padding: 16,
