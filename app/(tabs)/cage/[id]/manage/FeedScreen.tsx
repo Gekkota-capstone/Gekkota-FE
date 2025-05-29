@@ -22,29 +22,26 @@ export default function FeedScreen() {
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(dayjs());
-  const [feedVisible, setFeedVisible] = useState(false);
 
-  const [dDay, setDDay] = useState<number>(0);
   const [recentDate, setRecentDate] = useState<string | null>(null);
-  const [nextDate, setNextDate] = useState<string | null>(null);
   const [interval, setInterval] = useState<number>(1);
   const [selectedFeed, setSelectedFeed] = useState<any | null>(null);
 
   //전체 급여기록 조회
-  const { data: allData, error } = useGetAllFeedRecords({
+  const { data: allData, refetch } = useGetAllFeedRecords({
     cageId: petId,
     startDate: startDate ?? '',
     endDate: endDate ?? '',
   });
 
-  const {
-    data: feedData,
-    isLoading,
-    refetch,
-  } = useGetFeedRecord(petId, selectedDate.format('YYYY-MM-DD'));
+  const { data: feedData, isLoading } = useGetFeedRecord(
+    petId, 
+    selectedDate.format('YYYY-MM-DD')
+  );
 
 
   const { feedCycleData, setFeedCycleData } = usePetContext();
+  if (!petId || !feedCycleData) return null;
   const storedCycleData = feedCycleData[petId];
 
 
@@ -56,7 +53,9 @@ export default function FeedScreen() {
     setEndDate(today.format('YYYY-MM-DD'));
   }, [feedCycleData]);
 
-
+  useEffect(() => {
+    console.log('급여 storedCycleData:', storedCycleData);
+  }, [storedCycleData]);
 
   // data가 바뀔 때마다 최근 날짜 찾기
   useEffect(() => {
@@ -74,10 +73,6 @@ export default function FeedScreen() {
       setRecentDate(sorted[0].date);
     }
   }, [allData, recentDate, setRecentDate, startDate, endDate]);
-
-  useEffect(() => {
-    console.log('급여 storedCycleData:', storedCycleData);
-  }, [storedCycleData]);
 
   const handleAfterDelete = async () => {
     const { data: updatedData } = await refetch();
@@ -178,7 +173,6 @@ export default function FeedScreen() {
         <FeedDetailModal
           visible={!!selectedFeed}
           onClose={() => setSelectedFeed(null)}
-          refetch={refetch}
           data={{
             id: selectedFeed.id,
             date: selectedFeed.date,

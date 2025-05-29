@@ -40,7 +40,7 @@ export default function CleanScreen() {
 
   //Context에서 주기데이터 가져옴
   const { cleanCycleData, setCleanCycleData } = usePetContext();
-  if (!petId || !cleanCycleData) return null; // 혹은 로딩 중 표시
+  if (!petId || !cleanCycleData) return null;
   const storedCycleData = cleanCycleData[petId];
 
 

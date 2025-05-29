@@ -11,14 +11,14 @@ interface FeedRecordData {
   id: number;
   date: string;
   food_type:
-    | '사료'
-    | '귀뚜라미'
-    | '밀웜'
-    | '슈퍼밀웜'
-    | '왁스웜'
-    | '누에'
-    | '과일'
-    | '채소';
+  | '사료'
+  | '귀뚜라미'
+  | '밀웜'
+  | '슈퍼밀웜'
+  | '왁스웜'
+  | '누에'
+  | '과일'
+  | '채소';
   food_size: null | '극소' | '소' | '중' | '대' | '특대';
   food_amount: number | null;
   amount_unit: null | '마리' | 'ml' | 'g';
@@ -29,7 +29,6 @@ interface FeedDetailModalProps {
   visible: boolean;
   onClose: () => void;
   data: FeedRecordData;
-  refetch: () => void;
   onDeleted: () => void;
 }
 
@@ -37,16 +36,22 @@ export default function FeedDetailModal({
   visible,
   onClose,
   data,
-  refetch,
   onDeleted,
 }: FeedDetailModalProps) {
   const { id } = useLocalSearchParams();
   const { mutate: deleteFeed } = useDeleteFeedRecord(id as string, onClose);
 
   const handleDelete = () => {
-    deleteFeed({ date: data.date, food_type: data.food_type });
-    onDeleted(); // 삭제 성공 후 호출
-    onClose();
+    deleteFeed({ date: data.date, food_type: data.food_type }, {
+      onSuccess: () => {
+        onDeleted();  // 삭제 성공 후 호출
+        onClose();    // 모달 닫기 등
+      }
+      ,
+      onError: (error) => {
+        console.error('삭제 실패:', error);
+      }
+    });
   };
 
   return (
