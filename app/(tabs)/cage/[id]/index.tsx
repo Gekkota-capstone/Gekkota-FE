@@ -15,8 +15,8 @@ import { useGetCageState } from '@/hooks/useGetCageState';
 import { useEffect } from 'react';
 
 const cageImages = {
-  active: require('@/assets/images/hide_pet.png'),
-  stealth: require('@/assets/images/default_pet.png'),
+  active: require('@/assets/images/default_pet.png'),
+  stealth: require('@/assets/images/hide_pet.png'),
 };
 export default function PetDetailScreen() {
   const { id } = useLocalSearchParams();
