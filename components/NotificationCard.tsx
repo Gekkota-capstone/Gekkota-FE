@@ -6,10 +6,9 @@ interface NotificationCardProps {
     name: string;
     type: '급여' | '청소' | string;
     status: '알림' | '지연' | string;
-    time: number;
 }
 
-export default function NotificationCard({ name, type, status, time }: NotificationCardProps) {
+export default function NotificationCard({ name, type, status }: NotificationCardProps) {
     const getMessage = () => {
         if (type === '급여') {
             return status === '알림'
@@ -40,7 +39,6 @@ export default function NotificationCard({ name, type, status, time }: Notificat
                     />
                     <Text style={styles.titleText}>{`${type}${status}`}</Text>
                 </View>
-                <Text style={styles.timeText}>{`${time}시간 전`}</Text>
             </View>
             <View style={styles.info}>
                 <Text style={styles.detailText}>{getMessage()}</Text>

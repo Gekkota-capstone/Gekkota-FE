@@ -7,18 +7,17 @@ import Modal from 'react-native-modal';
 
 interface PetNameDropdownProps {
     isVisible: boolean;
-    onPress: () => void;
+    onSelect: (petId: string) => void;
     onClose: () => void;
 }
 
-export default function PetNameDropdown({ isVisible, onPress, onClose }: PetNameDropdownProps) {
+export default function PetNameDropdown({ isVisible, onSelect, onClose }: PetNameDropdownProps) {
     const { data, isLoading, error } = useGetList();
 
     if (isLoading) return <Text style={styles.loading}>로딩 중...</Text>;
     if (error || !data) return <Text style={styles.loading}>에러 발생</Text>;
 
     const list = Array.isArray(data) ? data : [data];
-
 
     return (
         <View>
@@ -32,14 +31,30 @@ export default function PetNameDropdown({ isVisible, onPress, onClose }: PetName
                     <FlatList
                         data={list}
                         keyExtractor={(item, index) => index.toString()}
+                        ListHeaderComponent={() => (
+                            <TouchableOpacity
+                                style={[styles.item, styles.allItem]}
+                                onPress={() => {
+                                    onSelect('all');
+                                    onClose();
+                                }}
+                            >
+                                <Text style={[styles.itemText, styles.allItemText]}>전체보기</Text>
+                            </TouchableOpacity>
+                        )}
                         renderItem={({ item }) => (
-                            <TouchableOpacity 
-                            style={styles.item}
-                            onPress={onPress}>
+                            <TouchableOpacity
+                                style={styles.item}
+                                onPress={() => {
+                                    onSelect(item.pet_id);
+                                    onClose();
+                                }}
+                            >
                                 <Text style={styles.itemText}>{item.name}</Text>
                             </TouchableOpacity>
                         )}
                     />
+
                 </View>
             </Modal>
         </View>
@@ -72,6 +87,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     loading: {
-        
-    }
+    },
+    allItem: {
+    },
+    allItemText: {
+        fontWeight: 'bold',
+        color: colors.BLUE_700,
+    },
 });

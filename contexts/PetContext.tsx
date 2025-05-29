@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import dayjs from 'dayjs';
-
+import { useGetList } from '@/hooks/useGetList';
+interface Pet {
+  pet_id: string;
+  name: string;
+}
 interface CycleData {
   recentDate: string | null;
   dDay: string;
@@ -16,6 +20,9 @@ interface PetContextType {
   cleanCycleData: { [key: string]: CycleData };
   setFeedCycleData: (id: string, data: Partial<CycleData>) => void;
   setCleanCycleData: (id: string, data: Partial<CycleData>) => void;
+
+  pets: Pet[];
+  setPets: React.Dispatch<React.SetStateAction<Pet[]>>;
 }
 
 const PetContext = createContext<PetContextType | undefined>(undefined);
@@ -24,6 +31,25 @@ export const PetProvider = ({ children }: { children: ReactNode }) => {
   const [petId, setPetId] = useState<string | null>(null);
   const [feedCycleData, setFeedCycleDataState] = useState<{ [key: string]: CycleData }>({});
   const [cleanCycleData, setCleanCycleDataState] = useState<{ [key: string]: CycleData }>({});
+
+  const [pets, setPets] = useState<Pet[]>([]);
+
+  const { data, isLoading, error } = useGetList();
+
+  useEffect(() => {
+    if (!isLoading && !error && data) {
+      const petListRaw = Array.isArray(data) ? data : [data];
+      // pet_id -> id 매핑
+      const petList = petListRaw.map(pet => ({
+        pet_id: pet.pet_id,
+        name: pet.name,
+        species: pet.species,
+        gender: pet.gender,
+        birthdate: pet.birthdate,
+      }));
+      setPets(petList);
+    }
+  }, [data, isLoading, error]);
 
   // 초기 로딩 시 AsyncStorage에서 데이터 가져오기
   useEffect(() => {
@@ -137,6 +163,8 @@ export const PetProvider = ({ children }: { children: ReactNode }) => {
         cleanCycleData,
         setFeedCycleData,
         setCleanCycleData,
+        pets,
+        setPets,
       }}
     >
       {children}
