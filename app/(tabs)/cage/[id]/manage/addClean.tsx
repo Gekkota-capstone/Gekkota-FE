@@ -45,11 +45,7 @@ export default function CleanModal({
       { ...data, date: selectedDate },
       {
         onSuccess: () => {
-          setCleanCycleData(petId, {
-            recentDate: selectedDate,
-          });
-
-          console.log('✅ 성공적으로 저장됨');
+          console.log('✅ 청소 성공적으로 저장됨');
           onClose();
         },
         onError: (err) => {

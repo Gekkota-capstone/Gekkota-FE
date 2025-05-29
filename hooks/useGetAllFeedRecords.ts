@@ -12,7 +12,17 @@ export function useGetAllFeedRecords({
 }) {
     return useQuery({
         queryKey: ['feedRecords', cageId, startDate, endDate],
-        queryFn: () => getAllFeedRecords({ cageId, startDate, endDate }), // 모든 급여 기록
+        queryFn: async () => {
+                    try {
+                        console.log('🐛 급여 API 호출 with:', cageId, startDate, endDate);
+                        const res = await getAllFeedRecords({cageId, startDate, endDate});
+                        console.log('📦 급여 API 응답:', res);
+                        return res;
+                    } catch (error) {
+                        console.error('❌ 급여 API 요청 중 에러 발생:', error);
+                        throw error;
+                    }
+                },
         enabled: !!cageId && !!startDate && !!endDate,
         refetchOnWindowFocus: true
     });

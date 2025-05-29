@@ -7,13 +7,19 @@ import PetNameDropdown from '@/components/PetNameDropdown';
 
 import { usePetContext } from '@/contexts/PetContext';  // 컨텍스트 import
 import dayjs from 'dayjs';
+import { useGetList } from '@/hooks/useGetList';
 
 export default function NotificationScreen() {
+  const { data, isLoading, error } = useGetList();
+  const list = Array.isArray(data) ? data : [data];
+
   const { feedCycleData, cleanCycleData } = usePetContext();
   const [isModalVisible, setModalVisible] = useState(false);
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
+
+
 
   // 알림 목록 만들기: feedCycleData와 cleanCycleData 각각을 알림 형태로 변환
   const feedNotifications = Object.entries(feedCycleData).map(([petId, cycle]) => {

@@ -33,6 +33,8 @@ export const PetProvider = ({ children }: { children: ReactNode }) => {
         const storedCleanData = await AsyncStorage.getItem('cleanCycleData');
         if (storedFeedData) setFeedCycleDataState(JSON.parse(storedFeedData));
         if (storedCleanData) setCleanCycleDataState(JSON.parse(storedCleanData));
+        //console.log("청소 불러온 값:", storedCleanData);
+        //console.log("급여 불러온 값:", storedFeedData);
       } catch (error) {
         console.error('Error loading cycle data:', error);
       }
@@ -42,8 +44,15 @@ export const PetProvider = ({ children }: { children: ReactNode }) => {
 
   // 데이터 변경 시 AsyncStorage에 저장
   useEffect(() => {
-    AsyncStorage.setItem('feedCycleData', JSON.stringify(feedCycleData));
-    AsyncStorage.setItem('cleanCycleData', JSON.stringify(cleanCycleData));
+    if (Object.keys(feedCycleData).length > 0) {
+      AsyncStorage.setItem('feedCycleData', JSON.stringify(feedCycleData));
+      //console.log("급여 저장한 값 확인:", feedCycleData);
+    }
+
+    if (Object.keys(cleanCycleData).length > 0) {
+      AsyncStorage.setItem('cleanCycleData', JSON.stringify(cleanCycleData));
+      //console.log("청소 저장한 값 확인:", cleanCycleData);
+    }
   }, [feedCycleData, cleanCycleData]);
 
   const calculateCycleData = (
@@ -53,7 +62,7 @@ export const PetProvider = ({ children }: { children: ReactNode }) => {
   ): CycleData => {
     const today = dayjs().startOf('day');
 
-    const recentDateStr = data.recentDate ?? prevData?.recentDate ?? '-';
+    const recentDateStr = data.recentDate ?? prevData?.recentDate ?? null;
     const interval = data.interval ?? prevData?.interval ?? 0;
 
     const recentDate = recentDateStr ? dayjs(recentDateStr) : null;
@@ -101,21 +110,23 @@ export const PetProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-
   //nextDate와 dDay 계산
   const setCleanCycleData = (id: string, data: Partial<CycleData>) => {
-    const prev = cleanCycleData[id];
+    setCleanCycleDataState(prevState => {
+      const prev = prevState[id];
 
-    const merged = {
-      ...prev,
-      ...data, // 일부만 와도 덮어씌워짐
-    };
-    const calculated = calculateCycleData(id, merged, prev);
-    setCleanCycleDataState((prevState) => ({
-      ...prevState,
-      [id]: calculated,
-    }));
-  };
+      const merged = {
+        ...prev,
+        ...data,
+      };
+      const calculated = calculateCycleData(id, merged, prev);
+
+      return {
+        ...prevState,
+        [id]: calculated,
+      };
+    });
+  }
 
   return (
     <PetContext.Provider

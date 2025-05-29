@@ -30,14 +30,23 @@ export default function FeedScreen() {
   const [interval, setInterval] = useState<number>(1);
   const [selectedFeed, setSelectedFeed] = useState<any | null>(null);
 
-  const { feedCycleData, setFeedCycleData } = usePetContext();
-  const storedCycleData = feedCycleData[petId];
+  //전체 급여기록 조회
+  const { data: allData, error } = useGetAllFeedRecords({
+    cageId: petId,
+    startDate: startDate ?? '',
+    endDate: endDate ?? '',
+  });
 
   const {
     data: feedData,
     isLoading,
     refetch,
   } = useGetFeedRecord(petId, selectedDate.format('YYYY-MM-DD'));
+
+
+  const { feedCycleData, setFeedCycleData } = usePetContext();
+  const storedCycleData = feedCycleData[petId];
+
 
   useEffect(() => {
     const today = dayjs();
@@ -47,18 +56,13 @@ export default function FeedScreen() {
     setEndDate(today.format('YYYY-MM-DD'));
   }, [feedCycleData]);
 
-  //전체 급여기록 조회
-  const { data: allData, error } = useGetAllFeedRecords({
-    cageId: petId,
-    startDate: startDate ?? '',
-    endDate: endDate ?? '',
-  });
+
 
   // data가 바뀔 때마다 최근 날짜 찾기
   useEffect(() => {
     if (!startDate || !endDate) return;
-    console.log('📌 호출 조건 만족' + startDate + endDate);
-    console.log('📦 allData:', allData);
+    console.log('📌 급여 호출 조건 만족' + startDate + endDate);
+    console.log('📦 급여 allData:', allData);
     if (allData && allData.length > 0) {
       const sorted = allData.sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -71,8 +75,11 @@ export default function FeedScreen() {
     }
   }, [allData, recentDate, setRecentDate, startDate, endDate]);
 
+  useEffect(() => {
+    console.log('급여 storedCycleData:', storedCycleData);
+  }, [storedCycleData]);
+
   const handleAfterDelete = async () => {
-    console.log('호출됨');
     const { data: updatedData } = await refetch();
     if (updatedData && updatedData.length > 0) {
       const sorted = updatedData.sort(
@@ -135,8 +142,8 @@ export default function FeedScreen() {
           dDay={displayDDay}
           interval={displayFeedingInterval}
           onSelectInterval={updateFeedCycleData}
-          onPressCycle={() => {}}
-          onPressAlert={() => {}}
+          onPressCycle={() => { }}
+          onPressAlert={() => { }}
         />
         <CustomCalendar
           selectedDate={selectedDate}

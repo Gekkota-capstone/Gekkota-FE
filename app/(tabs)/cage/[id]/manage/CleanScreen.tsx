@@ -4,7 +4,7 @@ import { colors } from '@/constants';
 import React, { useDebugValue, useEffect, useState } from 'react';
 import AlertCycleCard from './components/AlertCycleCard';
 import CustomCalendar from './components/CustomCalendar';
-import ModalComponent from '@/app/(tabs)/cage/[id]/manage/addClean';
+import ModalComponent from './addClean';
 import { useGetCleanRecord } from '@/hooks/useGetCleanRecord';
 import { useGetAllCleanRecords } from '@/hooks/useGetAllCleanRecords';
 import CleanDetailModal from '@/components/CleanDetailModal';
@@ -21,21 +21,28 @@ export default function CleanScreen() {
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
   const [recentDate, setRecentDate] = useState<string | null>(null);
-  const [interval, setInterval] = useState<number>(() => {
-    return storedCycleData?.interval ?? 1;
-  });
-
-
+  const [interval, setInterval] = useState<number>(1);
   const [startDate, setStartDate] = useState<string | null>(null); //조회할 시작 날짜
   const [endDate, setEndDate] = useState<string | null>(null); //조회할 마지막 날짜
 
-  const { cleanCycleData, setCleanCycleData } = usePetContext();
-  const storedCycleData = cleanCycleData[petId];
+  //전체 청소기록 조회 (제일먼저)
+  const { data: allData, refetch } = useGetAllCleanRecords({
+    cageId: petId,
+    startDate: startDate ?? '',
+    endDate: endDate ?? '',
+  });
 
+  //날짜별 청소기록 조회
   const { data: cleanData, isLoading } = useGetCleanRecord(
     petId,
     selectedDate.format('YYYY-MM-DD')
   );
+
+  //Context에서 주기데이터 가져옴
+  const { cleanCycleData, setCleanCycleData } = usePetContext();
+  if (!petId || !cleanCycleData) return null; // 혹은 로딩 중 표시
+  const storedCycleData = cleanCycleData[petId];
+
 
   // startDate, endDate 초기화 (최근 1년치)
   useEffect(() => {
@@ -44,41 +51,29 @@ export default function CleanScreen() {
 
     setStartDate(lastYear.format('YYYY-MM-DD'));
     setEndDate(today.format('YYYY-MM-DD'));
-  }, []);
+  }, [cleanCycleData]);
 
-  //전체 청소기록 조회
-  const { data: allData, refetch } = useGetAllCleanRecords({
-    cageId: petId,
-    startDate: startDate ?? '',
-    endDate: endDate ?? '',
-  });
-
-  useEffect(() => {
-    updateCleanCycleData(storedCycleData?.interval); // 처음 마운트되었을 때 실행
-  }, []);
-
+    useEffect(() => {
+    console.log('청소 storedCycleData:', storedCycleData);
+  }, [storedCycleData]);
 
   // data가 바뀔 때마다 최근 날짜 찾기
   useEffect(() => {
-  if (!startDate || !endDate) return;
-  if (allData && allData.length > 0) {
-    const sorted = allData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    const latest = sorted[0].date;
-    setRecentDate(latest);
-    setCleanCycleData(petId, {
-      recentDate: latest,
-      interval: storedCycleData.interval
-    });
-  } else {
-    setRecentDate(null);
-    setCleanCycleData(petId, {
-      recentDate: null,
-      interval,
-    });
-  }
-}, [allData, startDate, endDate, interval]);  // interval도 의존성 추가
-
-
+    if (!startDate || !endDate) return;  // 날짜 없으면 실행 중단
+    console.log('📌 청소 호출 조건 만족', startDate, endDate);
+    console.log('📦 청소 allData:', allData);
+    if (allData && allData.length > 0) {
+      // 최신 날짜 순 정렬
+      const sorted = allData.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      setCleanCycleData(petId, {
+        recentDate,
+        interval: storedCycleData?.interval,
+      });
+      setRecentDate(sorted[0].date);
+    }
+  }, [allData, recentDate, setRecentDate, startDate, endDate]);
 
   const handleAfterDelete = async () => {
     const { data: updatedData } = await refetch(); // 최신 데이터를 받아옴
@@ -110,13 +105,8 @@ export default function CleanScreen() {
         recentDate, // YYYY-MM-DD 포맷이면 그대로 전달
         interval: newInterval,
       });
-    } else {
-      // recentDate가 없으면 recentDate는 null, interval만 넘기기
-      setCleanCycleData(petId, {
-        recentDate: null,
-        interval: newInterval,
-      });
     }
+    console.log(storedCycleData?.interval)
   };
 
   const displayRecentDate = storedCycleData?.recentDate && dayjs(storedCycleData.recentDate).isValid()
@@ -127,7 +117,7 @@ export default function CleanScreen() {
     ? dayjs(storedCycleData.nextDate).format('MM/DD')
     : '-';
 
-  const displayFeedingInterval = storedCycleData?.interval;
+  const displayCleaningInterval = storedCycleData?.interval ?? 0;
 
   const displayDDay = storedCycleData?.dDay ?? 'D-Day';
 
@@ -145,7 +135,7 @@ export default function CleanScreen() {
           recentDate={displayRecentDate}
           nextDate={displayNextDate}
           dDay={displayDDay}
-          interval={displayFeedingInterval}
+          interval={displayCleaningInterval}
           onSelectInterval={updateCleanCycleData}
           onPressCycle={() => { }}
           onPressAlert={() => { }}

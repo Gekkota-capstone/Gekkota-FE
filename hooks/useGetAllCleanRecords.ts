@@ -14,12 +14,12 @@ export function useGetAllCleanRecords({
         queryKey: ['cleanRecords', cageId, startDate, endDate],
         queryFn: async () => {
             try {
-                console.log('🐛 API 호출 with:', cageId, startDate, endDate);
+                console.log('🐛 청소 API 호출 with:', cageId, startDate, endDate);
                 const res = await getAllCleanRecords({cageId, startDate, endDate});
-                console.log('📦 API 응답:', res);
+                console.log('📦 청소 API 응답:', res);
                 return res;
             } catch (error) {
-                console.error('❌ API 요청 중 에러 발생:', error);
+                console.error('❌ 청소 API 요청 중 에러 발생:', error);
                 throw error;
             }
         },

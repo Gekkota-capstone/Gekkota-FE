@@ -85,7 +85,7 @@ const FeedModal: React.FC<ModalComponentProps> = ({
       { ...data, date: selectedDate },
       {
         onSuccess: () => {
-          console.log('✅ 성공적으로 저장됨');
+          console.log('✅ 급여 성공적으로 저장됨');
           onClose();
         },
         onError: (err) => {
